@@ -32,11 +32,6 @@ const productSchema = new Schema({
     imageProduct: {
         type: Array
     },
-
-    review: {
-        type: String
-    },
-
     rating: {
         type: Number,
         required: true,

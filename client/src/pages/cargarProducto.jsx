@@ -2,15 +2,23 @@ import React from "react";
 import NavBar from "../components/NavBar"
 import { useState } from 'react';
 import { Link ,  useNavigate } from "react-router-dom"
-import { TextField, Box, InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
+import { TextField,Container, CardMedia, Box, InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
 import Filter from '../ui/FilterByCategory'
+
+import { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
+import { Swiper, SwiperSlide } from 'swiper/react'
+// Import Swiper styles
+import 'swiper/css';
+import 'swiper/css/navigation';
+import 'swiper/css/pagination';
+import 'swiper/css/scrollbar';
 
 const regex=/^[0-9]+$/
 
 export default function CrearPublicacion() {
 
   const [formData,SetFormData]=useState({})//almacena el formulario para luego ser enviado al servidor
-  const[images,setImages]=useState(["http://inversionesumbrias.com.ve/static/images/productos/producto-sin-imagen.jpg"]);//array de strings de url de imagenes 
+  const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
 
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
@@ -63,7 +71,7 @@ export default function CrearPublicacion() {
     },
   ];
 
-  const [input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],review:0,rating:0,envio:'coordinar'})
+  const [input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
 
   const validate=(e)=>{
     //aca se hacen 2 cosas, se actualiza el valor actual de los inputs y se almacena su valor en formdata
@@ -165,22 +173,31 @@ export default function CrearPublicacion() {
             <TextField id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
             onChange={(e)=>validate(e)}/>
 
-            import Filter from '../components/FilterByCategory'
             
             
             {<input aria-label="Archivo" type="file" name="imagen" onChange={handleUpload} />}
 
-              <Box display='flex' flexDirection='row' justifyContent='center'  >
-                {images[1]?images.map(image=> {
-                  return image!=="http://inversionesumbrias.com.ve/static/images/productos/producto-sin-imagen.jpg"?
-                  <Box sx={{ paddingX: 2 }}>
-                    <img src={image} alt="" width="250px" height ="150px" />
-                    <button onClick={(e)=>{handleDelete(e,image)}}>X</button>
-                  </Box>
-                  :<></>
-                }
-              ):<></>}
-              </Box>
+              <Container display='flex' flexDirection='row' justifyContent='center' width={1000}  >
+              <Swiper
+                      modules={[Navigation, Pagination, Scrollbar, A11y]}
+                      spaceBetween={40}
+                      slidesPerView={3}
+                      navigation
+                      pagination={{ clickable: true }}
+                    >
+                {images[0]?images.map(image=>(
+                  <SwiperSlide>
+                    <CardMedia
+                      component="img"
+                      height="250"
+                      image={image}
+                      alt="gf"
+                      sx={{objectFit:'contain'}}
+                    />
+                  </SwiperSlide>
+                )):<></>}
+                </Swiper>
+              </Container>
               {upLoading && <p>Subiendo Foto...</p> }
 
              <div>
@@ -196,3 +213,7 @@ export default function CrearPublicacion() {
     </div>
     );
   }
+
+
+  // <button onClick={(e)=>{handleDelete(e,image)}}>X</button>
+
