@@ -1,26 +1,31 @@
-import { Grid,CardMedia } from '@mui/material'
+import { Grid,CardMedia, Box } from '@mui/material'
 import { Container } from '@mui/system'
 import * as React from 'react'
 import ProductCard from '../components/products/ProductCard'
 import NavBar from '../components/NavBar'
-// import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
-
 import { Swiper, SwiperSlide } from 'swiper/react';
-
-// Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import { useDispatch, useSelector } from 'react-redux'
+import { GETPRODUCTS } from '../actions'
+import Loading from './Loading'
 
 const categories=['https://cdn.forbes.pe/2022/05/CELULARES.jpg','https://www.lifeder.com/wp-content/uploads/2016/11/video-juegos-1.jpg']
 
 const Landing=()=>{
+    const dispatch=useDispatch()
+    React.useEffect(()=>{
+        dispatch(GETPRODUCTS())
+    },[])
+    const products=useSelector((state)=>state.rootReducer.products)
     return(
-        <Container>
-            <NavBar/>
+        products?
             <Container sx={{mt:10}}>
+            <NavBar/>
+            <Box sx={{display:'flex'}}>
             <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={40}
@@ -37,47 +42,14 @@ const Landing=()=>{
                     />
                 </SwiperSlide>)}
                 </Swiper>
-            </Container>
+            </Box>
             <Grid container spacing={1} sx={{justifyContent:'center',mt:3}}>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
                 <Grid item xs={5} md={3}>
                     <ProductCard/>
                 </Grid>
             </Grid>
         </Container>
+        :<Loading/>
     )
 }
 
