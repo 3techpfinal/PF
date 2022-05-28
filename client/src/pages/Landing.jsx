@@ -23,9 +23,9 @@ const Landing=()=>{
     const products=useSelector((state)=>state.rootReducer.products)
     return(
         products[0]?
-            <Container sx={{mt:10}}>
+            <Container sx={{mt:10,width:{xs:'100%'},minWidth:'100%',p:{xs:0}}}>
             <NavBar/>
-            <Box sx={{mt:10}}>
+            <Box>
             <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={40}
