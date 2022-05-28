@@ -24,7 +24,15 @@ const userSchema = new Schema({
         // required : true
     },
 
-    role: [],
+    role: {
+        type: String,
+        enum: {
+            values: ['admin','user','superadmin'],
+            message: '{VALUE} no es un role válido',
+            default: 'user',
+            require:true
+        }
+    },
 
 
     cart: [

@@ -17,6 +17,8 @@ const rootReducer = createReducer(initialState, (builder) => {
     .addCase(actions.GETDETAIL.fulfilled, (state, action) => {
       state.detail=action.payload
     })
+    .addCase(actions.CREATEPRODUCT.fulfilled, (state, action) => {
+    })
 
 })
 export default rootReducer

@@ -16,3 +16,8 @@ export const GETDETAIL = createAsyncThunk('GETDETAIL', async (id) => {
     return response.data
 })
 
+export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => {
+    await axios.post(`${api}/products`,input)
+})
+
+
