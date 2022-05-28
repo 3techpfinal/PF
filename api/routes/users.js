@@ -9,7 +9,7 @@ const router = Router();
 // express-validator
 router.post('/signup', auth.signUp); 
 
-// router.post('/login', auth.login);
+router.post('/login', auth.logIn);
 
 
 router.get("/", async (req, res, next) => {
