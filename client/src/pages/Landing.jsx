@@ -19,13 +19,13 @@ const Landing=()=>{
     const dispatch=useDispatch()
     React.useEffect(()=>{
         dispatch(GETPRODUCTS())
-    },[])
+    },[dispatch])
     const products=useSelector((state)=>state.rootReducer.products)
     return(
-        products?
+        products[0]?
             <Container sx={{mt:10}}>
             <NavBar/>
-            <Box sx={{display:'flex'}}>
+            <Box sx={{mt:10}}>
             <Swiper
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 spaceBetween={40}
@@ -43,10 +43,11 @@ const Landing=()=>{
                 </SwiperSlide>)}
                 </Swiper>
             </Box>
-            <Grid container spacing={1} sx={{justifyContent:'center',mt:3}}>
-                <Grid item xs={5} md={3}>
-                    <ProductCard/>
-                </Grid>
+            <Grid container spacing={1} sx={{justifyContent:'center',mt:2}}>
+                {products.map(e=>
+                    <Grid item xs={5} md={3}>
+                        <ProductCard key={e._id} product={e}/>
+                    </Grid>)}
             </Grid>
         </Container>
         :<Loading/>

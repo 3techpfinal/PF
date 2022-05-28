@@ -16,7 +16,7 @@ export default function SearchInput() {
   return (
     <Paper
       component="form"
-      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: {xs:'100%', md:'35vw'}, bgcolor: '#3d3d3d'}}
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: {xs:'100%', md:'35vw'}, bgcolor: '#7a7a7a'}}
       onSubmit={(e) => {
         e.preventDefault()
         dispatch(SEARCHBYNAME(input))

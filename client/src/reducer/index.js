@@ -2,7 +2,8 @@ import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions/index'
 
 const initialState = {
-  products:[]
+  products:[],
+  detail:[]
 }
 
 
@@ -12,6 +13,9 @@ const rootReducer = createReducer(initialState, (builder) => {
     })
     .addCase(actions.GETPRODUCTS.fulfilled, (state, action) => {
       state.products=action.payload
+    })
+    .addCase(actions.GETDETAIL.fulfilled, (state, action) => {
+      state.detail=action.payload
     })
 
 })
