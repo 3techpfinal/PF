@@ -5,14 +5,21 @@ const router = Router();
 
 
 router.post('/', async (req, res) => {
-// queda organizar como enlazar con las categorías 
+    // queda organizar como enlazar con las categorías 
 
     try {
+        const found = await Product.findOne({ name: req.body.name })
 
-        const newProduct = new Product(req.body)
-        await newProduct.save()
+        if (found) {
+            res.send('You can´t post the same product twice')
+        }
+        else {
 
-        res.send(newProduct)
+            const newProduct = new Product(req.body)
+            await newProduct.save()
+
+            res.send(newProduct)
+        }
     } catch (error) {
         next(err)
     }
@@ -35,7 +42,7 @@ router.get('/', async (req, res, next) => {
 router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params
-        const found = await Product.findById({_id:id});
+        const found = await Product.findById({ _id: id });
         res.send(found)
     } catch (err) {
         next(err)
