@@ -3,8 +3,8 @@ import NavBar from "../components/NavBar"
 import { useState } from 'react';
 import { Link ,  useNavigate } from "react-router-dom"
 import { TextField,Container, CardMedia, Box, InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import { useDispatch } from "react-redux";
-import {CREATEPRODUCT} from '../actions'
+import {CREATEPRODUCT,GETCATEGORIES} from '../actions'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -18,14 +18,16 @@ const regex=/^[0-9]+$/
 
 export default function CrearPublicacion() {
 
+
   const dispatch=useDispatch()
-
-  const [input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
-
-  //const [formData,SetFormData]=useState({})//almacena el formulario para luego ser enviado al servidor
+  React.useEffect(()=>{
+      dispatch(GETCATEGORIES())
+  },[dispatch])
+  const categories=useSelector((state)=>state.rootReducer.categories)
+  console.log("categorias:",categories)
+  const[input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
   const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
-
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
 
   const handleUpload= async (e)=>{
@@ -120,7 +122,7 @@ export default function CrearPublicacion() {
         <Box display='flex' justifyContent='center'>
       <div id='formnuevo'>
 
-        <Typography mt={10}>PUBLICAR ARTICULO</Typography>
+        <Typography mt={15}>PUBLICAR ARTICULO</Typography>
 
           <Box
             display='flex' 
@@ -163,16 +165,16 @@ export default function CrearPublicacion() {
               <MenuItem key='select' value='Select'>
                   Select
                 </MenuItem>
-              {currencies.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+              {categories.map((category) => (
+                <MenuItem key={category._id} value={category.name}>
+                  {category.name}
                 </MenuItem>
               ))}
             </TextField>
 
    
 
-            <TextField id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
+            <TextField multiline rows={4} id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
             onChange={(e)=>validate(e)}/>
 
             
@@ -196,6 +198,7 @@ export default function CrearPublicacion() {
                       alt="gf"
                       sx={{objectFit:'contain'}}
                     />
+                     <button onClick={(e)=>{handleDelete(e,image)}}>X</button>
                   </SwiperSlide>
                 )):<></>}
                 </Swiper>

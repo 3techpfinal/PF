@@ -11,6 +11,11 @@ export const GETPRODUCTS = createAsyncThunk('GETPRODUCTS', async () => {
     return response.data
 })
 
+export const GETCATEGORIES = createAsyncThunk('GETCATEGORIES', async () => {
+    const response = await axios(`${api}/categories`)
+    return response.data
+})
+
 export const GETDETAIL = createAsyncThunk('GETDETAIL', async (id) => {
     const response = await axios(`${api}/products/${id}`)
     return response.data

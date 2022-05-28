@@ -21,7 +21,15 @@ import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import color from '../styles'
 import SearchBar from '../ui/SearchInput'
 
-
+const StyledToolbar = styled(Toolbar)(({ theme }) => ({
+  alignItems: 'flex-start',
+  paddingTop: theme.spacing(1),
+  paddingBottom: theme.spacing(1),
+  // Override media queries injected by theme.mixins.toolbar
+  '@media all': {
+    minHeight: 80,
+  },
+}));
 
 
 export default function PrimarySearchAppBar() {
@@ -128,8 +136,8 @@ const handleOpenUserMenu = (event) => {
 
   return (
     <Box sx={{ flexGrow: 1, zIndex: 'tooltip'}} position="fixed" top='0px'>
-      <AppBar sx={{bgcolor:color.color1}}>
-        <Toolbar sx={{justifyContent:'space-between'}}>
+      <AppBar sx={{bgcolor:color.color1}} >
+        <StyledToolbar sx={{justifyContent:'space-between'}}>
           
           <Box>
             <Typography
@@ -145,48 +153,60 @@ const handleOpenUserMenu = (event) => {
           </Box>
 
 
+
           <Box>
             <SearchBar />
+            <Typography
+            variant="h5"
+            noWrap
+            component="div"
+            sx={{ flexGrow:0, alignSelf: 'flex-end' }}
+          >
+            FILTRO
+          </Typography>
+
           </Box>
 
           <Box sx={{display:'flex',alignItems:'center'}}>
-          <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
-                <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                    <Badge badgeContent={2} color="error">
-                        <ShoppingCart />
-                    </Badge>
-                </IconButton>
-            </NavLink>
+            <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
+                  <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                      <Badge badgeContent={2} color="error">
+                          <ShoppingCart />
+                      </Badge>
+                  </IconButton>
+              </NavLink>
 
-          <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-            <IconButton
-              size="large"
-              edge="end"
-              aria-label="account of current user"
-              aria-controls={menuId}
-              aria-haspopup="true"
-              onClick={handleProfileMenuOpen}
-              color="inherit"
-            >
-              <Avatar alt="Remy Sharp" src="https://www.rutanmedellin.org/images/1pruebas/foto-persona.jpg" />
-            </IconButton>
+            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+              <IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
+                <Avatar alt="Remy Sharp" src="https://www.rutanmedellin.org/images/1pruebas/foto-persona.jpg" />
+              </IconButton>
+            </Box>
+
+            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+              <IconButton
+                size="large"
+                aria-label="show more"
+                aria-controls={mobileMenuId}
+                aria-haspopup="true"
+                onClick={handleMobileMenuOpen}
+                color="inherit"
+              >
+                <MoreIcon />
+              </IconButton>
+            </Box>
           </Box>
 
-          <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-            <IconButton
-              size="large"
-              aria-label="show more"
-              aria-controls={mobileMenuId}
-              aria-haspopup="true"
-              onClick={handleMobileMenuOpen}
-              color="inherit"
-            >
-              <MoreIcon />
-            </IconButton>
-          </Box>
-          </Box>
+
           
-        </Toolbar>
+        </StyledToolbar>
       </AppBar>
       {renderMobileMenu}
       {renderMenu}

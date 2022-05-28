@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { CardActionArea,Chip, IconButton,Box,Container } from '@mui/material';
+import { CardActionArea,Chip, IconButton,Box,Container,Tooltip } from '@mui/material';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 // import Swiper core and required modules
@@ -45,12 +45,14 @@ export default function ProductCard({product}) {
             sx={{objectFit:'contain'}}
            />
         <CardContent sx={{bgcolor:'#3d3d3d'}}>
-            <Box sx={{display:'flex',alignItems:'flex-start',justifyContent:'space-between'}}>
-                <Typography gutterBottom variant="h5" sx={{color:'white',fontWeight:'200'}}>
-                    {product.name}
-                </Typography>
-                <Chip label="-10%" sx={{bgcolor:'#9dff00'}}/>
-            </Box>
+            <Tooltip title={product.name} placement="top">
+                <Box sx={{display:'flex',alignItems:'flex-start',justifyContent:'space-between'}}>
+                  <Typography gutterBottom variant="h6" sx={{color:'white',fontWeight:'200'}}>
+                  {product.name.slice(0,15)}
+                  </Typography>
+                  <Chip label="-10%" sx={{bgcolor:'#9dff00'}}/>
+                </Box>
+            </Tooltip>
             <Typography gutterBottom variant="h5" sx={{color:'white',fontWeight:'500'}}>
                     $ {product.price}
             </Typography>
