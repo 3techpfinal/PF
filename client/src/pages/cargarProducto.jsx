@@ -3,7 +3,8 @@ import NavBar from "../components/NavBar"
 import { useState } from 'react';
 import { Link ,  useNavigate } from "react-router-dom"
 import { TextField,Container, CardMedia, Box, InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import Filter from '../ui/FilterByCategory'
+import {CREATEPRODUCT,GETCATEGORIES} from '../actions'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -17,10 +18,16 @@ const regex=/^[0-9]+$/
 
 export default function CrearPublicacion() {
 
-  const [formData,SetFormData]=useState({})//almacena el formulario para luego ser enviado al servidor
+
+  const dispatch=useDispatch()
+  React.useEffect(()=>{
+      dispatch(GETCATEGORIES())
+  },[dispatch])
+  const categories=useSelector((state)=>state.rootReducer.categories)
+  console.log("categorias:",categories)
+  const[input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
   const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
-
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
 
   const handleUpload= async (e)=>{
@@ -71,42 +78,39 @@ export default function CrearPublicacion() {
     },
   ];
 
-  const [input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
+  
 
   const validate=(e)=>{
-    //aca se hacen 2 cosas, se actualiza el valor actual de los inputs y se almacena su valor en formdata
+    
     if(e.target.name==='title'){
       setInput((input)=>({...input,name:e.target.value}))
-      e.target.id="name"
+
     }
     if(e.target.name==='precio'){
       if(regex.test(e.target.value))setInput((input)=>({...input,price:e.target.value}))
-      e.target.id="price"
+
     }
     if(e.target.name==='stock'){
       setInput((input)=>({...input,stock:e.target.value}))
-      e.target.id="stock"
+
     }
     if(e.target.name==='description'){
       setInput((input)=>({...input,description:e.target.value}))
-      e.target.id="description"
+
     }
     if(e.target.name==='category'){
       setInput((input)=>({...input,category:e.target.value}))
-      e.target.id="category"
+
     }
-  
-     //aqui se almacena el valor en formdata, el target.id es el nombre del campo y value es su valor obtenido del event  
-     SetFormData({...formData,[e.target.id]:e.target.value})
+
     }
   
     function handleSubmit(e){
       e.preventDefault()
-          if(images.length>1)images.shift() //elimino el primer valor, que es la foto por defecto
-          const newPost={...formData,imageProduct:images} // se prepara un objeto con los campos del fomrulario y sus imagenes
- *
+          const newPost={...input,imageProduct:images[0]?images:["http://inversionesumbrias.com.ve/static/images/productos/producto-sin-imagen.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
+          dispatch(CREATEPRODUCT(newPost))
           alert("Se creo el Producto exitosamente!")
-          navegar("/home")//se accede al home
+          navegar("/")//se accede al home
           window.location.reload();//se refresca para activar el dispatch de GETPRODUCTS()       
   }
 
@@ -118,7 +122,7 @@ export default function CrearPublicacion() {
         <Box display='flex' justifyContent='center'>
       <div id='formnuevo'>
 
-        <Typography mt={10}>PUBLICAR ARTICULO</Typography>
+        <Typography mt={15}>PUBLICAR ARTICULO</Typography>
 
           <Box
             display='flex' 
@@ -161,16 +165,16 @@ export default function CrearPublicacion() {
               <MenuItem key='select' value='Select'>
                   Select
                 </MenuItem>
-              {currencies.map((option) => (
-                <MenuItem key={option.value} value={option.value}>
-                  {option.label}
+              {categories.map((category) => (
+                <MenuItem key={category._id} value={category.name}>
+                  {category.name}
                 </MenuItem>
               ))}
             </TextField>
 
-            <Filter/>
+   
 
-            <TextField id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
+            <TextField multiline rows={4} id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
             onChange={(e)=>validate(e)}/>
 
             
@@ -194,6 +198,7 @@ export default function CrearPublicacion() {
                       alt="gf"
                       sx={{objectFit:'contain'}}
                     />
+                     <button onClick={(e)=>{handleDelete(e,image)}}>X</button>
                   </SwiperSlide>
                 )):<></>}
                 </Swiper>

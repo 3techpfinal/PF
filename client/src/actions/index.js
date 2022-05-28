@@ -8,6 +8,21 @@ export const SEARCHBYNAME = createAsyncThunk('SEARCHBYNAME', (input) => {
 })
 export const GETPRODUCTS = createAsyncThunk('GETPRODUCTS', async () => {
     const response = await axios(`${api}/products`)
-    console.log(response)
     return response.data
 })
+
+export const GETCATEGORIES = createAsyncThunk('GETCATEGORIES', async () => {
+    const response = await axios(`${api}/categories`)
+    return response.data
+})
+
+export const GETDETAIL = createAsyncThunk('GETDETAIL', async (id) => {
+    const response = await axios(`${api}/products/${id}`)
+    return response.data
+})
+
+export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => {
+    await axios.post(`${api}/products`,input)
+})
+
+
