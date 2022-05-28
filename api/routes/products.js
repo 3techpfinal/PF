@@ -5,8 +5,6 @@ const router = Router();
 
 
 router.post('/', async (req, res) => {
-    // queda organizar como enlazar con las categorías 
-
     try {
         const found = await Product.findOne({ name: req.body.name })
 
@@ -16,6 +14,8 @@ router.post('/', async (req, res) => {
         else {
 
             const newProduct = new Product(req.body)
+            newProduct.setCreationDate();
+
             await newProduct.save()
 
             res.send(newProduct)
@@ -64,7 +64,6 @@ router.put('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         await Product.findByIdAndUpdate({ _id: id }, req.body);
-        // le paso todo el body, el método compara y cambia todo automáticamente
         const updatedProduct = await Product.findById({ _id: id })
         res.send(updatedProduct)
     } catch (err) {
