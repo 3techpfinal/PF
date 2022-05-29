@@ -3,9 +3,7 @@ import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 //const { URL } = process.env
 const api='http://localhost:3000'
 
-export const SEARCHBYNAME = createAsyncThunk('SEARCHBYNAME', (input) => {
-    console.log(input)
-})
+
 export const GETPRODUCTS = createAsyncThunk('GETPRODUCTS', async () => {
     const response = await axios(`${api}/products`)
     return response.data
@@ -25,4 +23,25 @@ export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => 
     await axios.post(`${api}/products`,input)
 })
 
+
+export const SEARCHBYNAME=createAsyncThunk('SEARCHBYNAME',async (name)=>{
+    const result=await axios(`${api}/products?name=${name}`) 
+    return result.data
+})
+
+export const SEARCHBYCATEGORY=createAsyncThunk('SEARCHBYCATEGORY',async (name)=>{
+    const result=await axios(`${api}/products?filterName=category&filterOrder=${name?.toLocaleLowerCase()}&names=stock&sort=1`) 
+    return result.data
+})
+
+export const ORDERBYPRICE=createAction('ORDERBYPRICE',(order)=>{
+    return {
+        payload:order
+    }
+})
+
+
+
+
+  
 

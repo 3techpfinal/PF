@@ -20,6 +20,8 @@ import { NavLink,Link, useLocation } from 'react-router-dom';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import color from '../styles'
 import SearchBar from '../ui/SearchInput'
+import FilterCategory from './FilterCategory'
+import { Container } from '@mui/system';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
@@ -135,7 +137,9 @@ const handleOpenUserMenu = (event) => {
   );
 
   return (
-    <Box sx={{ flexGrow: 1, zIndex: 'tooltip'}} position="fixed" top='0px'>
+<>
+   
+    <Container sx={{ flexGrow: 1, zIndex: 'tooltip'}} position="fixed" top='0px'>
       <AppBar sx={{bgcolor:color.color1}} >
         <StyledToolbar sx={{justifyContent:'space-between'}}>
           
@@ -154,18 +158,17 @@ const handleOpenUserMenu = (event) => {
 
 
 
-          <Box>
+          <Container>
             <SearchBar />
-            <Typography
-            variant="h5"
-            noWrap
-            component="div"
-            sx={{ flexGrow:0, alignSelf: 'flex-end' }}
-          >
-            FILTRO
-          </Typography>
+            <Container sx={{m:1,display:'flex',flexDirection:'row'}}>
+              <Typography variant="body2">
+                Categorias
+              </Typography>
+              <FilterCategory/>
+            </Container>
 
-          </Box>
+          </Container>
+          
 
           <Box sx={{display:'flex',alignItems:'center'}}>
             <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
@@ -210,6 +213,7 @@ const handleOpenUserMenu = (event) => {
       </AppBar>
       {renderMobileMenu}
       {renderMenu}
-    </Box>
+    </Container>
+    </>
   );
 }
