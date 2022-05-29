@@ -81,7 +81,11 @@ const ProductDetails=()=>{
                                 </IconButton>
                             </Box>
                             <Typography variant='h5' sx={{mt:1,fontWeight:12}}>$ {product.price+' '} <Chip label="-10%" sx={{bgcolor:color.color2}}/></Typography>
-                            <Typography overflow={'auto'} variant='body1' sx={{mt:2,maxHeight:100}}>{product.description}</Typography>
+                            
+                            <Typography overflow={'auto'} variant='body1' sx={{mt:2,maxHeight:200}}>{product.description}</Typography>
+
+
+                            
                         </Box>
                     </Box>
                     <Box sx={{flexDirection:'column',p:0}}>
