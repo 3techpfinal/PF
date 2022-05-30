@@ -20,11 +20,15 @@ export default function FilterByCategory() {
 
     async function handleFilterCategory(e) {
       
-      e.target.value==="Todos"? 
+
+      if(e.target.value==="Todos") {
       dispatch(GETPRODUCTS())
-      :
-      dispatch(SEARCHBYCATEGORY(e.target.value))
       if(location!=='/')navigate('/')
+    }
+      else{
+      dispatch(SEARCHBYCATEGORY(e.target.value))
+
+      if(location!=='/')navigate('/')}
     }
 
 
@@ -42,7 +46,9 @@ export default function FilterByCategory() {
         name='category'
         sx={{ height:24,bgcolor:color.color3 }}
       >
-          <MenuItem key='select' value='Todos'>Todos</MenuItem>
+          <MenuItem key='select' value='Todos' onClick={(e)=>{
+            dispatch(GETPRODUCTS())
+            if(location!=='/')navigate('/')}}>Todos</MenuItem>
               {categories.map((category) => (
                 <MenuItem key={category._id} name={category.name} value={category._id}>
                   {category.name}

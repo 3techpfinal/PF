@@ -12,6 +12,8 @@ router.post('/', async (req, res) => {
             res.send('You can´t post the same product twice')
         }
         else {
+
+
         const newProduct = new Product(req.body)
         newProduct.category = [req.body.category]
         await newProduct.save()
