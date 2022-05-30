@@ -2,7 +2,7 @@ import React from "react";
 import NavBar from "../components/NavBar"
 import { useState } from 'react';
 import { Link ,  useNavigate } from "react-router-dom"
-import { TextField,Container, CardMedia, Box, InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
+import { TextField,Select,Container, CardMedia, Box, InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
 import {CREATEPRODUCT,GETCATEGORIES} from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -24,7 +24,6 @@ export default function CrearPublicacion() {
       dispatch(GETCATEGORIES())
   },[dispatch])
   const categories=useSelector((state)=>state.rootReducer.categories)
-  console.log("categorias:",categories)
   const[input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
   const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
@@ -59,27 +58,6 @@ export default function CrearPublicacion() {
   }
 
 
-  const currencies = [
-    {
-      value: 'tecnologia',
-      label: 'Tecnologia',
-    },
-    {
-      value: 'ropa',
-      label: 'Ropa',
-    },
-    {
-      value: 'cuidado personal',
-      label: 'Cuidado Personal',
-    },
-    {
-      value: 'deporte',
-      label: 'Deportes',
-    },
-  ];
-
-  
-
   const validate=(e)=>{
     
     if(e.target.name==='title'){
@@ -100,7 +78,6 @@ export default function CrearPublicacion() {
     }
     if(e.target.name==='category'){
       setInput((input)=>({...input,category:e.target.value}))
-
     }
 
     }
@@ -154,7 +131,7 @@ export default function CrearPublicacion() {
               min="1" max="100" type="number"/>
 
 
-            <TextField
+            <Select
               id="formcats"
               select
               label="Categorias"
@@ -162,15 +139,15 @@ export default function CrearPublicacion() {
               onChange={(e)=>validate(e)}
               name='category'
             >
-              <MenuItem key='select' value='Select'>
+                <MenuItem key='select' value='Select'>
                   Select
                 </MenuItem>
-              {categories.map((category) => (
-                <MenuItem key={category._id} value={category.name}>
+                  {categories.map((category) => (
+                <MenuItem key={category._id} value={category._id}>
                   {category.name}
                 </MenuItem>
               ))}
-            </TextField>
+            </Select>
 
    
 

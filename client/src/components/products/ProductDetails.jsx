@@ -74,7 +74,7 @@ const ProductDetails=()=>{
                             <Box sx={{display:'flex',justifyContent:'space-between'}}>
                                 <Typography sx={{fontSize:{xs:30}}}>{product.name}</Typography>
                                 <IconButton 
-                                sx={{bgcolor:color.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black'}}
+                                sx={{bgcolor:color.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
                                 onClick={()=>alert('Proximamente')}>
                                     Agregar al carrito 
                                     <AddShoppingCartIcon sx={{ml:1}}/>

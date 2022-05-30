@@ -30,6 +30,7 @@ const userSchema = new Schema({
         default: 'user'
     },
 
+
     cart: [
         {
             type: Schema.Types.ObjectId,
