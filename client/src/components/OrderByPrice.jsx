@@ -15,7 +15,7 @@ export default function FilterByCategory() {
 
 
   return (
-    <Box sx={{ maxWidth: 600,display:'flex',flexDirection:"row"}} >
+    <Box sx={{display:'flex',flexDirection:"row",justifyContent:'flex-end',m:2}} >
       
       <Typography>Ordenar por:</Typography>
       <FormControl>
@@ -28,7 +28,7 @@ export default function FilterByCategory() {
           setSelectValue(()=>e.target.value)
         }}
         name='category'
-        sx={{ height:24 }}
+        sx={{ height:24,ml:2 }}
       >
           <MenuItem disabled value="inicial">
             <em>Seleccionar</em>

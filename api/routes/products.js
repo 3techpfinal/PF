@@ -5,15 +5,23 @@ const router = Router();
 
 
 router.post('/', async (req, res) => {
-// queda organizar como enlazar con las categorías 
-
     try {
+        const found = await Product.findOne({ name: req.body.name })
+
+        if (found) {
+            res.send('You can´t post the same product twice')
+        }
+        else {
+
+            const newProduct = new Product(req.body)
+            newProduct.setCreationDate();
 
         const newProduct = new Product(req.body)
         newProduct.category = [req.body.category]
         await newProduct.save()
 
-        res.send(newProduct)
+            res.send(newProduct)
+        }
     } catch (error) {
         next(err)
     }
@@ -26,7 +34,7 @@ router.get("/", async (req, res,next) => {
     if(name){
         //http://localhost:3000/products?name=buzo
         try {
-            const productName = await Product.find({ name: {$regex: req.query.name, $options:'i'}})
+            const productName = await Product.find({ name: {$regex: req.query.name, $options:'i'}}).populate(["category"])
             return productName.length === 0 ? res.send("product not found") : res.json(productName)
             } catch (error) {
             next(error)
@@ -44,7 +52,7 @@ router.get("/", async (req, res,next) => {
                  const objOrder = {}
                 objOrder[names] = sort
                 
-                const product = await Product.find(objFilter).sort(objOrder)
+                const product = await Product.find(objFilter).sort(objOrder).populate(["category"])
                 res.json(product.length === 0? "not found product1" : product)
             
             } else {
@@ -58,7 +66,7 @@ router.get("/", async (req, res,next) => {
         
         try {
             //http://localhost:3000/products
-            const allProduct  = await Product.find({})
+            const allProduct = await Product.find({}).populate(["category"]);
             return res.json(allProduct)
         } catch (error) {
             next(error)
@@ -71,7 +79,7 @@ router.get("/", async (req, res,next) => {
 router.get('/:id', async (req, res, next) => {
     try {
         const { id } = req.params
-        const found = await Product.findById({_id:id});
+        const found = await Product.findById({ _id: id });
         res.send(found)
     } catch (err) {
         next(err)
@@ -93,7 +101,6 @@ router.put('/:id', async (req, res, next) => {
     try {
         const { id } = req.params;
         await Product.findByIdAndUpdate({ _id: id }, req.body);
-        // le paso todo el body, el método compara y cambia todo automáticamente
         const updatedProduct = await Product.findById({ _id: id })
         res.send(updatedProduct)
     } catch (err) {

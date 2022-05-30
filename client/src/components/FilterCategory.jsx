@@ -4,8 +4,13 @@ import { Divider,Box, TextField,Rating,FormControlLabel,Switch,FormControl,Selec
 import {GETCATEGORIES,SEARCHBYCATEGORY,GETPRODUCTS} from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { maxHeight } from '@mui/system';
+import color from '../styles'
+import {useLocation, useNavigate } from 'react-router-dom';
 
 export default function FilterByCategory() {
+    const [sValue,setSvalue]=React.useState('Todos')
+    const location=useLocation()
+    const navigate=useNavigate()
 
     const dispatch=useDispatch()
     React.useEffect(()=>{
@@ -14,27 +19,32 @@ export default function FilterByCategory() {
     const categories=useSelector((state)=>state.rootReducer.categories)
 
     async function handleFilterCategory(e) {
+      
       e.target.value==="Todos"? 
       dispatch(GETPRODUCTS())
       :
-      dispatch(SEARCHBYCATEGORY(e.target.value));
+      dispatch(SEARCHBYCATEGORY(e.target.value))
+      if(location!=='/')navigate('/')
     }
 
 
   return (
-    <Box sx={{ maxWidth: 1 }}>
+    <Box sx={{minWidth:100}}>
       <FormControl fullWidth>
       <Select
         id="demo-simple-select"
        
-        value={"select"}
-        onChange={(e) => handleFilterCategory(e)}
+        value={sValue}
+        onChange={(e) => {
+          setSvalue(()=>e.target.value)
+          handleFilterCategory(e)
+        }}
         name='category'
-        sx={{ height:24 }}
+        sx={{ height:24,bgcolor:color.color3 }}
       >
           <MenuItem key='select' value='Todos'>Todos</MenuItem>
               {categories.map((category) => (
-                <MenuItem key={category._id} value={category._id}>
+                <MenuItem key={category._id} name={category.name} value={category._id}>
                   {category.name}
                 </MenuItem>
               ))}
