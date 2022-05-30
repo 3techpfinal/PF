@@ -1,6 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import * as encrypter from '../helpers/encrypter.js'
+import credentials from '../credentials.js';
 
 
 
@@ -8,7 +9,7 @@ export const signUp = async (req, res, next) => {
     const { name, lastName, email, password } = req.body
 
     try {
-        const found = await User.find({ userEmail });
+        const found = await User.find({ email });
 
         if (found.length > 0) {
             res.send('There is an account already created with this email')
@@ -49,11 +50,10 @@ export const logIn = async (req, res) => {
     // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
     // if(!found.verified) return res.status(401).json({message : 'You need to verify your account first.'})
 
-    const matchPassword = await comparePasswords(password, found.password);
+    const matchPassword = await encrypter.comparePasswords(password, found.password);
 
     if (!matchPassword) return res.status(401).json({ message: 'Incorrect password' })
-
-    const token = jwt.sign({ id: found._id }, config.SECRET_JWT, { expiresIn: 86400 })
+    const token = jwt.sign({ id: found._id },  credentials.JWT_SECRET, { expiresIn: 86400 })
 
     // lo mando para que el Front lo capte y guarde, cookies, localStorage, reducer, donde sea más cómodo
     // https://rajaraodv.medium.com/securing-react-redux-apps-with-jwt-tokens-fcfe81356ea0

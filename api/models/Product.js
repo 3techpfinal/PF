@@ -39,9 +39,8 @@ const productSchema = new Schema({
     },
     
     category: {
-        type: String,
-        ref: "Category",
-        required: true
+        type: Schema.Types.ObjectId,
+        ref: 'Category'
     },
 
     inCart: {
