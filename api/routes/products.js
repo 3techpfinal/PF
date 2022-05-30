@@ -16,7 +16,9 @@ router.post('/', async (req, res) => {
             const newProduct = new Product(req.body)
             newProduct.setCreationDate();
 
-            await newProduct.save()
+        const newProduct = new Product(req.body)
+        newProduct.category = [req.body.category]
+        await newProduct.save()
 
             res.send(newProduct)
         }
@@ -25,17 +27,52 @@ router.post('/', async (req, res) => {
     }
 });
 
+router.get("/", async (req, res,next) => {
 
+    const {name, names, sort, filterName, filterOrder} = req.query
+    
+    if(name){
+        //http://localhost:3000/products?name=buzo
+        try {
+            const productName = await Product.find({ name: {$regex: req.query.name, $options:'i'}}).populate(["category"])
+            return productName.length === 0 ? res.send("product not found") : res.json(productName)
+            } catch (error) {
+            next(error)
+        }
+    } 
 
-
-
-router.get('/', async (req, res, next) => {
-    try {
-        const allProducts = await Product.find({});
-        res.send(allProducts)
-    } catch (err) {
-        next(err)
+    else if(names || sort || filterName || filterOrder) {
+        try {
+           //http://localhost:3000/products?filterName=name&filterOrder=buzo&names=stock&sort=1
+            if (typeof(names) === 'string' && typeof(filterName) === 'string' ) {
+                
+                const objFilter= {}
+                objFilter[filterName] = filterOrder
+              
+                 const objOrder = {}
+                objOrder[names] = sort
+                
+                const product = await Product.find(objFilter).sort(objOrder).populate(["category"])
+                res.json(product.length === 0? "not found product1" : product)
+            
+            } else {
+                res.send("not found product2")
+            }
+           
+        } catch (error) {
+            next(error)
+        }
+    }else {
+        
+        try {
+            //http://localhost:3000/products
+            const allProduct = await Product.find({}).populate(["category"]);
+            return res.json(allProduct)
+        } catch (error) {
+            next(error)
+        }
     }
+   
 });
 
 

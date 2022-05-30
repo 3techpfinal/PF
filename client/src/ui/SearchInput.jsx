@@ -5,8 +5,10 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import { useDispatch } from 'react-redux';
 import { SEARCHBYNAME } from '../actions';
+import { useNavigate } from 'react-router-dom';
 
 export default function SearchInput() {
+  const navigate=useNavigate()
   const dispatch = useDispatch()
   const [input, setInput] = React.useState('')
 
@@ -16,10 +18,12 @@ export default function SearchInput() {
   return (
     <Paper
       component="form"
-      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: {xs:'100%', md:'35vw'}, bgcolor: '#3d3d3d'}}
+      sx={{ p: '2px 4px', display: 'flex', alignItems: 'center', width: {xs:'100%', md:'35vw'}, bgcolor: '#7a7a7a'}}
       onSubmit={(e) => {
         e.preventDefault()
         dispatch(SEARCHBYNAME(input))
+        navigate('/')
+        setInput(()=>'')
       }}
     >
       <InputBase
