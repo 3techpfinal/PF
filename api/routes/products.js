@@ -13,8 +13,6 @@ router.post('/', async (req, res) => {
         }
         else {
 
-            const newProduct = new Product(req.body)
-            newProduct.setCreationDate();
 
         const newProduct = new Product(req.body)
         newProduct.category = [req.body.category]
