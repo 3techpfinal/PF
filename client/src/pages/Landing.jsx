@@ -43,7 +43,7 @@ const Landing=()=>{
                     {categories.map(e=><SwiperSlide>
                         <CardMedia
                         component="img"
-                        height="400"
+                        height="300"
                         image={e}
                         alt="gf"
                         sx={{objectFit:'cover'}}
