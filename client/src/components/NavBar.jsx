@@ -165,8 +165,7 @@ const handleOpenUserMenu = (event) => {
           <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
             <SearchBar />
           </Box>
-          
-
+        
           <Box sx={{display:'flex',alignItems:'center'}}>
             <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
                   <IconButton size="large" aria-label="show 4 new mails" color="inherit">

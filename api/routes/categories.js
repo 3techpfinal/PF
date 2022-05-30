@@ -1,11 +1,10 @@
 import { Router } from 'express';
 import Category from '../models/Category.js';
-
+import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 
 const router = Router();
 
-
-router.post('/', async(req,res,next)=>{
+router.post('/', [verifyToken, isAdmin], async(req,res,next)=>{
     const { name } = req.body;
 
     try {
@@ -42,12 +41,7 @@ router.get("/:id", async (req,res,next) => {
 });
 
 
-router.delete('/:id', async (req, res, next) => {
-
-    // el ban se logra quitando acceso temporal a la cuenta, habría que hacer una copia en otro esquema inaccesible, cosa de guardar los datos
-    // front pregunta si confirma x acción
-
-    // esto es permaban, ojo
+router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
     try {
         const { id } = req.params;
         const found = await Category.findByIdAndRemove({ _id: id })
@@ -57,12 +51,12 @@ router.delete('/:id', async (req, res, next) => {
     }
 });
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', [verifyToken, isAdmin], async (req, res, next) => {
     try {
         const { id } = req.params;
-        await Product.findByIdAndUpdate({ _id: id }, req.body);
-        const updatedProduct = await Product.findById({ _id: id })
-        res.send(updatedProduct)
+        await Category.findByIdAndUpdate({ _id: id }, req.body);
+        const updatedCategory = await Category.findById({ _id: id })
+        res.send(updatedCategory)
     } catch (err) {
         next(err)
     }

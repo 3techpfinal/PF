@@ -3,6 +3,7 @@ import { Container } from '@mui/system'
 import * as React from 'react'
 import ProductCard from '../components/products/ProductCard'
 import NavBar from '../components/NavBar'
+import NavBar2 from '../components/NavBar2'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -95,7 +96,6 @@ const Landing=()=>{
             </Container>
 
         :<Loading/> 
-   
     )
 }
 

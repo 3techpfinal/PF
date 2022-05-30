@@ -24,7 +24,6 @@ export default function CrearPublicacion() {
       dispatch(GETCATEGORIES())
   },[dispatch])
   const categories=useSelector((state)=>state.rootReducer.categories)
-
   const[input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
   const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"

@@ -23,7 +23,6 @@ export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => 
     await axios.post(`${api}/products`,input)
 })
 
-
 export const SEARCHBYNAME=createAsyncThunk('SEARCHBYNAME',async (name)=>{
     const result=await axios(`${api}/products?name=${name}`) 
     return result.data
@@ -41,7 +40,4 @@ export const ORDERBYPRICE=createAction('ORDERBYPRICE',(order)=>{
 })
 
 
-
-
-  
 
