@@ -6,6 +6,7 @@ import Prueba from '../src/pages/pruebaDeComponentes'
 import CargarProducto from './pages/cargarProducto'
 import ProductDetails from './components/products/ProductDetails';
 import Loading from './pages/Loading';
+import LoginGoogle from '../../client/src/components/LoginGoogle'
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route path='/cargarproducto' element={<CargarProducto/>}/>
       <Route path='/product/:id' element={<ProductDetails/>}/>
       <Route path='/loading' element={<Loading/>}/>
+      <Route path='/logingoogle' element={<LoginGoogle/>}/>
     </Routes>
   );
 }
