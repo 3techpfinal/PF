@@ -30,7 +30,6 @@ const OrderByPrice=(state,action)=>{
               });
 
         return sortedProductsByPrice
-        
 }
 
 
