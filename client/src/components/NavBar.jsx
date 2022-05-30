@@ -22,6 +22,9 @@ import color from '../styles'
 import SearchBar from '../ui/SearchInput'
 import FilterCategory from './FilterCategory'
 import { Container } from '@mui/system';
+import { Divider } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { GETPRODUCTS } from '../actions';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
@@ -29,13 +32,13 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   paddingBottom: theme.spacing(1),
   // Override media queries injected by theme.mixins.toolbar
   '@media all': {
-    minHeight: 80,
+    minHeight: 30,
   },
 }));
 
 
 export default function PrimarySearchAppBar() {
-  const location=useLocation()
+  const dispatch=useDispatch()
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 const handleOpenUserMenu = (event) => {
   setAnchorElUser(event.currentTarget);
@@ -141,7 +144,7 @@ const handleOpenUserMenu = (event) => {
    
     <Container sx={{ flexGrow: 1, zIndex: 'tooltip'}} position="fixed" top='0px'>
       <AppBar sx={{bgcolor:color.color1}} >
-        <StyledToolbar sx={{justifyContent:'space-between'}}>
+        <StyledToolbar sx={{justifyContent:'space-between',alignItems:'center',height:30,mt:1}}>
           
           <Box>
             <Typography
@@ -149,6 +152,7 @@ const handleOpenUserMenu = (event) => {
               noWrap
               component="div"
               sx={{ display: { xs:'block',textDecoration:'none' } }}
+              onClick={()=>dispatch(GETPRODUCTS())}
             >
               <Link to='/'>
               3TECH
@@ -158,16 +162,9 @@ const handleOpenUserMenu = (event) => {
 
 
 
-          <Container>
+          <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
             <SearchBar />
-            <Container sx={{m:1,display:'flex',flexDirection:'row'}}>
-              <Typography variant="body2">
-                Categorias
-              </Typography>
-              <FilterCategory/>
-            </Container>
-
-          </Container>
+          </Box>
           
 
           <Box sx={{display:'flex',alignItems:'center'}}>
@@ -210,6 +207,11 @@ const handleOpenUserMenu = (event) => {
 
           
         </StyledToolbar>
+        <Divider sx={{bgcolor:color.color3,m:1}}/>
+        <Box sx={{display:'flex',justifyContent:'center',mb:1,alignItems:'center'}}>
+          <Typography variant='body2' sx={{mr:2}}>Categorias: </Typography>
+          <FilterCategory/>
+        </Box>
       </AppBar>
       {renderMobileMenu}
       {renderMenu}

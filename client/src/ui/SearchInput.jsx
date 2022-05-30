@@ -5,8 +5,10 @@ import IconButton from '@mui/material/IconButton';
 import SearchIcon from '@mui/icons-material/Search';
 import { useDispatch } from 'react-redux';
 import { SEARCHBYNAME } from '../actions';
+import { useNavigate } from 'react-router-dom';
 
 export default function SearchInput() {
+  const navigate=useNavigate()
   const dispatch = useDispatch()
   const [input, setInput] = React.useState('')
 
@@ -20,6 +22,8 @@ export default function SearchInput() {
       onSubmit={(e) => {
         e.preventDefault()
         dispatch(SEARCHBYNAME(input))
+        navigate('/')
+        setInput(()=>'')
       }}
     >
       <InputBase
