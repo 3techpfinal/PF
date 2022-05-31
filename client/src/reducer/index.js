@@ -37,26 +37,31 @@ const rootReducer = createReducer(initialState, (builder) => {
   builder
 
     .addCase(actions.GETPRODUCTS.fulfilled, (state, action) => {
+      state.products=[]
       state.products=action.payload
     })
     .addCase(actions.GETCATEGORIES.fulfilled, (state, action) => {
       state.categories=action.payload
     })
     .addCase(actions.GETDETAIL.fulfilled, (state, action) => {
+      state.detail=[]
       state.detail=action.payload
     })
     .addCase(actions.CREATEPRODUCT.fulfilled, (state, action) => {
     })
     .addCase(actions.SEARCHBYNAME.fulfilled, (state, action) => {
+      state.products=[]
       state.products=action.payload
     })
     .addCase(actions.SEARCHBYCATEGORY.fulfilled, (state, action) => {
+      state.products=[]
       state.products=action.payload 
     })
 
     .addCase(actions.ORDERBYPRICE, (state, action) => {
-        const sortedProductsByPrice = OrderByPrice(state,action)
-        state.products=sortedProductsByPrice
+      const sortedProductsByPrice = OrderByPrice(state,action)
+      state.products=[]
+      state.products=sortedProductsByPrice
     })
 
 

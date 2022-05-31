@@ -1,7 +1,7 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import * as encrypter from '../helpers/encrypter.js'
-import credentials from '../credentials.js';
+
 
 
 
@@ -53,7 +53,7 @@ export const logIn = async (req, res) => {
     const matchPassword = await encrypter.comparePasswords(password, found.password);
 
     if (!matchPassword) return res.status(401).json({ message: 'Incorrect password' })
-    const token = jwt.sign({ id: found._id },  credentials.JWT_SECRET, { expiresIn: 86400 })
+    const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
 
     // lo mando para que el Front lo capte y guarde, cookies, localStorage, reducer, donde sea más cómodo
     // https://rajaraodv.medium.com/securing-react-redux-apps-with-jwt-tokens-fcfe81356ea0
