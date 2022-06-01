@@ -12,33 +12,37 @@ import { NavLink } from 'react-router-dom';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import color from '../styles'
+import { useAuth0 } from "@auth0/auth0-react";
+import Loading from './Loading'
 
 
 const Profile=()=>{
     //const dispatch=useDispatch()
-    //const user=useSelector((state)=>state.rootReducer.user)
-    const user={
-        _id:231213213,
-        avatar:'',
-        name:'Nico A',
-        email:'nico@mail.com',
-        adress:'avprueba',
-        city:'tucu',
-        country:'arg',
-        phone:'4324',
-        cuil:'324324'}
-
-    const [field,setField]=useState({
-        _id:user._id,
-        avatar:user.avatar,
-        name:user.name,
-        email: user.email,
-        adress:user.adress,
-        city:user.city,
-        country:user.country,
-        phone:user.phone,
-        cuil:user.cuil
-    })
+    const {user}=useAuth0()
+    // const user={
+    //     _id:231213213,
+    //     avatar:'',
+    //     name:'Nico A',
+    //     email:'nico@mail.com',
+    //     adress:'avprueba',
+    //     city:'tucu',
+    //     country:'arg',
+    //     phone:'4324',
+    //     cuil:'324324'}
+    const [field,setField]=useState({})
+    React.useEffect(()=>{
+        setField({
+            // _id:user._id,
+             avatar:user?.picture,
+             name:user?.name,
+             email: user?.email,
+             adress:user?.adress,
+             city:user?.city,
+             country:user?.country,
+             phone:user?.phone,
+             cuil:user?.cuil
+         })
+    },[user])
     const [editable,setEditable]=useState({
         avatar:false,
         name:false,
@@ -62,7 +66,7 @@ const Profile=()=>{
     }
 
     return(
-        <Box>
+        user?<Box>
             <NavBar/>
             <Box sx={{mt:15,mb:3,marginX:{xs:3,md:'25%'},p:3,borderRadius:3,boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',
             display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
@@ -74,8 +78,8 @@ const Profile=()=>{
                     <Typography variant='body2' sx={{fontWeight:20,mt:0,ml:1,color:'black'}}>Mis Compras</Typography>
                 </IconButton>
             </Box>
-            <Avatar sx={{height:200,width:200}}alt='Nico A'/>
-            <Typography variant='h5' sx={{fontWeight:20,m:2}}>Nico Amicone</Typography>
+            <Avatar sx={{height:200,width:200}} alt={user.name} src={user.picture}/>
+            <Typography variant='h5' sx={{fontWeight:20,m:2}}>{user.given_name}</Typography>
 
             <Divider flexItem/>
 
@@ -177,7 +181,7 @@ const Profile=()=>{
             </Box>
 
             </Box>
-        </Box>
+        </Box>:<Loading/>
     )
 }
 

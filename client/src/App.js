@@ -7,6 +7,10 @@ import CargarProducto from './pages/cargarProducto'
 import ProductDetails from './components/products/ProductDetails';
 import Loading from './pages/Loading';
 import Profile from './pages/Profile'
+import LoginGoogle from '../../client/src/components/LoginGoogle'
+import LoginButton from '../src/components/Login.jsx'
+
+import { useAuth0 } from "@auth0/auth0-react";
 
 function App() {
   return (
@@ -20,6 +24,7 @@ function App() {
       <Route path='/product/:id' element={<ProductDetails/>}/>
       <Route path='/loading' element={<Loading/>}/>
       <Route path='/profile' element={<Profile/>}/>
+      <Route path='/login' element={<LoginButton/>}/>
     </Routes>
   );
 }

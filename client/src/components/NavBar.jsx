@@ -26,6 +26,8 @@ import { Divider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { GETPRODUCTS,SEARCHBYCATEGORY } from '../actions';
 
+import { useAuth0 } from "@auth0/auth0-react";
+
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
   paddingTop: theme.spacing(1),
@@ -39,6 +41,9 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 export default function PrimarySearchAppBar() {
   const categories=useSelector((state)=>state.rootReducer.categories)
+
+  const { user, isAuthenticated, isLoading } = useAuth0();
+  console.log('usuario: ',user)
   const dispatch=useDispatch()
   const navigate=useNavigate()
   const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -187,7 +192,7 @@ const handleOpenUserMenu = (event) => {
                 onClick={handleProfileMenuOpen}
                 color="inherit"
               >
-                <Avatar alt="Remy Sharp" src="https://www.rutanmedellin.org/images/1pruebas/foto-persona.jpg" />
+                <Avatar alt="Remy Sharp" src={user?.picture} />
               </IconButton>
             </Box>
 
