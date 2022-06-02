@@ -3,7 +3,6 @@ import { Container } from '@mui/system'
 import * as React from 'react'
 import ProductCard from '../components/products/ProductCard'
 import NavBar from '../components/NavBar'
-import NavBar2 from '../components/NavBar2'
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -16,6 +15,7 @@ import Loading from './Loading'
 import OrderByPrice from '../components/OrderByPrice'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
+import color from '../styles'
 
 const categories=['https://cdn.forbes.pe/2022/05/CELULARES.jpg','https://www.lifeder.com/wp-content/uploads/2016/11/video-juegos-1.jpg']
 
@@ -61,13 +61,18 @@ const Landing=()=>{
                     height={50}
                 >
                     {categories.map(e=><SwiperSlide>
+                        <Box sx={{display:'flex',flexDirection:'row'}}>
+                            <Box sx={{bgcolor:color.color3,width:'30%',display:'flex',justifyContent:'center',alignItems:'center'}}>
+                                <Typography variant='h3' sx={{fontWeight:20}}>Celulares</Typography>
+                            </Box>
                         <CardMedia
                         component="img"
-                        height="300"
+                        height="350"
                         image={e}
                         alt="gf"
                         sx={{objectFit:'cover'}}
                         />
+                        </Box>
                 </SwiperSlide>)}
                     </Swiper>
                 </Box>

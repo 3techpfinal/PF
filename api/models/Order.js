@@ -46,9 +46,9 @@ const orderSchema = new Schema({
 
 
 
-orderSchema.method.setCreationDate = function () {
-    const formatedDate = format(date.now, 'dd/MM/yyyy')
-    this.productCreationDate = formatedDate
+orderSchema.methods.setCreationDate = function () {
+    const formatedDate = format(new Date(), 'yyyy/MM/dd')
+    this.creationDate = formatedDate
     return
 }
 

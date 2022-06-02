@@ -25,8 +25,8 @@ const cartSchema = new Schema({
 });
 
 cartSchema.methods.setCreationDate = function(){
-    const formatedDate = format(new Date(), 'dd/MM/yyyy')
-    this.userCreationDate = formatedDate
+    const formatedDate = format(new Date(), 'yyyy/MM/dd')
+    this.creationDate = formatedDate
     return
 }
 
