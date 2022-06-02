@@ -1,18 +1,19 @@
 import { Router } from 'express';
 import User from '../models/User.js';
-import * as encrypter from '../helpers/encrypter.js'
-import * as auth from '../middlewares/auth.js'
+import {encryptPassword} from '../helpers/encrypter.js'
+import {signUp, logIn}from '../middlewares/auth.js'
+import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 const router = Router();
 
 
 //A la espera del sigUp y logIn => JWT, la asignación y verificación de roles
 // express-validator
-router.post('/signup', auth.signUp); 
+router.post('/signup', signUp); 
 
-router.post('/login', auth.logIn);
+router.post('/login', logIn);
 
 
-router.get("/", async (req, res, next) => {
+router.get("/", [verifyToken, isAdmin], async (req, res, next) => {
     try {
         const users = await User.find()
         res.json(users)
@@ -35,7 +36,7 @@ router.get("/:id", async (req,res,next) => {
 });
 
 
-router.delete('/:id', async (req, res, next) => {
+router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
 
     // el ban se logra quitando acceso temporal a la cuenta, habría que hacer una copia en otro esquema inaccesible, cosa de guardar los datos
     // front pregunta si confirma x acción
@@ -50,12 +51,13 @@ router.delete('/:id', async (req, res, next) => {
     }
 });
 
-router.put('/:id', async (req, res, next) => {
+router.put('/:id', verifyToken, async (req, res, next) => {
     try {
         const { id } = req.params;
+        if(req.body.role || req.body.roles) return res.status(403).json({message : 'Unauthorized action'})
         if (req.body.password) {
             // defino si el valor es password para darle un tratamientoo específico
-            const encryptedPassword = await encrypter.encryptPassword(req.body.password)
+            const encryptedPassword = await encryptPassword(req.body.password)
             await User.findByIdAndUpdate(id, { $set:{password : encryptedPassword}});
             const updatedUser = await User.findById({ _id: id })
             return res.send(updatedUser)

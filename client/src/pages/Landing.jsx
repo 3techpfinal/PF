@@ -3,7 +3,7 @@ import { Container } from '@mui/system'
 import * as React from 'react'
 import ProductCard from '../components/products/ProductCard'
 import NavBar from '../components/NavBar'
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Autoplay,Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -19,30 +19,31 @@ import '@fontsource/roboto/500.css';
 const categories=['https://cdn.forbes.pe/2022/05/CELULARES.jpg','https://www.lifeder.com/wp-content/uploads/2016/11/video-juegos-1.jpg']
 
 const Landing=()=>{
+
+
     const [nameCatg,setNameCatg]=React.useState('Productos')
     const dispatch=useDispatch()
 
     
     let products=useSelector((state)=>state.rootReducer.products)
-
+    console.log("productos", products)
     React.useEffect(()=>{
         if(!products[0])dispatch(GETPRODUCTS())
     },[dispatch])
 
     
-    console.log("productos", products)
     
-    React.useEffect(()=>{
-            
+    
+    React.useEffect(()=>{      
             var inicial='Productos'
-            if(typeof products === "string")return setNameCatg(()=>inicial)
+            if(typeof products === "string")return setNameCatg(()=>inicial)//si es string es porque el back tira error, no encontro producto por ej
             if(!products[0])return setNameCatg(()=>inicial)
             else{
                 var ref=products[0].category.name
                 products.forEach((e)=>{
-                setNameCatg(()=>e.category.name)
-                if(e.category.name!==ref)setNameCatg(()=>inicial)
-            })
+                    setNameCatg(()=>e.category.name)
+                    if(e.category.name!==ref)setNameCatg(()=>inicial)
+                })
             }
     },[products])
 
@@ -54,11 +55,15 @@ const Landing=()=>{
 
                 <Box >
                 <Swiper 
-                    modules={[Navigation, Pagination, Scrollbar, A11y]}
+                    modules={[Autoplay, Navigation, Pagination, Scrollbar, A11y]}
                     spaceBetween={40}
                     slidesPerView={1}
                     navigation
                     height={50}
+                    autoplay={{
+                        delay: 2500,
+                        disableOnInteraction: true,
+                      }}
                 >
                     {categories.map(e=>
                         <SwiperSlide>

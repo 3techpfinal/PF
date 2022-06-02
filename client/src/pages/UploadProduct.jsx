@@ -33,7 +33,6 @@ export default function CrearPublicacion() {
       dispatch(GETCATEGORIES())
   },[dispatch])
   const categories=useSelector((state)=>state.rootReducer.categories)
-
   const[input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
   const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
@@ -75,9 +74,9 @@ export default function CrearPublicacion() {
       }
   });
 
-  setImages(images.filter(element=>{//deja afuera el elemento que tenga la url a eliminar
-    return element!==image;
-  }))
+  setImages(images.filter(element=>//deja afuera el elemento que tenga la url a eliminar
+    element!==image
+  ))
 
 
 
@@ -88,18 +87,15 @@ export default function CrearPublicacion() {
     
     if(ev.target.name==='title'){
       setInput((input)=>({...input,name:ev.target.value}))
-
-    }
-    // if(e.target.name==='precio'){
-    //   if(regex.test(e.target.value))setInput((input)=>({...input,price:e.target.value}))
-    // }
-
-    else if(ev.target.name==='precio'&& ev.target.value>-1 && ev.target.value!=='e'){
-        if(regex.test(ev.target.value))setInput((input)=>({...input,price:ev.target.value}))
     }
 
-    else if(ev.target.name==='stock'&& ev.target.value>-1 && ev.target.value!=='e'){
-        setInput((input)=>({...input,stock:ev.target.value}))
+    else if(ev.target.name==='precio' && ev.target.value>-1   ){
+      console.log("precio",ev.target.value)
+        setInput((input)=>({...input,price:parseInt(ev.target.value)}))
+    }
+
+    else if(ev.target.name==='stock' && ev.target.value>-1 ){
+        setInput((input)=>({...input,stock:parseInt(ev.target.value)}))
     }
 
     else if(ev.target.name==='description'){
@@ -129,7 +125,7 @@ export default function CrearPublicacion() {
         <Box display='flex' justifyContent='center'>
       <div id='formnuevo'>
 
-        <Typography mt={15}>PUBLICAR ARTICULO</Typography>
+        <Typography display='flex' justifyContent='center' mt={15}>PUBLICAR ARTICULO</Typography>
 
           <Box
             display='flex' 
@@ -145,11 +141,8 @@ export default function CrearPublicacion() {
             <TextField id="formtitle" label="Nombre" variant="outlined" name='title' value={input.name}
             onChange={(e)=>validate(e)}/>
 
-            <TextField id="formprecio" label="Precio" variant="outlined"  type='number'
-                InputProps={{
-                startAdornment: <InputAdornment position="start">$</InputAdornment>,
-                }}
-                name='precio' value={input.price}
+            <TextField id="formprecio" label="Precio" variant="outlined"  type='number' name='precio' value={parseInt(input.price)}
+                InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}
                 onChange={(e)=>validate(e)}
             />
             
@@ -160,7 +153,7 @@ export default function CrearPublicacion() {
                 onChange={(e)=>validate(e)}
               min="1" max="100" type="number"/> */}
 
-            <TextField id="productStock" label="Cantidad" variant="outlined" name='stock' value={input.stock} type='number'
+            <TextField id="productStock" label="Cantidad" variant="outlined" name='stock' value={parseInt(input.stock)} type='number'
             onChange={(ev)=>validate(ev)}>
             </TextField>
 
@@ -215,23 +208,36 @@ export default function CrearPublicacion() {
               <Swiper
                       modules={[Navigation, Pagination, A11y]}
                       spaceBetween={20}
-                      slidesPerView={5}
-                      navigation
+                      slidesPerView={4}
+                      navigation={true}
+                      loop={true}
+                     
+                  
                      // pagination={{ clickable: true }}
                     >
                 {images[0]?images.map(image=>(
-                  <SwiperSlide>
-                    <Link target="_blank" href={image}>
-                    <CardMedia
-                      component="img"
-                      height="250"
-                      image={image}
-                      alt="gf"
-                      sx={{objectFit:'contain'}}
-                    />
-                    </Link>
-                     <Button  color = 'error' onClick={(e)=>{handleDelete(e,image)}}>Borrar</Button>
-                  </SwiperSlide>
+                  <Box>
+
+                    <SwiperSlide>
+                      <Link target="_blank" href={image}>
+                      <CardMedia
+                        Autoplay='false' 
+                        component="img"
+                        height="250"
+                        image={image}
+                        alt="gf"
+                        sx={{objectFit:'contain',  zIndex: 'modal' }}
+
+                      />
+                      </Link>
+                    
+                      <Box display='flex' justifyContent='center' sx={{ zIndex: 'tooltip' }} onClick={(e)=>{handleDelete(e,image)}}>
+                        <Button  color = 'error' >Borrar</Button>
+                      </Box>
+
+                    </SwiperSlide>
+                   
+                   </Box>
                 )):<></>}
                 </Swiper>
               </Container>

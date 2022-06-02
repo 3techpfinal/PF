@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
-import Box from '@mui/material/Box';
+import {Box,Button} from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
@@ -16,15 +16,15 @@ import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import MoreIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
-import { NavLink,Link, useLocation } from 'react-router-dom';
+import { NavLink,Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import color from '../styles'
 import SearchBar from '../ui/SearchInput'
 import FilterCategory from './FilterCategory'
 import { Container } from '@mui/system';
 import { Divider } from '@mui/material';
-import { useDispatch } from 'react-redux';
-import { GETPRODUCTS } from '../actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { GETPRODUCTS,SEARCHBYCATEGORY } from '../actions';
 
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -40,11 +40,12 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 
 export default function PrimarySearchAppBar() {
+  const categories=useSelector((state)=>state.rootReducer.categories)
 
   const { user, isAuthenticated, isLoading } = useAuth0();
-
-  console.log("usuario",user)
+  console.log('usuario: ',user)
   const dispatch=useDispatch()
+  const navigate=useNavigate()
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 const handleOpenUserMenu = (event) => {
   setAnchorElUser(event.currentTarget);
@@ -90,8 +91,10 @@ const handleOpenUserMenu = (event) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={handleMenuClose}>Profile</MenuItem>
+      <MenuItem onClick={()=>{navigate('/profile')}}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
+      <MenuItem onClick={()=>{navigate('/uploadproduct')}}>Publicar Producto</MenuItem>
+      <MenuItem >Cerrar sesión</MenuItem>
     </Menu>
   );
 
@@ -171,8 +174,7 @@ const handleOpenUserMenu = (event) => {
           <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
             <SearchBar />
           </Box>
-          
-
+        
           <Box sx={{display:'flex',alignItems:'center'}}>
             <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
                   <IconButton size="large" aria-label="show 4 new mails" color="inherit">
@@ -217,6 +219,20 @@ const handleOpenUserMenu = (event) => {
         <Box sx={{display:'flex',justifyContent:'center',mb:1,alignItems:'center'}}>
           <Typography variant='body2' sx={{mr:2}}>Categorias: </Typography>
           <FilterCategory/>
+          <Divider orientation="vertical" flexItem sx={{display:{xs:'none',md:'flex'},bgcolor:'white',marginX:1}}/>
+            <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
+            {categories.map((e)=>(
+              <>
+              <Button onClick={()=>{
+                dispatch(SEARCHBYCATEGORY(e._id))
+                navigate('/')
+                }}>
+              <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>
+              </Button>
+              <Divider orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
+              </>               
+            ))}
+            </Box>
         </Box>
       </AppBar>
       {renderMobileMenu}

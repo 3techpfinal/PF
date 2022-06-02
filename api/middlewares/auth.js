@@ -1,6 +1,8 @@
 import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
+import jwt_decode from "jwt-decode";
 import * as encrypter from '../helpers/encrypter.js'
+
 
 
 
@@ -8,7 +10,7 @@ export const signUp = async (req, res, next) => {
     const { name, lastName, email, password } = req.body
 
     try {
-        const found = await User.find({ userEmail });
+        const found = await User.find({ email });
 
         if (found.length > 0) {
             res.send('There is an account already created with this email')
@@ -38,25 +40,53 @@ export const signUp = async (req, res, next) => {
 
 
 export const logIn = async (req, res) => {
+     const { token } = req.body;  
+    const decoded = jwt_decode(token) 
 
-    const { email, password } = req.body;
+    if(decoded.sub.includes('google')){
+        const found=await User.findOne({email:decoded.email})
+        if(!found){
+            const newUser = new User({ 
+                name: decoded.given_name, 
+                lastName: decoded.family_name, 
+                avatar: decoded.picture, 
+                email : decoded.email, 
+                verifiedAccount: decoded.email_verified, 
+                googleId : decoded.sub })
+        
+            newUser.setCreationDate();
+            await newUser.save();
 
-    const found = await User.findOne({ email })
+            const tokenBack = jwt.sign({ id: newUser._id },process.env.JWT_SECRET, { expiresIn: 86400 })
 
-    if (!found) return res.status(400).json({ message: 'Incorrect mail' });
+            return res.json({ user : newUser, token : tokenBack });
+        }
+    }
+    else{
+        const { email }=decoded
+        const found = await User.findOne({ email })
+         // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
+         // if(!found.verified) return res.status(401).json({message : 'You need to verify your account first.'})
+         const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
+         return res.json({ user : found, token });
+    }
+    // const { email, password } = req.body;
 
-    // ban => ver modelo User
-    // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
-    // if(!found.verified) return res.status(401).json({message : 'You need to verify your account first.'})
+    // const found = await User.findOne({ email })
 
-    const matchPassword = await comparePasswords(password, found.password);
+    // if (!found) return res.status(400).json({ message: 'Incorrect mail' });
 
-    if (!matchPassword) return res.status(401).json({ message: 'Incorrect password' })
+    // // ban => ver modelo User
+    // // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
+    // // if(!found.verified) return res.status(401).json({message : 'You need to verify your account first.'})
 
-    const token = jwt.sign({ id: found._id }, config.SECRET_JWT, { expiresIn: 86400 })
+    // const matchPassword = await encrypter.comparePasswords(password, found.password);
 
-    // lo mando para que el Front lo capte y guarde, cookies, localStorage, reducer, donde sea más cómodo
-    // https://rajaraodv.medium.com/securing-react-redux-apps-with-jwt-tokens-fcfe81356ea0
-    res.json({ user : found, token });
+    // if (!matchPassword) return res.status(401).json({ message: 'Incorrect password' })
+    // const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
+
+    // // lo mando para que el Front lo capte y guarde, cookies, localStorage, reducer, donde sea más cómodo
+    // // https://rajaraodv.medium.com/securing-react-redux-apps-with-jwt-tokens-fcfe81356ea0
+    // res.json({ user : found, token });
 }
 

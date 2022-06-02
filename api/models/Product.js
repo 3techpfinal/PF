@@ -34,7 +34,7 @@ const productSchema = new Schema({
     },
     rating: {
         type: Number,
-        required: true,
+        //required: true,
         default: 0
     },
     
@@ -65,10 +65,10 @@ const productSchema = new Schema({
 })
 
 
-productSchema.method.setCreationDate = function () {
-    const formatedDate = format(date.now, 'dd/MM/yyyy')
-    this.productCreationDate = formatedDate
-    return
+productSchema.methods.setCreationDate = function () {
+    const formatedDate = format(new Date(), 'yyyy/MM/dd')
+    this.creationDate = formatedDate
+    return 
 }
 
 
