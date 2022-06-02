@@ -5,7 +5,8 @@ import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 const router = Router();
 
 
-router.post('/', [verifyToken, isAdmin], async (req, res) => {
+router.post('/', /*[verifyToken, isAdmin],*/ async (req, res,next) => {
+    console.log('body: ',req.body)
     try {
         const found = await Product.findOne({ name: req.body.name })
 
@@ -20,9 +21,9 @@ router.post('/', [verifyToken, isAdmin], async (req, res) => {
         newProduct.setCreationDate();  
         await newProduct.save()
 
-            res.send(newProduct)
+        res.send(newProduct)
         }
-    } catch (error) {
+    } catch (err) {
         next(err)
     }
 });

@@ -65,11 +65,11 @@ export default function CrearPublicacion() {
 
     }
     if(e.target.name==='precio'){
-      if(regex.test(e.target.value))setInput((input)=>({...input,price:e.target.value}))
+      if(regex.test(e.target.value))setInput((input)=>({...input,price:parseInt(e.target.value)}))
 
     }
     if(e.target.name==='stock'){
-      setInput((input)=>({...input,stock:e.target.value}))
+      setInput((input)=>({...input,stock:parseInt(e.target.value)}))
 
     }
     if(e.target.name==='description'){

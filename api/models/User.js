@@ -7,6 +7,7 @@ import { format } from 'date-fns';
 
 
 const userSchema = new Schema({
+
     name: {
         type: String,
         // required : true
@@ -27,10 +28,16 @@ const userSchema = new Schema({
         // required : true
     },
 
+    avatar: {
+        type: String
+        // required : true
+
+    },
+
     role: {
         type: String,
         enum : ['user','admin','superadmin'],
-        default: 'user'
+        default: 'admin'
     },
 
 
@@ -62,12 +69,17 @@ const userSchema = new Schema({
 
     creationDate: {
         type: String
+    },
+
+    googleId:{
+        type : String,
+        default : null
     }
 
 });
 
 userSchema.methods.setCreationDate = function () {
-    const formatedDate = format(new Date(), 'dd/MM/yyyy')
+    const formatedDate = format(new Date(), 'yyyy/MM/dd')
     this.creationDate = formatedDate
     return
 };
