@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import jwt_decode from "jwt-decode";
 import * as encrypter from '../helpers/encrypter.js'
+import { verifyAccount } from '../controllers/sendMailer.js';
 
 
 
@@ -21,7 +22,7 @@ export const signUp = async (req, res, next) => {
             newUser.setCreationDate();
 
             // verificación cuenta vía mail 
-            newUser.verifyAccount();
+            verifyAccount(newUser._id, newUser.email);
 
             //aunque se haya guardado, necesita confirmar la cuenta para poder logearse
             await newUser.save();

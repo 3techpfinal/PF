@@ -1,4 +1,3 @@
-import 'dotenv/config.js' 
 import nodemailer from 'nodemailer';
 
 const config ={
