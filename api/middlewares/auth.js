@@ -20,6 +20,7 @@ export const signUp = async (req, res, next) => {
             newUser.setCreationDate();
 
             // verificación cuenta vía mail 
+            //newUser.verifyAccount();
 
             //aunque se haya guardado, necesita confirmar la cuenta para poder logearse
             await newUser.save();

@@ -2,7 +2,7 @@ import {Router} from "express";
 import user from "./users.js";
 import product from "./products.js";
 import category from "./categories.js";
-// import token_confirmed from "./Token_confirm";
+import token from './tokens.js';
 import order from './orders.js';
 import cart from './carts.js'
 // import conversation from "./Conversations";
@@ -12,7 +12,8 @@ import cart from './carts.js'
 const router = Router();
 
 router.use("/users", user) //CRUD de usuario - ADMIN lee y borra => implementar ban y permaban?
-// route.use('/auth/tokenConfirmed', token_confirmed)   //GET http://localhost:3000/auth/tokenConfirmed/:tokenId
+router.use('/auth/tokenConfirmed', token)   
+//GET http://localhost:3000/auth/tokenConfirmed/:tokenId
 
 router.use("/products", product) //CRUD - User y Admin
 router.use("/categories",category) // CRUD - Admin
