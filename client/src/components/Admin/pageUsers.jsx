@@ -27,7 +27,6 @@ const UsersPage = () => {
       },[dispatch])
 
     const usuarios=useSelector((State) => State.rootReducer.usuarios);
-    console.log("usuarios:",usuarios)
       //  console.log("usuarios:",usuarios[0]._id)
 
 

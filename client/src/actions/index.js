@@ -1,6 +1,6 @@
 import axios from "axios"
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
-//const { URL } = process.env
+import Cookie from 'js-cookie'
 const api='http://localhost:3000'
 
 
@@ -50,3 +50,10 @@ export const ORDERBYPRICE=createAction('ORDERBYPRICE',(order)=>{
     }
 })
 
+export const VERIFYADMIN=createAsyncThunk('VERIFYADMIN',async ()=>{
+    const user=JSON.parse( Cookie.get('user') )
+    if(user){
+        if(user.role==='admin')return true
+    }
+    return false
+})

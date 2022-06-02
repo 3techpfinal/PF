@@ -31,7 +31,6 @@ export default function FilterByCategory() {
       if(location!=='/')navigate('/')}
     }
 
-    console.log("categorias",categories)
   return (
     <Box sx={{minWidth:100}}>
       <FormControl fullWidth>

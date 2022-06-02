@@ -30,6 +30,7 @@ const ProductDetails=()=>{
     const product=useSelector((state)=>state.rootReducer.detail)
     const [loaded,setLoaded]=React.useState(false)
     const {id}=useParams()
+    const [tempCartProduct, setTempCartProduct] = useState({})
 
     React.useEffect(()=>{
         dispatch(GETDETAIL(id)).then(()=>setLoaded(true))
@@ -49,19 +50,19 @@ const ProductDetails=()=>{
     const { addProductToCart} = useContext( CartContext )
     const { cart } = React.useContext( CartContext );
 
-    const [tempCartProduct, setTempCartProduct] = useState({
+    useEffect(()=>setTempCartProduct({
         _id: product._id,
         imageProduct: product.imageProduct,
         price: product.price,
         name: product.name,
         category: product.category,
         quantity: 1,
-        envio: product.envio,
-        rating: product.rating,
-        review: product.review,
+        //envio: product.envio,
+        //rating: product.rating,
+        //review: product.review,
         description: product.description,
         stock: product.stock
-      })
+      }),[product])
 
       const onUpdateQuantity = ( quantity ) => {
         setTempCartProduct( currentProduct => ({
@@ -121,7 +122,7 @@ const ProductDetails=()=>{
                     <Box sx={{flexDirection:'column'}}>
                         <Box sx={{m:1,border:'1px solid lightgray',p:3,pt:1,borderRadius:5}}>
                             <Box sx={{display:'flex',justifyContent:'space-between'}}>
-                                <Typography sx={{fontSize:{xs:30}}}>{product.name}</Typography>
+                                <Typography sx={{fontSize:{xs:30},maxHeight:100}}>{product.name.length>40?product.name.slice(0,40)+'...':product.name}</Typography>
                                 <IconButton 
                                 sx={{bgcolor:color.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
                                 onClick={ onAddProduct }>

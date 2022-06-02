@@ -57,9 +57,14 @@ export const logIn = async (req, res) => {
             newUser.setCreationDate();
             await newUser.save();
 
-            const tokenBack = jwt.sign({ id: newUser._id },process.env.JWT_SECRET, { expiresIn: 86400 })
+            const tokenBack = jwt.sign({ id: newUser._id },"secret", { expiresIn: 86400 })
 
             return res.json({ user : newUser, token : tokenBack });
+        }
+        else{
+            const tokenBack = jwt.sign({ id: found._id },"secret", { expiresIn: 86400 })
+
+            return res.json({ user : found, token : tokenBack });
         }
     }
     else{
@@ -67,7 +72,7 @@ export const logIn = async (req, res) => {
         const found = await User.findOne({ email })
          // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
          // if(!found.verified) return res.status(401).json({message : 'You need to verify your account first.'})
-         const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
+         const token = jwt.sign({ id: found._id },  "secret", { expiresIn: 86400 })
          return res.json({ user : found, token });
     }
     // const { email, password } = req.body;
@@ -83,7 +88,7 @@ export const logIn = async (req, res) => {
     // const matchPassword = await encrypter.comparePasswords(password, found.password);
 
     // if (!matchPassword) return res.status(401).json({ message: 'Incorrect password' })
-    // const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
+    // const token = jwt.sign({ id: found._id },  "secret", { expiresIn: 86400 })
 
     // // lo mando para que el Front lo capte y guarde, cookies, localStorage, reducer, donde sea más cómodo
     // // https://rajaraodv.medium.com/securing-react-redux-apps-with-jwt-tokens-fcfe81356ea0

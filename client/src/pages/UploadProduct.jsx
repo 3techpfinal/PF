@@ -40,7 +40,6 @@ export default function CrearPublicacion() {
 
   const handleUpload=  (e)=>{
     const pics = e.target.files;
-    console.log("valor buscado*",pics);
     if (pics[0]===undefined)  return  0
 
     setUpLoading(true); //marcador de loading...
@@ -56,7 +55,6 @@ export default function CrearPublicacion() {
         .then((res)=>res.json())
         .then((res)=> {
           setImages(images=>[...images,res.url]);
-          console.log("respuesta",res)
           setUpLoading(false);
         })
         .catch(error=>console.log(error));

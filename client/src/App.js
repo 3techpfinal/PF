@@ -11,7 +11,6 @@ import LoginButton from '../src/components/Login.jsx'
 import Cart from './components/Cart/CartPage.jsx'
 import Dashboard from './components/Admin/pageAdmin'
 import  CartProvider  from './components/Cart/CartProvider';
-import { useAuth0 } from "@auth0/auth0-react";
 
 function App() {
   return (

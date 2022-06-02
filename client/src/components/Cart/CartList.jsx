@@ -30,7 +30,7 @@ export const CartList = ({ editable = false }) => {
         product.quantity = newQuantityValue;
         updateCartQuantity( product );
     }
-
+    console.log(cart)
 
     return (
         <>

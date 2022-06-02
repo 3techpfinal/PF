@@ -24,10 +24,11 @@ import FilterCategory from './FilterCategory'
 import { Container } from '@mui/system';
 import { Divider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { GETPRODUCTS,SEARCHBYCATEGORY } from '../actions';
+import { GETPRODUCTS,SEARCHBYCATEGORY,VERIFYADMIN } from '../actions';
 import CartContext from '../components/Cart/CartContext'
-
+import axios from 'axios'
 import { useAuth0 } from "@auth0/auth0-react";
+import Cookie from 'js-cookie'
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
@@ -42,15 +43,17 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 export default function PrimarySearchAppBar() {
   const categories=useSelector((state)=>state.rootReducer.categories)
+  const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
   const { numberOfItems } = React.useContext( CartContext );
-  const { user, isAuthenticated, isLoading } = useAuth0();
-  console.log('usuario: ',user)
+  const { user, isAuthenticated,getIdTokenClaims,logout,loginWithPopup } = useAuth0();
   const dispatch=useDispatch()
   const navigate=useNavigate()
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-const handleOpenUserMenu = (event) => {
-  setAnchorElUser(event.currentTarget);
-};
+
+  React.useEffect(()=>{
+    dispatch(VERIFYADMIN())
+  },[isAuthenticated])
+
+
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -93,10 +96,11 @@ const handleOpenUserMenu = (event) => {
       onClose={handleMenuClose}
     >
       <MenuItem onClick={()=>{navigate('/profile')}}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={()=>{navigate('/uploadproduct')}}>Publicar Producto</MenuItem>
-      <MenuItem onClick={()=>{navigate('/admin/dashboard')}}>Dashboard</MenuItem>
-      <MenuItem >Cerrar sesión</MenuItem>
+      {isAdmin && <MenuItem onClick={()=>{navigate('/admin/dashboard')}}>Dashboard</MenuItem>}
+      <MenuItem onClick={()=>{
+        Cookie.set('user',JSON.stringify([]))
+        logout({ returnTo: window.location.origin })
+        }}>Cerrar sesión</MenuItem>
     </Menu>
   );
 
@@ -187,7 +191,7 @@ const handleOpenUserMenu = (event) => {
               </NavLink>
 
             <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
-              <IconButton
+              {isAuthenticated?<IconButton
                 size="large"
                 edge="end"
                 aria-label="account of current user"
@@ -198,6 +202,13 @@ const handleOpenUserMenu = (event) => {
               >
                 <Avatar alt="Remy Sharp" src={user?.picture} />
               </IconButton>
+              :<Button sx={{bgcolor:color.color2,color:'black',ml:2}}
+              onClick={()=>loginWithPopup().then(()=>getIdTokenClaims()).then(r=>axios.post('http://localhost:3000/users/login',{token:r.__raw})).then(r=>{
+                Cookie.set('token',r.data.token)
+                Cookie.set('user',JSON.stringify(r.data.user))
+              }).then(()=>dispatch(VERIFYADMIN()))}>
+                Login
+                </Button>}
             </Box>
 
             <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
@@ -225,7 +236,7 @@ const handleOpenUserMenu = (event) => {
             <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
             {categories.map((e)=>(
               <>
-              <Button onClick={()=>{
+              <Button key={e._id} onClick={()=>{
                 dispatch(SEARCHBYCATEGORY(e._id))
                 navigate('/')
                 }}>
