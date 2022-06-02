@@ -25,6 +25,7 @@ import { Container } from '@mui/system';
 import { Divider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { GETPRODUCTS,SEARCHBYCATEGORY } from '../actions';
+import CartContext from '../components/Cart/CartContext'
 
 import { useAuth0 } from "@auth0/auth0-react";
 
@@ -41,7 +42,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 export default function PrimarySearchAppBar() {
   const categories=useSelector((state)=>state.rootReducer.categories)
-
+  const { numberOfItems } = React.useContext( CartContext );
   const { user, isAuthenticated, isLoading } = useAuth0();
   console.log('usuario: ',user)
   const dispatch=useDispatch()
@@ -94,6 +95,7 @@ const handleOpenUserMenu = (event) => {
       <MenuItem onClick={()=>{navigate('/profile')}}>Profile</MenuItem>
       <MenuItem onClick={handleMenuClose}>My account</MenuItem>
       <MenuItem onClick={()=>{navigate('/uploadproduct')}}>Publicar Producto</MenuItem>
+      <MenuItem onClick={()=>{navigate('/admin/dashboard')}}>Dashboard</MenuItem>
       <MenuItem >Cerrar sesión</MenuItem>
     </Menu>
   );
@@ -178,7 +180,7 @@ const handleOpenUserMenu = (event) => {
           <Box sx={{display:'flex',alignItems:'center'}}>
             <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
                   <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                      <Badge badgeContent={2} color="error">
+                      <Badge badgeContent={numberOfItems} color="error">
                           <ShoppingCart />
                       </Badge>
                   </IconButton>

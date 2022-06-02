@@ -4,7 +4,9 @@ import * as actions from '../actions/index'
 const initialState = {
   products:[],
   detail:[],
-  categories:[]
+  categories:[],
+  users:[],
+  orders:[]
 }
 
 const OrderByPrice=(state,action)=>{
@@ -43,6 +45,15 @@ const rootReducer = createReducer(initialState, (builder) => {
     .addCase(actions.GETCATEGORIES.fulfilled, (state, action) => {
       state.categories=action.payload
     })
+
+    .addCase(actions.GETORDERS.fulfilled, (state, action) => {
+      state.categories=action.payload
+    })
+
+    .addCase(actions.GETUSERS.fulfilled, (state, action) => {
+      state.users=action.payload
+    })
+
     .addCase(actions.GETDETAIL.fulfilled, (state, action) => {
       state.detail=[]
       state.detail=action.payload

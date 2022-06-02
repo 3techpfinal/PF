@@ -8,12 +8,14 @@ import ProductDetails from './components/products/ProductDetails';
 import Loading from './pages/Loading';
 import Profile from './pages/Profile'
 import LoginButton from '../src/components/Login.jsx'
-import Cart from './pages/CartPage'
-
+import Cart from './components/Cart/CartPage.jsx'
+import Dashboard from './components/Admin/pageAdmin'
+import  CartProvider  from './components/Cart/CartProvider';
 import { useAuth0 } from "@auth0/auth0-react";
 
 function App() {
   return (
+    <CartProvider>
     <Routes>
       {/* <Route path='/' element={<><SearchInput /> <FilterByCategory />  <Btn href={"/contact"} text={"Contact Us!"} />  <Btn href={"/login"} text={"Login"} /> </>} /> */}
       <Route path='/' element={<Landing/>} />
@@ -25,7 +27,10 @@ function App() {
       <Route path='/profile' element={<Profile/>}/>
       <Route path='/login' element={<LoginButton/>}/>
       <Route path='/cart' element={<Cart/>}/>
+      <Route path='/admin/dashboard' element={<Dashboard/>}/>
     </Routes>
+    </CartProvider>
+    
   );
 }
 

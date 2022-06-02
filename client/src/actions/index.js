@@ -19,6 +19,16 @@ export const GETDETAIL = createAsyncThunk('GETDETAIL', async (id) => {
     return response.data
 })
 
+export const GETUSERS = createAsyncThunk('GETUSERS', async () => {
+    const response = await axios(`${api}/users`)
+    return response.data
+})
+
+export const GETORDERS = createAsyncThunk('GETORDERS', async () => {
+    const response = await axios(`${api}/orders`)
+    return response.data
+})
+
 export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => {
     await axios.post(`${api}/products`,input)
 })

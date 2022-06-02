@@ -28,7 +28,7 @@ import axios from 'axios'
       }
       }>Console</button>
 
-    <button onClick={() => logout({ returnTo: window.location.origin })}>
+    <button onClick={() => logout({ returnTo: window.location.origin }).then()}>
     Logout
     </button>
 </div>
