@@ -5,10 +5,6 @@ import User from '../models/User.js'
 import { OAuth2Client } from 'google-auth-library';
 const router = Router();
 
-
-
-
-
 const googleSignIn =async(req,res=response)=>{
     
     const {id_token}=req.body;
@@ -19,7 +15,7 @@ const googleSignIn =async(req,res=response)=>{
         const {name, email, img}=await googleVerify(id_token);
         //console.log(googleUser)
 
-        let usuario =  await User.findOne({email});
+       let  usuario =  await User.findOne({email});
 
     
          if ( !usuario ) {
@@ -28,8 +24,8 @@ const googleSignIn =async(req,res=response)=>{
                 name,
                 email,
                 password: ':P',
-                //img,
-                google: true
+                profilePic: img,
+                //google: true
             };
 
             usuario = new User( data );
@@ -37,7 +33,7 @@ const googleSignIn =async(req,res=response)=>{
         }
 
         // Si el usuario en DB
-        if ( !usuario.suspendedAccount ) {
+        if ( usuario.suspendedAccount ) {
             return res.status(401).json({
                 msg: 'Hable con el administrador, usuario bloqueado'
             });
@@ -85,7 +81,7 @@ const client = new OAuth2Client( '715638807647-7hjrrq0c7iqu0imiku0hc9nnmbo762h2.
 
   const payload = ticket.getPayload();
 
-  //console.log(payload);
+  console.log(payload);
 
    const { name: name, 
            picture: img, 

@@ -2,7 +2,7 @@ import {Router} from "express";
 import user from "./users.js";
 import product from "./products.js";
 import category from "./categories.js";
-import google from './googleLogin.js'
+import google from './googleLoginhtml.js'
 // import token_confirmed from "./Token_confirm";
 // import order from './Orders';
 // import conversation from "./Conversations";

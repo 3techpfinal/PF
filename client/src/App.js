@@ -6,7 +6,7 @@ import Prueba from '../src/pages/pruebaDeComponentes'
 import CargarProducto from './pages/cargarProducto'
 import ProductDetails from './components/products/ProductDetails';
 import Loading from './pages/Loading';
-import LoginGoogle from '../../client/src/components/LoginGoogle'
+import LoginGoogle from '../../client/src/components/LoginGoogleCopy'
 import LoginButton from '../src/components/Login.jsx'
 
 import { useAuth0 } from "@auth0/auth0-react";
@@ -14,7 +14,6 @@ import { useAuth0 } from "@auth0/auth0-react";
 function App() {
   return (
     <Routes>
-
       {/* <Route path='/' element={<><SearchInput /> <FilterByCategory />  <Btn href={"/contact"} text={"Contact Us!"} />  <Btn href={"/login"} text={"Login"} /> </>} /> */}
       <Route path='/' element={<Landing/>} />
       <Route path='/navbar' element={<NavBar/>}/>

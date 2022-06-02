@@ -1,10 +1,12 @@
 import React from "react";
 import NavBar from "../components/NavBar"
-import { useState } from 'react';
-import { Link ,  useNavigate } from "react-router-dom"
-import { TextField,Select,Container, CardMedia, Box, InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
+import { useState,useRef } from 'react';
+import {   useNavigate } from "react-router-dom"
+//import { Link } from "react-router-dom";
+import { TextField,Select,Container, CardMedia,Link, Box, UploadOulined,InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
 import {CREATEPRODUCT,GETCATEGORIES} from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
+import { UploadOutlined } from '@ant-design/icons';
 
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
@@ -14,11 +16,18 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
+//var cloudinary = require('cloudinary').v2;
+//import { v2 as cloudinary } from 'cloudinary';
+//cloudinary.config( process.env.CLOUDINARY_URL || '' );
+//cloudinary.config( 'cloudinary://194456155422281:5zFQO4yzRgVJZvpI557kVlR_XP4@dnlooxokf' );
+
 const regex=/^[0-9]+$/
+
 
 export default function CrearPublicacion() {
 
 
+  const fileInputRef=useRef(null)
   const dispatch=useDispatch()
   React.useEffect(()=>{
       dispatch(GETCATEGORIES())
@@ -30,62 +39,82 @@ export default function CrearPublicacion() {
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
 
-  const handleUpload= async (e)=>{
-    const pic = e.target.files[0];
-    console.log("valor buscado*",pic);
-    if (pic===undefined)  return  0
-    setUpLoading(true);
-    const formData=new FormData();
-    formData.append('file',pic);
-    formData.append('upload_preset','images');
-     await fetch('https://api.cloudinary.com/v1_1/dnlooxokf/upload',{
-      method: 'POST',
-      body: formData,
-    })
-      .then((res)=>res.json())
-      .then((res)=> {
-        setImages(images=>[...images,res.url]);
-        console.log("respuesta",res)
-        setUpLoading(false);
+  const handleUpload=  (e)=>{
+    const pics = e.target.files;
+    console.log("valor buscado*",pics);
+    if (pics[0]===undefined)  return  0
+
+    setUpLoading(true); //marcador de loading...
+   
+    for(const pic of pics){
+      let formData=new FormData();
+      formData.append('file',pic);
+      formData.append('upload_preset','images');
+       fetch('https://api.cloudinary.com/v1_1/dnlooxokf/upload',{
+        method: 'POST',
+        body: formData,
       })
-      .catch(error=>console.log(error));
+        .then((res)=>res.json())
+        .then((res)=> {
+          setImages(images=>[...images,res.url]);
+          console.log("respuesta",res)
+          setUpLoading(false);
+        })
+        .catch(error=>console.log(error));
+      }
   };
 
   const handleDelete=(e,image)=>{
     e.preventDefault()
-    setImages(images.filter(element=>{//deja afuera el elemento que tenga la url a eliminar
-      return element!==image;
-    }))
+    images.forEach( async(image) => {
+      if ( images.includes(image) ){
+          // Borrar de cloudinary
+          const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
+          console.log({ image, fileId, extension });
+          //await cloudinary.uploader.destroy( fileId );
+      }
+  });
+
+  setImages(images.filter(element=>{//deja afuera el elemento que tenga la url a eliminar
+    return element!==image;
+  }))
+
+
+
   }
 
 
-  const validate=(e)=>{
+  const validate=(ev)=>{
     
-    if(e.target.name==='title'){
-      setInput((input)=>({...input,name:e.target.value}))
+    if(ev.target.name==='title'){
+      setInput((input)=>({...input,name:ev.target.value}))
 
     }
-    if(e.target.name==='precio'){
-      if(regex.test(e.target.value))setInput((input)=>({...input,price:e.target.value}))
+    // if(e.target.name==='precio'){
+    //   if(regex.test(e.target.value))setInput((input)=>({...input,price:e.target.value}))
+    // }
+
+    else if(ev.target.name==='precio'&& ev.target.value>-1 && ev.target.value!=='e'){
+        if(regex.test(ev.target.value))setInput((input)=>({...input,price:ev.target.value}))
+    }
+
+    else if(ev.target.name==='stock'&& ev.target.value>-1 && ev.target.value!=='e'){
+        setInput((input)=>({...input,stock:ev.target.value}))
+    }
+
+    else if(ev.target.name==='description'){
+      setInput((input)=>({...input,description:ev.target.value}))
 
     }
-    if(e.target.name==='stock'){
-      setInput((input)=>({...input,stock:e.target.value}))
-
-    }
-    if(e.target.name==='description'){
-      setInput((input)=>({...input,description:e.target.value}))
-
-    }
-    if(e.target.name==='category'){
-      setInput((input)=>({...input,category:e.target.value}))
+    else if(ev.target.name==='category'){
+      setInput((input)=>({...input,category:ev.target.value}))
     }
 
     }
   
     function handleSubmit(e){
       e.preventDefault()
-          const newPost={...input,imageProduct:images[0]?images:["http://inversionesumbrias.com.ve/static/images/productos/producto-sin-imagen.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
+          const newPost={...input,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
           dispatch(CREATEPRODUCT(newPost))
           alert("Se creo el Producto exitosamente!")
           navegar("/")//se accede al home
@@ -108,7 +137,7 @@ export default function CrearPublicacion() {
             margin='auto'
             component="form"
             sx={{
-              '& > :not(style)': { m: 1, width: '50ch' },
+              '& > :not(style)': { m: 1 , width:'70ch' },
             }}
             noValidate
             autoComplete="off"
@@ -116,7 +145,7 @@ export default function CrearPublicacion() {
             <TextField id="formtitle" label="Nombre" variant="outlined" name='title' value={input.name}
             onChange={(e)=>validate(e)}/>
 
-            <TextField id="formprecio" label="Precio" variant="outlined" 
+            <TextField id="formprecio" label="Precio" variant="outlined"  type='number'
                 InputProps={{
                 startAdornment: <InputAdornment position="start">$</InputAdornment>,
                 }}
@@ -125,11 +154,15 @@ export default function CrearPublicacion() {
             />
             
             
-            
+{/*          
             <label>Cantidad:</label>
             <input id="productStock" name='stock' value={input.stock}
                 onChange={(e)=>validate(e)}
-              min="1" max="100" type="number"/>
+              min="1" max="100" type="number"/> */}
+
+            <TextField id="productStock" label="Cantidad" variant="outlined" name='stock' value={input.stock} type='number'
+            onChange={(ev)=>validate(ev)}>
+            </TextField>
 
 
             <Select
@@ -139,6 +172,7 @@ export default function CrearPublicacion() {
               value={input.category}
               onChange={(e)=>validate(e)}
               name='category'
+              
             >
                 <MenuItem key='select' value='Select'>
                   Select
@@ -152,23 +186,42 @@ export default function CrearPublicacion() {
 
    
 
-            <TextField multiline rows={4} id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
+            <TextField multiline rows={10} id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
             onChange={(e)=>validate(e)}/>
 
-            
-            
-            {<input aria-label="Archivo" type="file" name="imagen" onChange={handleUpload} />}
+                            <Button
+                                color="secondary"
+                                fullWidth
+                                startIcon={ <UploadOutlined /> }
+                                sx={{ mb: 3 }}
+                                onClick={ () => fileInputRef.current?.click() }
+                            >
+                                Cargar imagen
+                            </Button>
 
-              <Container display='flex' flexDirection='row' justifyContent='center' width={1000}  >
+            
+            
+            {
+            <input 
+              multiple
+              aria-label="Archivo" 
+              type="file" name="imagen" 
+              onChange={handleUpload} 
+              ref={ fileInputRef }
+              style={{ display: 'none' }}
+            />}
+
+              <Container display='flex' flexDirection='row' justifyContent='center' width={10}  >
               <Swiper
-                      modules={[Navigation, Pagination, Scrollbar, A11y]}
-                      spaceBetween={40}
-                      slidesPerView={3}
+                      modules={[Navigation, Pagination, A11y]}
+                      spaceBetween={20}
+                      slidesPerView={5}
                       navigation
-                      pagination={{ clickable: true }}
+                     // pagination={{ clickable: true }}
                     >
                 {images[0]?images.map(image=>(
                   <SwiperSlide>
+                    <Link target="_blank" href={image}>
                     <CardMedia
                       component="img"
                       height="250"
@@ -176,7 +229,8 @@ export default function CrearPublicacion() {
                       alt="gf"
                       sx={{objectFit:'contain'}}
                     />
-                     <button onClick={(e)=>{handleDelete(e,image)}}>X</button>
+                    </Link>
+                     <Button  color = 'error' onClick={(e)=>{handleDelete(e,image)}}>Borrar</Button>
                   </SwiperSlide>
                 )):<></>}
                 </Swiper>

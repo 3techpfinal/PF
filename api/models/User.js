@@ -34,6 +34,10 @@ const userSchema = new Schema({
         }
     },
 
+    profilePic:{
+        type: String
+    },
+
 
     cart: [
         {

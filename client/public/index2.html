@@ -41,9 +41,9 @@
     <script>
         function handleCredentialResponse(response) {
 
-            //console.log('id_token', response.credential)
+            console.log('id_token', response.credential)
 
-        const body = { id_token: response.credential }
+       /* const body = { id_token: response.credential }
         fetch('http://localhost:3000/google', {
             method: 'POST',
             headers: {
@@ -57,7 +57,7 @@
             localStorage.setItem('email', resp.usuario.email ) //almaceno el email e n el local storage para luego eliminarlas cookies
             location.reload()
         })
-        .catch( console.warn )
+        .catch( console.warn )*/
         }
 
 

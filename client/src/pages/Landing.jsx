@@ -21,6 +21,7 @@ const categories=['https://cdn.forbes.pe/2022/05/CELULARES.jpg','https://www.lif
 const Landing=()=>{
     const [nameCatg,setNameCatg]=React.useState('Productos')
     const dispatch=useDispatch()
+
     
     let products=useSelector((state)=>state.rootReducer.products)
 
@@ -59,16 +60,17 @@ const Landing=()=>{
                     navigation
                     height={50}
                 >
-                    {categories.map(e=><SwiperSlide>
-                        <CardMedia
-                        component="img"
-                        height="300"
-                        image={e}
-                        alt="gf"
-                        sx={{objectFit:'cover'}}
-                        />
-                </SwiperSlide>)}
-                    </Swiper>
+                    {categories.map(e=>
+                        <SwiperSlide>
+                            <CardMedia
+                            component="img"
+                            height="300"
+                            image={e}
+                            alt="gf"
+                            sx={{objectFit:'cover'}}
+                            />
+                        </SwiperSlide>)}
+                </Swiper>
                 </Box>
                 
                 <Box sx={{marginX:4,mt:1,maxWidth:'100%',display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
