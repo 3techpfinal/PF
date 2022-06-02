@@ -6,26 +6,26 @@ const { Schema, model } = mongoose;
 const productSchema = new Schema({
     name: {
         type: String,
-        required: true,
+        //required: true,
         unique: true
 
     },
 
     price: {
         type: Number,
-        required: true,
+        //required: true,
         default: 0
     },
 
     description: {
         type: String,
-        required: true,
+        //required: true,
         maxLength: 1000
     },
 
     stock: {
         type: Number,
-        required: true,
+        //required: true,
         default: 0
     },
 
@@ -34,7 +34,7 @@ const productSchema = new Schema({
     },
     rating: {
         type: Number,
-        required: true,
+        //required: true,
         default: 0
     },
     
@@ -65,10 +65,10 @@ const productSchema = new Schema({
 })
 
 
-productSchema.method.setCreationDate = function () {
-    const formatedDate = format(date.now, 'dd/MM/yyyy')
-    this.productCreationDate = formatedDate
-    return
+productSchema.methods.setCreationDate = function () {
+    const formatedDate = format(new Date(), 'yyyy/MM/dd')
+    this.creationDate = formatedDate
+    return 
 }
 
 

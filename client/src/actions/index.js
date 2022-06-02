@@ -20,7 +20,11 @@ export const GETDETAIL = createAsyncThunk('GETDETAIL', async (id) => {
 })
 
 export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => {
-    await axios.post(`${api}/products`,input)
+    await axios.post(`${api}/products`,input,{
+        headers:{
+            'x-access-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTdmN2MwOGJmZjU5M2E5MGI1Mzg0ZCIsImlhdCI6MTY1NDEyNjUyOCwiZXhwIjoxNjU0MjEyOTI4fQ.O4dxO7iHN_11U9hu549YwT_NgRmp5piU4JlTY2NAWQs'
+        }
+    })
 })
 
 export const SEARCHBYNAME=createAsyncThunk('SEARCHBYNAME',async (name)=>{
