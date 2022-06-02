@@ -1,15 +1,13 @@
+import 'dotenv/config.js' 
 import nodemailer from 'nodemailer';
-// import 'dotenv/config'
-import credentials from '../credentials.js';
-
 
 const config ={
-  host: credentials.MAIL_HOST,
-  port: credentials.MAIL_PORT,
+  host: process.env.MAIL_HOST,
+  port: process.env.MAIL_PORT,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: credentials.MAIL_USER,
-    pass: credentials.MAIL_PASS
+    user: process.env.MAIL_USER,
+    pass: process.env.MAIL_PASS
   }
 }
 

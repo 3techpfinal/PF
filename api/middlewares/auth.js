@@ -21,7 +21,7 @@ export const signUp = async (req, res, next) => {
             newUser.setCreationDate();
 
             // verificación cuenta vía mail 
-            //newUser.verifyAccount();
+            newUser.verifyAccount();
 
             //aunque se haya guardado, necesita confirmar la cuenta para poder logearse
             await newUser.save();
@@ -71,23 +71,5 @@ export const logIn = async (req, res) => {
          const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
          return res.json({ user : found, token });
     }
-    // const { email, password } = req.body;
-
-    // const found = await User.findOne({ email })
-
-    // if (!found) return res.status(400).json({ message: 'Incorrect mail' });
-
-    // // ban => ver modelo User
-    // // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
-    // // if(!found.verified) return res.status(401).json({message : 'You need to verify your account first.'})
-
-    // const matchPassword = await encrypter.comparePasswords(password, found.password);
-
-    // if (!matchPassword) return res.status(401).json({ message: 'Incorrect password' })
-    // const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
-
-    // // lo mando para que el Front lo capte y guarde, cookies, localStorage, reducer, donde sea más cómodo
-    // // https://rajaraodv.medium.com/securing-react-redux-apps-with-jwt-tokens-fcfe81356ea0
-    // res.json({ user : found, token });
 }
 

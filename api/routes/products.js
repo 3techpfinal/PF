@@ -5,7 +5,7 @@ import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 const router = Router();
 
 
-router.post('/', /*[verifyToken, isAdmin],*/ async (req, res,next) => {
+router.post('/', [verifyToken, isAdmin], async (req, res,next) => {
     console.log('body: ',req.body)
     try {
         const found = await Product.findOne({ name: req.body.name })
