@@ -3,11 +3,11 @@ const { Schema, model } = pkg;
 
 const tokenSchema= new Schema({
 
-    user:[{
+    user:{
         type: Schema.Types.ObjectId,
         ref: "User", 
         required:true       
-    }],
+    },
 
     token:{
         type: String,

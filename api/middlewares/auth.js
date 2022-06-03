@@ -64,11 +64,12 @@ export const logIn = async (req, res) => {
             return res.json({ user : newUser, token : tokenBack });
         }
     }
-    else{
+    else { //login manual-no google
         const { email }=decoded
-        const found = await User.findOne({ email })
+        const found = await User.findOne({ email }) //if(!found)
          // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
-         // if(!found.verified) return res.status(401).json({message : 'You need to verify your account first.'})
+         if(!found.verifiedAccount) return res.status(401).json({message : 'You need to verify your account first.'})
+         
          const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
          return res.json({ user : found, token });
     }
