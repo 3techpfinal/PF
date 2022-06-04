@@ -34,8 +34,13 @@ export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => 
 })
 
 
-export const SEARCHBYNAME=createAsyncThunk('SEARCHBYNAME',async (name)=>{
+export const SEARCHBYNAMEPRODUCTS=createAsyncThunk('SEARCHBYNAMEPRODUCTS',async (name)=>{
     const result=await axios(`${api}/products?name=${name}`) 
+    return result.data
+})
+
+export const SEARCHBYNAMEUSERS=createAsyncThunk('SEARCHBYNAMEUSERS',async (name)=>{
+    const result=await axios(`${api}/users?name=${name}`) 
     return result.data
 })
 

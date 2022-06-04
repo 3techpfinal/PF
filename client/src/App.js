@@ -1,17 +1,23 @@
 import './App.css';
 import { Route, Routes } from 'react-router-dom';
-import Landing from './pages/Landing';
+import Landing from './Pages/Landing';
 import NavBar from './components/NavBar'
 import Prueba from './pruebaDeComponentes'
-import CargarProducto from './pages/UploadProduct'
-import ProductDetails from './components/products/ProductDetails';
-import Loading from './pages/Loading';
-import Profile from './pages/Profile'
+import CargarProducto from './components/Products/UploadProduct'
+import ProductDetails from './components/Products/ProductDetails';
+import Loading from './components/Loading';
+import Profile from './Pages/Profile'
 import LoginButton from '../src/components/Login.jsx'
 import Cart from './components/Cart/CartPage.jsx'
-import Dashboard from './components/Admin/pageAdmin'
+
+
 import  CartProvider  from './components/Cart/CartProvider';
 import { useAuth0 } from "@auth0/auth0-react";
+
+import Dashboard from './components/Admin/DashboardPage'
+import UserTable from './components/Admin/UsersTable'
+import OrdersTable from './components/Admin/OrdersTable'
+import ProductsTable from './components/Admin/ProductsTable'
 
 function App() {
   return (
@@ -21,13 +27,18 @@ function App() {
       <Route path='/' element={<Landing/>} />
       <Route path='/navbar' element={<NavBar/>}/>
       <Route path='/prueba' element={<Prueba/>}/>
-      <Route path='/uploadproduct' element={<CargarProducto/>}/>
+      <Route path='/admin/uploadproduct' element={<CargarProducto/>}/>
       <Route path='/product/:id' element={<ProductDetails/>}/>
       <Route path='/loading' element={<Loading/>}/>
-      <Route path='/profile' element={<Profile/>}/>
+      <Route path='/admin/profile' element={<Profile/>}/>
       <Route path='/login' element={<LoginButton/>}/>
       <Route path='/cart' element={<Cart/>}/>
       <Route path='/admin/dashboard' element={<Dashboard/>}/>
+      <Route path='/admin/userstable' element={<UserTable/>}/>
+      <Route path='/admin/orderstable' element={<OrdersTable/>}/>
+      <Route path='/admin/productstable' element={<ProductsTable/>}/>
+
+
     </Routes>
     </CartProvider>
     

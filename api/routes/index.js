@@ -3,7 +3,7 @@ import user from "./users.js";
 import product from "./products.js";
 import category from "./categories.js";
 // import token_confirmed from "./Token_confirm";
- //import order from './Orders';
+ import order from './orders.js';
 // import conversation from "./Conversations";
 // import message from "./Messages";
 
@@ -16,7 +16,7 @@ router.use("/users", user) //CRUD de usuario - ADMIN lee y borra => implementar 
 router.use("/products", product) //CRUD - User y Admin
 router.use("/categories",category) // CRUD - Admin
 // route.use("/products-cart", productCart) // CRUD - User y Admin
-// router.use("/orders", order) 
+ router.use("/orders", order) 
 
 // route.use('/conversations', conversation)
 // route.use('/messages', message)

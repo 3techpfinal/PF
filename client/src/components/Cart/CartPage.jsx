@@ -1,6 +1,7 @@
 import {Box, Button, Card, CardContent, Divider, Grid,Typography} from '@mui/material';
 import { NavLink } from 'react-router-dom';
-import { CartList, OrderSummary } from '.';
+import {  OrderSummary } from './OrderSummary';
+import { CartList } from './CartList';
 import NavBar from '../NavBar'
 
 const CartPage=()=>{

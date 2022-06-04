@@ -60,10 +60,16 @@ const rootReducer = createReducer(initialState, (builder) => {
     })
     .addCase(actions.CREATEPRODUCT.fulfilled, (state, action) => {
     })
-    .addCase(actions.SEARCHBYNAME.fulfilled, (state, action) => {
+    .addCase(actions.SEARCHBYNAMEPRODUCTS.fulfilled, (state, action) => {
       state.products=[]
       state.products=action.payload
     })
+    .addCase(actions.SEARCHBYNAMEUSERS.fulfilled, (state, action) => {
+      state.users=[]
+      state.users=action.payload
+    })
+
+
     .addCase(actions.SEARCHBYCATEGORY.fulfilled, (state, action) => {
       state.products=[]
       state.products=action.payload 

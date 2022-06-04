@@ -20,7 +20,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import Loading from '../../pages/Loading'
+import Loading from '../Loading'
 import { GETDETAIL } from '../../actions';
 
 

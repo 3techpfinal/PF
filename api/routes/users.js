@@ -13,7 +13,8 @@ router.post('/signup', signUp);
 router.post('/login', logIn);
 
 
-router.get("/", [verifyToken, isAdmin], async (req, res, next) => {
+router.get("/", /*[verifyToken, isAdmin],*/ async (req, res, next) => {
+    
     try {
         const users = await User.find()
         res.json(users)

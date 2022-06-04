@@ -1,7 +1,7 @@
 import { Grid,CardMedia, Box, Typography, Divider } from '@mui/material'
 import { Container } from '@mui/system'
 import * as React from 'react'
-import ProductCard from '../components/products/ProductCard'
+import ProductCard from '../components/Products/ProductCard'
 import NavBar from '../components/NavBar'
 import { Autoplay,Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -11,7 +11,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux'
 import { GETPRODUCTS } from '../actions'
-import Loading from './Loading'
+import Loading from '../components/Loading'
 import OrderByPrice from '../components/OrderByPrice'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
@@ -36,13 +36,12 @@ const Landing=()=>{
     
     React.useEffect(()=>{      
             var inicial='Productos'
-            if(typeof products === "string")return setNameCatg(()=>inicial)//si es string es porque el back tira error, no encontro producto por ej
-            if(!products[0])return setNameCatg(()=>inicial)
+            if(typeof products === "string")return setNameCatg(inicial)//si es string es porque el back tira error, no encontro producto por ej
             else{
-                var ref=products[0].category.name
+                var ref=products[0]?.category.name
+                setNameCatg(ref)
                 products.forEach((e)=>{
-                    setNameCatg(()=>e.category.name)
-                    if(e.category.name!==ref)setNameCatg(()=>inicial)
+                    if(e.category.name!==ref){ return setNameCatg(inicial)}
                 })
             }
     },[products])

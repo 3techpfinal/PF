@@ -13,7 +13,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import color from '../styles'
 import { useAuth0 } from "@auth0/auth0-react";
-import Loading from './Loading'
+import Loading from '../components/Loading'
 
 
 const Profile=()=>{

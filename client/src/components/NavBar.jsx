@@ -1,10 +1,11 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
-import {Box,Button} from '@mui/material';
+
+import {Button} from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+
 import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
@@ -19,16 +20,17 @@ import Avatar from '@mui/material/Avatar';
 import { NavLink,Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import color from '../styles'
-import SearchBar from '../ui/SearchInput'
+import SearchBar from '../components/SearchBar'
 import FilterCategory from './FilterCategory'
 import { Container } from '@mui/system';
-import { Divider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { GETPRODUCTS,SEARCHBYCATEGORY } from '../actions';
 import CartContext from '../components/Cart/CartContext'
+import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
 
+import { Box, Divider, Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
 import { useAuth0 } from "@auth0/auth0-react";
-
+import { SEARCHBYNAMEPRODUCTS } from '../actions';
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
   paddingTop: theme.spacing(1),
@@ -76,6 +78,7 @@ const handleOpenUserMenu = (event) => {
   };
 
   const menuId = 'primary-search-account-menu';
+
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -92,11 +95,56 @@ const handleOpenUserMenu = (event) => {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={()=>{navigate('/profile')}}>Profile</MenuItem>
-      <MenuItem onClick={handleMenuClose}>My account</MenuItem>
-      <MenuItem onClick={()=>{navigate('/uploadproduct')}}>Publicar Producto</MenuItem>
-      <MenuItem onClick={()=>{navigate('/admin/dashboard')}}>Dashboard</MenuItem>
-      <MenuItem >Cerrar sesión</MenuItem>
+
+      <ListItem 
+          button
+          onClick={ () => navigate('/admin/profile') }>
+          <ListItemIcon>
+             <AdminPanelSettings/>
+          </ListItemIcon>
+          <ListItemText primary={'Mi perfil'} />
+        </ListItem>
+
+        <ListItem 
+          button
+          onClick={ () => navigate('/admin/orders') }>
+          <ListItemIcon>
+            <ConfirmationNumberOutlined/>
+          </ListItemIcon>
+          <ListItemText primary={'Ordenes'} />
+        </ListItem>
+
+
+      <ListItem 
+          button
+          onClick={ () => navigate('/admin/uploadproduct') }>
+          <ListItemIcon>
+              <CategoryOutlined/> 
+          </ListItemIcon>
+          <ListItemText primary={'Publicar producto'} />
+        </ListItem>
+
+      
+
+      <ListItem 
+          button
+          onClick={ () => navigate('/admin/dashboard') }>
+          <ListItemIcon>
+              <DashboardOutlined />
+          </ListItemIcon>
+          <ListItemText primary={'Dashboard'} />
+        </ListItem>
+
+        <ListItem 
+          button
+          onClick={ () => navigate('/admin/') }>
+          <ListItemIcon>
+              <VpnKeyOutlined/>
+          </ListItemIcon>
+          <ListItemText primary={'Salir'} />
+        </ListItem>
+
+      
     </Menu>
   );
 
@@ -174,7 +222,12 @@ const handleOpenUserMenu = (event) => {
 
 
           <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-            <SearchBar />
+            <SearchBar 
+            placeholder="buscar por producto o categoria"
+            url='/'
+            dinamic={false}
+            action={SEARCHBYNAMEPRODUCTS}
+            />
           </Box>
         
           <Box sx={{display:'flex',alignItems:'center'}}>
@@ -186,7 +239,7 @@ const handleOpenUserMenu = (event) => {
                   </IconButton>
               </NavLink>
 
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ display: {  md: 'flex' } }}>
               <IconButton
                 size="large"
                 edge="end"
@@ -200,7 +253,7 @@ const handleOpenUserMenu = (event) => {
               </IconButton>
             </Box>
 
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"
                 aria-label="show more"
@@ -211,33 +264,34 @@ const handleOpenUserMenu = (event) => {
               >
                 <MoreIcon />
               </IconButton>
-            </Box>
+            </Box> */}
+
           </Box>
 
 
           
         </StyledToolbar>
+
         <Divider sx={{bgcolor:color.color3,m:1}}/>
+
         <Box sx={{display:'flex',justifyContent:'center',mb:1,alignItems:'center'}}>
           <Typography variant='body2' sx={{mr:2}}>Categorias: </Typography>
           <FilterCategory/>
           <Divider orientation="vertical" flexItem sx={{display:{xs:'none',md:'flex'},bgcolor:'white',marginX:1}}/>
-            <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
-            {categories.map((e)=>(
-              <>
-              <Button onClick={()=>{
-                dispatch(SEARCHBYCATEGORY(e._id))
-                navigate('/')
-                }}>
-              <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>
-              </Button>
-              <Divider orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
-              </>               
-            ))}
-            </Box>
+              <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
+                {categories.map((e)=>(
+                <>
+                    <Button onClick={()=>{dispatch(SEARCHBYCATEGORY(e._id)); navigate('/') }}>
+                      <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>
+                    </Button>
+                  <Divider orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
+                </>               
+              ))}
+              </Box>
         </Box>
+
       </AppBar>
-      {renderMobileMenu}
+      {/* {renderMobileMenu} */}
       {renderMenu}
     </Container>
     </>

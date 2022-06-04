@@ -1,10 +1,10 @@
 import React from "react";
-import NavBar from "../components/NavBar"
+import NavBar from "../NavBar"
 import { useState,useRef } from 'react';
 import {   useNavigate } from "react-router-dom"
 //import { Link } from "react-router-dom";
 import { TextField,Select,Container, CardMedia,Link, Box, UploadOulined,InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import {CREATEPRODUCT,GETCATEGORIES} from '../actions'
+import {CREATEPRODUCT,GETCATEGORIES} from '../../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -165,7 +165,7 @@ export default function CrearPublicacion() {
               value={input.category}
               onChange={(e)=>validate(e)}
               name='category'
-              
+              fullWidth
             >
                 <MenuItem key='select' value='Select'>
                   Select
@@ -182,15 +182,16 @@ export default function CrearPublicacion() {
             <TextField multiline rows={10} id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
             onChange={(e)=>validate(e)}/>
 
-                            <Button
-                                color="secondary"
-                                fullWidth
-                                startIcon={ <UploadOutlined /> }
-                                sx={{ mb: 3 }}
-                                onClick={ () => fileInputRef.current?.click() }
-                            >
-                                Cargar imagen
-                            </Button>
+                <Button
+                    color="secondary"
+                    fullWidth
+                    startIcon={ <UploadOutlined /> }
+                   
+                    
+                    onClick={ () => fileInputRef.current?.click() }
+                >
+                    Cargar imagen
+                </Button>
 
             
             
@@ -244,7 +245,7 @@ export default function CrearPublicacion() {
               {upLoading && <p>Subiendo Foto...</p> }
 
              <div>
-            <button disabled={input.name===""||input.category==="Select"?true:false||input.description===""||input.price===""}  type="submit" onClick={(e) => handleSubmit(e)}>Crear Pubicación</button>
+            <Button fullWidth sx={{ mb: 3 }} disabled={input.name===""||input.category==="Select"?true:false||input.description===""||input.price===""}  width="100%" type="submit" onClick={(e) => handleSubmit(e)}>Crear Pubicación</Button>
             </div>   
 
           </Box>

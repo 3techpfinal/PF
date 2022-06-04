@@ -37,7 +37,6 @@ export default function FilterByCategory() {
       <FormControl fullWidth>
       <Select
         id="demo-simple-select"
-       
         value={sValue}
         onChange={(e) => {
           setSvalue(()=>e.target.value)
@@ -46,9 +45,9 @@ export default function FilterByCategory() {
         name='category'
         sx={{ height:24,bgcolor:color.color3 }}
       >
-          <MenuItem key='select' value='Todos' onClick={(e)=>{
-            dispatch(GETPRODUCTS())
-            if(location!=='/')navigate('/')}}>Todos</MenuItem>
+          <MenuItem key='select' value='Todos' onClick={(e)=>{dispatch(GETPRODUCTS()); if(location!=='/')navigate('/')}}>
+              Todos
+          </MenuItem>
               {categories.map((category) => (
                 <MenuItem key={category._id} name={category.name} value={category._id}>
                   {category.name}
