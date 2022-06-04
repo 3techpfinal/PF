@@ -16,12 +16,13 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
+import swal from 'sweetalert';
 //var cloudinary = require('cloudinary').v2;
 //import { v2 as cloudinary } from 'cloudinary';
 //cloudinary.config( process.env.CLOUDINARY_URL || '' );
 //cloudinary.config( 'cloudinary://194456155422281:5zFQO4yzRgVJZvpI557kVlR_XP4@dnlooxokf' );
 
-const regex=/^[0-9]+$/
+//const regex=/^[0-9]+$/
 
 
 export default function CrearPublicacion() {
@@ -89,12 +90,13 @@ export default function CrearPublicacion() {
       setInput((input)=>({...input,name:ev.target.value}))
     }
 
-    else if(ev.target.name==='precio' && ev.target.value>-1   ){
-      console.log("precio",ev.target.value)
-        setInput((input)=>({...input,price:parseInt(ev.target.value)}))
+   // else if(ev.target.name==='precio' && ev.target.value>-1 && (/\d/.test(ev.target.value))||( ev.target.name==='precio' && ev.target.value==='.') ){
+    else if (ev.target.name==='precio' && ev.target.value>-1 && (/\d/.test(ev.target.value))){  
+      console.log("precio:", ev.target.value)
+       setInput((input)=>({...input,price:(ev.target.value)}))
     }
 
-    else if(ev.target.name==='stock' && ev.target.value>-1 ){
+    else if(ev.target.name==='stock' && ev.target.value>-1 && (/\d/.test(ev.target.value)) ){
         setInput((input)=>({...input,stock:parseInt(ev.target.value)}))
     }
 
@@ -113,6 +115,15 @@ export default function CrearPublicacion() {
           const newPost={...input,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
           dispatch(CREATEPRODUCT(newPost))
           alert("Se creo el Producto exitosamente!")
+
+          swal({
+            title:"Realizado",
+            text:"Se creo el Producto exitosamente!",
+            icon:"success",
+            button:"Aceptar"
+          })
+
+
           navegar("/")//se accede al home
           window.location.reload();//se refresca para activar el dispatch de GETPRODUCTS()       
   }
@@ -123,7 +134,7 @@ export default function CrearPublicacion() {
         <NavBar/>
 
         <Box display='flex' justifyContent='center'>
-      <div id='formnuevo'>
+          <div id='formnuevo'>
 
         <Typography display='flex' justifyContent='center' mt={15}>PUBLICAR ARTICULO</Typography>
 
@@ -141,12 +152,10 @@ export default function CrearPublicacion() {
             <TextField id="formtitle" label="Nombre" variant="outlined" name='title' value={input.name}
             onChange={(e)=>validate(e)}/>
 
-            <TextField id="formprecio" label="Precio" variant="outlined"  type='number' name='precio' value={parseInt(input.price)}
+            <TextField id="formprecio" label="Precio" variant="outlined"  name='precio' value={(input.price)} type='number'
                 InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}
                 onChange={(e)=>validate(e)}
-            />
-            
-            
+            />                      
 {/*          
             <label>Cantidad:</label>
             <input id="productStock" name='stock' value={input.stock}
@@ -167,13 +176,9 @@ export default function CrearPublicacion() {
               name='category'
               fullWidth
             >
-                <MenuItem key='select' value='Select'>
-                  Select
-                </MenuItem>
+                <MenuItem key='select' value='Select'>Select</MenuItem>
                   {categories.map((category) => (
-                <MenuItem key={category._id} value={category._id}>
-                  {category.name}
-                </MenuItem>
+                <MenuItem key={category._id} value={category._id}>{category.name}</MenuItem>
               ))}
             </Select>
 
@@ -211,13 +216,13 @@ export default function CrearPublicacion() {
                       spaceBetween={20}
                       slidesPerView={4}
                       navigation={true}
-                      loop={true}
+                      loop={false}
                      
                   
                      // pagination={{ clickable: true }}
                     >
                 {images[0]?images.map(image=>(
-                  <Box>
+                  <Container>
 
                     <SwiperSlide>
                       <Link target="_blank" href={image}>
@@ -238,11 +243,12 @@ export default function CrearPublicacion() {
 
                     </SwiperSlide>
                    
-                   </Box>
+                   </Container>
                 )):<></>}
                 </Swiper>
               </Container>
               {upLoading && <p>Subiendo Foto...</p> }
+              <Typography display='flex' justifyContent='center'>subiste {images.length} fotos</Typography>
 
              <div>
             <Button fullWidth sx={{ mb: 3 }} disabled={input.name===""||input.category==="Select"?true:false||input.description===""||input.price===""}  width="100%" type="submit" onClick={(e) => handleSubmit(e)}>Crear Pubicación</Button>

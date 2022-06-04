@@ -16,20 +16,12 @@ export default function SearchInput({placeholder,url,dinamic,action}) {
   const dispatch = useDispatch()
   const [input, setInput] = React.useState('')
 
-  const noDinamicChange = (e) => {
+  const handleChange = (e) => {
     setInput(() => e.target.value)
   }
 
    React.useEffect(()=>
    {dinamic && dispatch(action(input))},[input])
-  
-
-  const DinamicChange = (e) => {
-    setInput(()=>e.target.value)
-
-  }
-
-
 
 
   return (
@@ -47,7 +39,7 @@ export default function SearchInput({placeholder,url,dinamic,action}) {
         sx={{ ml: 1, flex: 1, color: 'white',fontSize:{xs:9,md:18} }}
         placeholder={placeholder}
         value={input}
-        onChange={dinamic?DinamicChange: (e) =>noDinamicChange(e)}
+        onChange={(e) =>handleChange(e)}
       />
       <IconButton type="submit" sx={{ }} >
         <SearchIcon sx={{ color: 'white' }} />

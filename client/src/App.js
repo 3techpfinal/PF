@@ -18,6 +18,7 @@ import Dashboard from './components/Admin/DashboardPage'
 import UserTable from './components/Admin/UsersTable'
 import OrdersTable from './components/Admin/OrdersTable'
 import ProductsTable from './components/Admin/ProductsTable'
+import PasswordChange from './Pages/PasswordChange'
 
 function App() {
   return (
@@ -26,7 +27,6 @@ function App() {
       {/* <Route path='/' element={<><SearchInput /> <FilterByCategory />  <Btn href={"/contact"} text={"Contact Us!"} />  <Btn href={"/login"} text={"Login"} /> </>} /> */}
       <Route path='/' element={<Landing/>} />
       <Route path='/navbar' element={<NavBar/>}/>
-      <Route path='/prueba' element={<Prueba/>}/>
       <Route path='/admin/uploadproduct' element={<CargarProducto/>}/>
       <Route path='/product/:id' element={<ProductDetails/>}/>
       <Route path='/loading' element={<Loading/>}/>
@@ -37,6 +37,7 @@ function App() {
       <Route path='/admin/userstable' element={<UserTable/>}/>
       <Route path='/admin/orderstable' element={<OrdersTable/>}/>
       <Route path='/admin/productstable' element={<ProductsTable/>}/>
+      <Route path='/passwordchange' element={<PasswordChange/>}/>
 
 
     </Routes>

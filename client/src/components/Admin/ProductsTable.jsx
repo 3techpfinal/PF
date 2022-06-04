@@ -4,9 +4,10 @@ import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-mate
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Grid, Select, MenuItem, Box,CardMedia } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {GETUSERS, GETORDERS,GETPRODUCTS} from '../../actions'
+import {GETUSERS, GETORDERS,GETPRODUCTS,SEARCHBYNAMEPRODUCTS} from '../../actions'
 import { AppDispatch,RootState } from '../../store'
 import NavBar from '../NavBar'
+import SearchBar from '../SearchBar'
 
 
 
@@ -83,12 +84,19 @@ const UsersPage = () => {
     }))
     
   return (
-    <Box >
-
-
+<>
     <NavBar/>
-        <Grid container className='fadeIn' my={15}>
-            <Grid item xs={12} sx={{ height:700, width: 40000 }}>
+    <Box mt={15} >
+
+    <SearchBar 
+                placeholder="buscar por nombre de producto"
+                url='/admin/userstable'
+                dinamic={true}
+                action={SEARCHBYNAMEPRODUCTS}
+        />
+
+        <Grid container className='fadeIn'>
+            <Grid item xs={12} sx={{ height:660, width: 40000 }}>
                 <DataGrid 
                     rows={ rows }
                     columns={ columns }
@@ -101,7 +109,7 @@ const UsersPage = () => {
 
 
     </Box>
-
+    </>
   )
 }
 
