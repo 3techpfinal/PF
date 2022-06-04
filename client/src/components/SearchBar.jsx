@@ -20,8 +20,8 @@ export default function SearchInput({placeholder,url,dinamic,action}) {
     setInput(() => e.target.value)
   }
 
-  // React.useEffect((dinamic)=>
-  // {dispatch(action(input))},[input])
+   React.useEffect(()=>
+   {dinamic && dispatch(action(input))},[input])
   
 
   const DinamicChange = (e) => {

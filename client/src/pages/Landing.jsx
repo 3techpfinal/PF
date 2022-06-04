@@ -34,14 +34,15 @@ const Landing=()=>{
     
     
     
-    React.useEffect(()=>{      
+    React.useEffect(()=>
+    {      
             var inicial='Productos'
-            if(typeof products === "string")return setNameCatg(inicial)//si es string es porque el back tira error, no encontro producto por ej
+            if(typeof products === "string"){ setNameCatg("")}//si es string es porque el back tira error, no encontro producto por ej
             else{
                 var ref=products[0]?.category.name
                 setNameCatg(ref)
                 products.forEach((e)=>{
-                    if(e.category.name!==ref){ return setNameCatg(inicial)}
+                    if(e.category.name!==ref){  setNameCatg(inicial)}
                 })
             }
     },[products])
@@ -73,7 +74,8 @@ const Landing=()=>{
                             alt="gf"
                             sx={{objectFit:'cover'}}
                             />
-                        </SwiperSlide>)}
+                        </SwiperSlide>)
+                    }
                 </Swiper>
                 </Box>
                 
@@ -85,16 +87,14 @@ const Landing=()=>{
 
                 {typeof products === "string" ? 
                 <Box sx={{display:'flex',flexDirection:'row',justifyContent:'center',mt:3}}>
-                <Typography variant='h4' sx={{m:3}}>No hay productos con este nombre</Typography>
+                    <Typography variant='h4' sx={{m:3}}>No hay productos con este nombre</Typography>
                 </Box>
                 :
                 <Grid container spacing={1} sx={{justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>
-                
                     {products.map(e=>
                         <Grid item xs={5} md={3}  sx={{display:'flex',justifyContent:'center',m:'auto',marginX:0}}>
                             <ProductCard key={e._id} product={e}/>
                         </Grid>)}
-
                 </Grid>}
 
                

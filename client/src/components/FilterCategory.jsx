@@ -18,9 +18,7 @@ export default function FilterByCategory() {
     },[dispatch])
     const categories=useSelector((state)=>state.rootReducer.categories)
 
-    async function handleFilterCategory(e) {
-      
-
+    async function handleFilterCategory(e) {      
       if(e.target.value==="Todos") {
       dispatch(GETPRODUCTS())
       if(location!=='/')navigate('/')
@@ -29,31 +27,34 @@ export default function FilterByCategory() {
       dispatch(SEARCHBYCATEGORY(e.target.value))
 
       if(location!=='/')navigate('/')}
+
+      return e.target.value
+      
     }
 
     console.log("categorias",categories)
   return (
     <Box sx={{minWidth:100}}>
-      <FormControl fullWidth>
-      <Select
-        id="demo-simple-select"
-        value={sValue}
-        onChange={(e) => {
-          setSvalue(()=>e.target.value)
-          handleFilterCategory(e)
-        }}
-        name='category'
-        sx={{ height:24,bgcolor:color.color3 }}
-      >
-          <MenuItem key='select' value='Todos' onClick={(e)=>{dispatch(GETPRODUCTS()); if(location!=='/')navigate('/')}}>
-              Todos
-          </MenuItem>
-              {categories.map((category) => (
-                <MenuItem key={category._id} name={category.name} value={category._id}>
-                  {category.name}
-                </MenuItem>
-              ))}
-        </Select>
+        <FormControl fullWidth>
+          <Select
+            id="demo-simple-select"
+            value={sValue}
+            onChange={(e) => {
+              setSvalue(()=>e.target.value)
+              handleFilterCategory(e)
+            }}
+            name='category'
+            sx={{ height:24,bgcolor:color.color3 }}
+          >
+              <MenuItem key='select' value='Todos' onClick={(e)=>{dispatch(GETPRODUCTS()); if(location!=='/')navigate('/')}}>
+                  Todos
+              </MenuItem>
+                  {categories.map((category) => (
+                    <MenuItem key={category._id} name={category.name} value={category._id}>
+                      {category.name}
+                    </MenuItem>
+                  ))}
+          </Select>
         </FormControl>
     </Box>
   );

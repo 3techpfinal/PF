@@ -29,6 +29,12 @@ const productSchema = new Schema({
         default: 0
     },
 
+    amountOfSales: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+
     imageProduct: {
         type: Array
     },

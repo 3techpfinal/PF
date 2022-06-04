@@ -42,12 +42,12 @@ const userSchema = new Schema({
     },
 
 
-    cart: [
+    cart: 
         {
             type: Schema.Types.ObjectId,
             ref: 'Cart'
         }
-    ],
+    ,
 
     wishList: [
         {

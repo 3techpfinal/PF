@@ -14,15 +14,30 @@ router.post('/login', logIn);
 
 
 router.get("/", /*[verifyToken, isAdmin],*/ async (req, res, next) => {
-    
-    try {
-        const users = await User.find()
-        res.json(users)
-    } catch (error) {
-        next(error)
+   
+    const {name} = req.query
+    if(name){
+        try {
+            const userName = await User.find({ name: {$regex: req.query.name, $options:'i'}}).populate('cart',['wishList'])
+            return userName.length === 0 ? res.send("user not found") : res.json(userName)
+            } catch (error) {
+            next(error)
+        }
     }
-
+    
+    else {
+        
+        try {
+            //http://localhost:3000/products
+            const allUsers = await User.find({});
+            return res.json(allUsers)
+            } catch (error) {
+            next(error)
+        }
+    }
+   
 });
+
 
 
 router.get("/:id", async (req,res,next) => {
