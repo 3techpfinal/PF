@@ -44,7 +44,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 export default function PrimarySearchAppBar() {
   const categories=useSelector((state)=>state.rootReducer.categories)
   const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
-  const { numberOfItems } = React.useContext( CartContext );
+  const { numberOfItems,total } = React.useContext( CartContext );
   const { user, isAuthenticated,getIdTokenClaims,logout,loginWithPopup } = useAuth0();
   const dispatch=useDispatch()
   const navigate=useNavigate()
@@ -53,7 +53,9 @@ export default function PrimarySearchAppBar() {
     dispatch(VERIFYADMIN())
   },[isAuthenticated])
 
-
+  React.useEffect(()=>{
+    if(!Cookie.get('cart'))Cookie.set('cart',JSON.stringify([]))
+  },[])
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -99,6 +101,8 @@ export default function PrimarySearchAppBar() {
       {isAdmin && <MenuItem onClick={()=>{navigate('/admin/dashboard')}}>Dashboard</MenuItem>}
       <MenuItem onClick={()=>{
         Cookie.set('user',JSON.stringify([]))
+        Cookie.remove('cart')
+        Cookie.remove('token')
         logout({ returnTo: window.location.origin })
         }}>Cerrar sesión</MenuItem>
     </Menu>
@@ -206,6 +210,15 @@ export default function PrimarySearchAppBar() {
               onClick={()=>loginWithPopup().then(()=>getIdTokenClaims()).then(r=>axios.post('http://localhost:3000/users/login',{token:r.__raw})).then(r=>{
                 Cookie.set('token',r.data.token)
                 Cookie.set('user',JSON.stringify(r.data.user))
+                axios.post('http://localhost:3000/cart',{
+                  cart:JSON.parse( Cookie.get('cart') ),
+                  totalPrice:total
+                },{
+                  headers:{
+                    'x-access-token':r.data.token
+                  }
+                })
+     
               }).then(()=>dispatch(VERIFYADMIN()))}>
                 Login
                 </Button>}

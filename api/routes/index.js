@@ -6,6 +6,7 @@ import category from "./categories.js";
  //import order from './Orders';
 // import conversation from "./Conversations";
 // import message from "./Messages";
+import cart from './carts.js'
 
 
 const router = Router();
@@ -17,7 +18,7 @@ router.use("/products", product) //CRUD - User y Admin
 router.use("/categories",category) // CRUD - Admin
 // route.use("/products-cart", productCart) // CRUD - User y Admin
 // router.use("/orders", order) 
-
+router.use("/cart",cart)
 // route.use('/conversations', conversation)
 // route.use('/messages', message)
 export default router

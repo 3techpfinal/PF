@@ -4,6 +4,8 @@ import React, { PropsWithChildren } from 'react';
 import  {cartReducer}  from './cartReducer';
 import  CartContext  from './CartContext';
 //import { IOrder } from '../Orders/orderInterface';
+import {useAuth0} from '@auth0/auth0-react'
+import axios from 'axios'
 
 /*
 export interface CartState {
@@ -28,7 +30,7 @@ type Props = {
 export default function CartProvider({children})  {
 
     const [state, dispatch] = useReducer( cartReducer , CART_INITIAL_STATE );
-
+    const {isAuthenticated} =useAuth0()
 
 
     // Efecto
@@ -40,7 +42,32 @@ export default function CartProvider({children})  {
         } catch (error) {
             dispatch({ type: '[Cart] - LoadCart from cookies | storage', payload: [] });
         }
+        
     }, []);
+
+    useEffect(()=>{
+        if(isAuthenticated){
+            const token= Cookie.get('token')
+            axios('http://localhost:3000/cart',
+                    {
+                      headers:{
+                        'x-access-token':token
+                      }
+                    }).then((r)=>{
+                      Cookie.set('cart',JSON.stringify(r.data.cart))
+                    
+                    }).then(()=>{
+                        try 
+                        {
+                            const cookieProducts = Cookie.get('cart')? JSON.parse( Cookie.get('cart') ): [] // Cookie.get(cart) pregunto si existe para que no sea undefined, lo parseo sino array vacio
+                            dispatch({ type: '[Cart] - LoadCart from cookies | storage', payload: cookieProducts });
+                        } catch (error) {
+                            dispatch({ type: '[Cart] - LoadCart from cookies | storage', payload: [] });
+                        }
+                    })
+                               
+        }
+    },[isAuthenticated])
 
     useEffect(() => { 
         if(state.cart.length>0)Cookie.set('cart', JSON.stringify( state.cart ));

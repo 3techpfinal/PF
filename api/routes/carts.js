@@ -3,24 +3,37 @@ import Cart from '../models/Cart.js';
 import User from '../models/User.js';
 import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 
+
 const router = Router();
 
 router.post('/', verifyToken, async(req,res,next)=>{
     try {
-                
+    
+        const {cart,totalPrice} = req.body;
+        // buscar carrito prexistente y modificarlo
+        const previousCart = await Cart.findOne({user:req.userId});
+        if(previousCart){
+            
+            const modifiedCart = await Cart.findByIdAndUpdate(
+                previousCart._id,
+                {"products":previousCart.products.concat(cart), "totalPrice" : previousCart.totalPrice+totalPrice},
+                {upsert: true, new : true})
+
+                console.log('modifiedCart', modifiedCart)
+        } else{
+
         const newCart = new Cart(req.body);
+        newCart.products = cart
         newCart.user = [req.userId];
         newCart.setCreationDate();
-
         await newCart.save();
 
         const updatedUser = await User.findByIdAndUpdate(
             req.userId,
             {"cart": newCart._id},
             {upsert: true, new : true})
-            console.log(updatedUser)
-
-        res.send(newCart);
+        }
+        res.send('hola');
     } catch(err){
         next(err)
     }
@@ -30,8 +43,8 @@ router.post('/', verifyToken, async(req,res,next)=>{
 
 router.get("/", verifyToken, async (req, res, next) => {
     try {
-        const cart = await Cart.find()
-        res.json(cart)
+        const previousCart = await Cart.findOne({user:req.userId});
+        res.json({cart:previousCart.products})
     } catch (error) {
         res.status(404).json({ error: "Error : Cart not found" })
     }

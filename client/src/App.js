@@ -7,7 +7,6 @@ import CargarProducto from './pages/UploadProduct'
 import ProductDetails from './components/products/ProductDetails';
 import Loading from './pages/Loading';
 import Profile from './pages/Profile'
-import LoginButton from '../src/components/Login.jsx'
 import Cart from './components/Cart/CartPage.jsx'
 import Dashboard from './components/Admin/pageAdmin'
 import  CartProvider  from './components/Cart/CartProvider';
@@ -24,7 +23,6 @@ function App() {
       <Route path='/product/:id' element={<ProductDetails/>}/>
       <Route path='/loading' element={<Loading/>}/>
       <Route path='/profile' element={<Profile/>}/>
-      <Route path='/login' element={<LoginButton/>}/>
       <Route path='/cart' element={<Cart/>}/>
       <Route path='/admin/dashboard' element={<Dashboard/>}/>
     </Routes>
