@@ -5,8 +5,9 @@ import  ItemCounter  from './ItemCounter.jsx';
 import  CartContext  from './CartContext.jsx';
 import { NavLink, useParams } from 'react-router-dom';
 import { CreditScoreOutlined } from '@mui/icons-material';
-
-
+import {api} from '../../actions'
+import axios from 'axios'
+import Cookie from 'js-cookie'
 import { useDispatch, useSelector } from "react-redux";
 import {GETDETAIL} from '../../actions'
 
@@ -24,13 +25,22 @@ export const CartList = ({ editable = false }) => {
 
 */
 
-    const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext);
+    const { cart, updateCartQuantity, removeCartProduct,total } = useContext(CartContext);
 
     const onNewCartQuantityValue = (product, newQuantityValue) => {
         product.quantity = newQuantityValue;
         updateCartQuantity( product );
+        const token=Cookie.get('token')
+        var totalPrice=0
+        cart.forEach((e)=>{
+            totalPrice=totalPrice+e.price*e.quantity
+        })
+        axios.put(`${api}/cart`,{cart:cart,totalPrice},{
+               headers:{
+                  'x-access-token':token
+               }
+        }) 
     }
-    console.log(cart)
 
     return (
         <>

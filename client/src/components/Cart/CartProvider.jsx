@@ -6,6 +6,7 @@ import  CartContext  from './CartContext';
 //import { IOrder } from '../Orders/orderInterface';
 import {useAuth0} from '@auth0/auth0-react'
 import axios from 'axios'
+import {api} from '../../actions'
 
 /*
 export interface CartState {
@@ -32,42 +33,17 @@ export default function CartProvider({children})  {
     const [state, dispatch] = useReducer( cartReducer , CART_INITIAL_STATE );
     const {isAuthenticated} =useAuth0()
 
-
+    
     // Efecto
-    useEffect(() => {
+    useEffect(() => {     
         try 
         {
             const cookieProducts = Cookie.get('cart')? JSON.parse( Cookie.get('cart') ): [] // Cookie.get(cart) pregunto si existe para que no sea undefined, lo parseo sino array vacio
              dispatch({ type: '[Cart] - LoadCart from cookies | storage', payload: cookieProducts });
         } catch (error) {
             dispatch({ type: '[Cart] - LoadCart from cookies | storage', payload: [] });
-        }
-        
+        }        
     }, []);
-
-    useEffect(()=>{
-        if(isAuthenticated){
-            const token= Cookie.get('token')
-            axios('http://localhost:3000/cart',
-                    {
-                      headers:{
-                        'x-access-token':token
-                      }
-                    }).then((r)=>{
-                      Cookie.set('cart',JSON.stringify(r.data.cart))
-                    
-                    }).then(()=>{
-                        try 
-                        {
-                            const cookieProducts = Cookie.get('cart')? JSON.parse( Cookie.get('cart') ): [] // Cookie.get(cart) pregunto si existe para que no sea undefined, lo parseo sino array vacio
-                            dispatch({ type: '[Cart] - LoadCart from cookies | storage', payload: cookieProducts });
-                        } catch (error) {
-                            dispatch({ type: '[Cart] - LoadCart from cookies | storage', payload: [] });
-                        }
-                    })
-                               
-        }
-    },[isAuthenticated])
 
     useEffect(() => { 
         if(state.cart.length>0)Cookie.set('cart', JSON.stringify( state.cart ));
@@ -90,8 +66,6 @@ export default function CartProvider({children})  {
 
 
 
-
-
     
 
     const addProductToCart = ( product ) => {
@@ -104,7 +78,11 @@ export default function CartProvider({children})  {
 
         //! Nivel Final
       const productInCart = state.cart.some( p => p._id === product._id ); //productInCart es verdadero si el producto agregado esta en el carrito
-        if ( !productInCart ) return dispatch({ type: '[Cart] - Update products in cart', payload: [...state.cart, product ] }) //si el producto no esta en el carrito entonces lo agrega
+        if ( !productInCart ){  
+        return dispatch({ type: '[Cart] - Update products in cart', payload: [...state.cart, product ] })
+        }    
+            
+             //si el producto no esta en el carrito entonces lo agrega
 
         // Acumular
         const updatedProducts = state.cart.map( p => { //si el producto agregado esta en el carrito entonces mapea el carrito 
@@ -113,8 +91,7 @@ export default function CartProvider({children})  {
             // Actualizar la cantidad
             p.quantity += product.quantity; //pero si coincide el producto agregado con el producto del carrito entonces suma la cantidad de producto del carrito y luego duelve el producto con la cantidad actualizada
             return p;
-        });
-
+        });  
         dispatch({ type: '[Cart] - Update products in cart', payload: updatedProducts });
 
     }

@@ -19,7 +19,6 @@ router.post('/', verifyToken, async(req,res,next)=>{
                 {"products":previousCart.products.concat(cart), "totalPrice" : previousCart.totalPrice+totalPrice},
                 {upsert: true, new : true})
 
-                console.log('modifiedCart', modifiedCart)
         } else{
 
         const newCart = new Cart(req.body);
@@ -74,15 +73,23 @@ router.delete('/:id', verifyToken, async (req, res, next) => {
     }
 });
 
-router.put('/:id', verifyToken, async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        await Product.findByIdAndUpdate({ _id: id }, req.body);
-        const updatedProduct = await Product.findById({ _id: id })
-        res.send(updatedProduct)
-    } catch (err) {
-        next(err)
-    }
+router.put('/', verifyToken, async (req, res, next) => {
+    const {cart,totalPrice}=req.body
+        // buscar carrito prexistente y modificarlo
+        const previousCart = await Cart.findOne({user:req.userId})
+        const modifiedCart = await Cart.findByIdAndUpdate(
+                previousCart._id,
+                {"products":cart, "totalPrice" : totalPrice},
+                {upsert: true, new : true})
+
+    // try {
+    //     const { id } = req.params;
+    //     await Product.findByIdAndUpdate({ _id: id }, req.body);
+    //     const updatedProduct = await Product.findById({ _id: id })
+    //     res.send(updatedProduct)
+    // } catch (err) {
+    //     next(err)
+    // }
 
 });
 

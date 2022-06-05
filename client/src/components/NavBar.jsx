@@ -29,6 +29,8 @@ import CartContext from '../components/Cart/CartContext'
 import axios from 'axios'
 import { useAuth0 } from "@auth0/auth0-react";
 import Cookie from 'js-cookie'
+import {api} from '../actions'
+import { cartReducer } from './Cart/cartReducer';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
@@ -48,6 +50,8 @@ export default function PrimarySearchAppBar() {
   const { user, isAuthenticated,getIdTokenClaims,logout,loginWithPopup } = useAuth0();
   const dispatch=useDispatch()
   const navigate=useNavigate()
+  const [logged,setLogged]=React.useState(false)
+
 
   React.useEffect(()=>{
     dispatch(VERIFYADMIN())
@@ -207,10 +211,10 @@ export default function PrimarySearchAppBar() {
                 <Avatar alt="Remy Sharp" src={user?.picture} />
               </IconButton>
               :<Button sx={{bgcolor:color.color2,color:'black',ml:2}}
-              onClick={()=>loginWithPopup().then(()=>getIdTokenClaims()).then(r=>axios.post('http://localhost:3000/users/login',{token:r.__raw})).then(r=>{
+              onClick={()=>loginWithPopup().then(()=>getIdTokenClaims()).then(r=>axios.post(`${api}/users/login`,{token:r.__raw})).then(r=>{
                 Cookie.set('token',r.data.token)
                 Cookie.set('user',JSON.stringify(r.data.user))
-                axios.post('http://localhost:3000/cart',{
+                axios.post(`${api}/cart`,{
                   cart:JSON.parse( Cookie.get('cart') ),
                   totalPrice:total
                 },{
@@ -219,7 +223,22 @@ export default function PrimarySearchAppBar() {
                   }
                 })
      
-              }).then(()=>dispatch(VERIFYADMIN()))}>
+              }).then(()=>{
+
+                const token= Cookie.get('token')
+                axios(`${api}/cart`,
+                {
+                    headers:{
+                         'x-access-token':token
+                    }
+                }).then((r)=>{
+                    Cookie.set('cart',JSON.stringify(r.data.cart))            
+                })
+
+              }).then(()=>{
+                dispatch(VERIFYADMIN())
+                window.location.reload()
+                })}>
                 Login
                 </Button>}
             </Box>

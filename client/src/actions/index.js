@@ -1,7 +1,8 @@
 import axios from "axios"
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import Cookie from 'js-cookie'
-const api='http://localhost:3000'
+
+export const api='http://localhost:3000'
 
 
 export const GETPRODUCTS = createAsyncThunk('GETPRODUCTS', async () => {
