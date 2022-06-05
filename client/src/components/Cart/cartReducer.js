@@ -42,6 +42,25 @@ export const cartReducer = ( state, action) => {
 
 
       case '[Cart] - Change cart quantity': //se genera al presionar los + - del componentes itemCounter
+         if(Cookie.get('token')){
+            const token=Cookie.get('token')
+            var totalPrice=0
+            state.cart.map( product => {
+               if ( product._id !== action.payload._id ) return product; //si es igual, no es el producto que quiero actualizar, lo retorno asi como esta
+               return action.payload; //producto actualizado con la cantidad actualizada
+            }).forEach(e=>{
+               totalPrice=totalPrice+e.price*e.quantity
+            })
+            axios.put(`${api}/cart`,{cart:state.cart.map( product => {
+               if ( product._id !== action.payload._id ) return product; //si es igual, no es el producto que quiero actualizar, lo retorno asi como esta
+               return action.payload; //producto actualizado con la cantidad actualizada
+            }),totalPrice},{
+                  headers:{
+                     'x-access-token':token
+                  }
+         }) 
+
+         }
          return {
             
 
@@ -55,6 +74,19 @@ export const cartReducer = ( state, action) => {
 
       case '[Cart] - Remove product in cart':
          if(state.cart.length===1)Cookie.set('cart', JSON.stringify([]));
+         if(Cookie.get('token')){
+            const token=Cookie.get('token')
+            var totalPrice=0
+            state.cart.filter( product => !(product._id === action.payload._id  )).forEach(e=>{
+               totalPrice=totalPrice+e.price*e.quantity
+            })
+            axios.put(`${api}/cart`,{cart:state.cart.filter( product => !(product._id === action.payload._id  )),totalPrice},{
+                  headers:{
+                     'x-access-token':token
+                  }
+          }) 
+
+         }
          return {
             ...state,
             cart: state.cart.filter( product => !(product._id === action.payload._id  ))
@@ -62,12 +94,16 @@ export const cartReducer = ( state, action) => {
 
          case '[Cart] - Remove all product in cart':
             Cookie.set('cart', JSON.stringify([]));
-            // const token3=Cookie.get('token')
-            // axios.put(`${api}/cart`,{cart:[],totalPrice:0},{
-            //       headers:{
-            //          'x-access-token':token3
-            //       }
-            // }) 
+            if(Cookie.get('token')){
+               const token=Cookie.get('token')
+               var totalPrice=0
+               axios.put(`${api}/cart`,{cart:[],totalPrice},{
+                     headers:{
+                        'x-access-token':token
+                     }
+             }) 
+   
+            }
             return {
                ...state,
                cart: []
