@@ -27,7 +27,7 @@ export default function SummaryPage(){ // esta es la funcion principal
 
     const navegar = useNavigate()    
     const dispatch= useDispatch();
-    const { cart,total } = useContext(CartContext);
+    const { cart,total,removeAllCartProduct } = useContext(CartContext);
 
     const order = {products:cart, adress: "gandhi", isPaid: false, totalPrice: total }
     console.log('orden creada', order)
@@ -35,22 +35,16 @@ export default function SummaryPage(){ // esta es la funcion principal
     const crearOrden = async ()=> {
      let ordenNueva = await dispatch(CREATEORDER(order))
      await dispatch(GETORDER(ordenNueva.payload))
-     Cookie.remove('cart')
-     const token=Cookie.get('token')
-     axios.put(`${api}/cart`,{cart:[],totalPrice:0},{
-         headers:{
-             'x-access-token':token
-         }
-     })
+     removeAllCartProduct()
      navegar(`/orderpayment/${ordenNueva.payload}`)
     }
 
     return(
            <>
         <NavBar/>
-        <Typography variant='h1' component='h1' sx={{mt:15}} display='flex' justifyContent='center'> Resumen de la orden</Typography>
-
-            <Grid container>
+        <Typography variant='h4'  sx={{mt:15,fontWeight:20}} display='flex' justifyContent='center'> Resumen de la orden</Typography>
+        <Divider sx={{m:1,marginX:'10%'}}/>
+            <Grid container sx={{mt:3}}>
                 <Grid item xs={12} sm={7}>
 
                     <CartList editable={false}/>

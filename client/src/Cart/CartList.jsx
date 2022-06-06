@@ -19,19 +19,19 @@ import {GETDETAIL} from '../actions'
 
 
 
-export const CartList = ({ editable = false }) => {
+export const CartList = ({ editable = false,order=false }) => {
 
     const dispatch=useDispatch()
     const {id} = useParams()
     useEffect(()=>{
       dispatch(GETDETAIL(id))
     },[dispatch,id])
-    const productDb=useSelector((State) => State.rootReducer.detail); 
-
-
+    
+    
+    
 
     const { cart, updateCartQuantity, removeCartProduct,total } = useContext(CartContext);
-
+    const array=order || cart
     const onNewCartQuantityValue = (product, newQuantityValue) => {
         product.quantity = newQuantityValue;
         updateCartQuantity( product );
@@ -50,7 +50,7 @@ export const CartList = ({ editable = false }) => {
     return (
         <>
             {
-                cart?.map( product => (//product es un elemento del array cart
+                array?.map( product => (//product es un elemento del array cart
                     <Grid container spacing={2} key={ product._id } sx={{ mb:1 }}>
                         <Grid item xs={3}>
                             
