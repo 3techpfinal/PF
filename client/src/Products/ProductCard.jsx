@@ -51,7 +51,7 @@ export default function ProductCard({product}) {
       review: product.review,
       description: product.description,
       stock: product.stock,
-      discount:product.discount
+      priceOriginal: product.priceOriginal||product.price
     })
 
     const onUpdateQuantity = ( quantity ) => {
@@ -111,20 +111,32 @@ export default function ProductCard({product}) {
         <CardContent sx={{bgcolor:colorStyles.color1,height:100}}>
 
             <Tooltip title={product.name} placement="top">  
-                <Box sx={{display:'flex',alignItems:'flex-start',justifyContent:'space-between'}}>
+                <Box sx={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',mb:1}}>
                   <Typography gutterBottom variant="h6" sx={{color:'white',fontWeight:'200'}}>
                   {product.name.slice(0,15)}
                   </Typography>
-                  {product.discount?<Chip label={`-${product.discount}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
+                  {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
                 </Box>
             </Tooltip>
 
-            <Typography gutterBottom variant="h6" sx={{color:'white',fontWeight:'500'}}>
-                    $ {product.discount?new Intl.NumberFormat().format(product.price*product.discount/100):new Intl.NumberFormat().format(product.price)}
-            </Typography> 
-
-            <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>
             
+
+            <Box sx={{color:'white',fontWeight:'500',display:'flex', flexDirection:'row',justifyContent:'space-between'}}>
+              <Box>
+                     {product.priceOriginal && product.price!==product.priceOriginal ?
+                       <div>
+                         <Typography>{'$'+new Intl.NumberFormat().format(product.price)}</Typography>
+                         <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
+                        </div>
+                      :
+                      <Typography>${new Intl.NumberFormat().format(product.price)}</Typography> }
+            </Box>
+            <Box sx={{display:'flex',justifyContent:'flex-end'}}>         
+               <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>
+            </Box> 
+              
+            </Box> 
+
 
         </CardContent>
       </CardActionArea>
