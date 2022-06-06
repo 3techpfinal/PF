@@ -58,3 +58,14 @@ export const VERIFYADMIN=createAsyncThunk('VERIFYADMIN',async ()=>{
     }
     return false
 })
+
+export const GETRECOMMENDED=createAsyncThunk('GETRECOMMENDED',async (id)=>{
+    const all = await axios(`${api}/products`)
+    const response = await axios(`${api}/products/${id}`)
+    const final=all.data.filter(e=>{
+        if(e.category._id===response.data.category&&e._id!==id)return true
+        else return false
+      })
+    return final
+})
+

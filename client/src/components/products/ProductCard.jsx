@@ -32,7 +32,7 @@ export default function ProductCard({product}) {
          
     },[isHovered,product.imageProduct])
   return (
-    <Card sx={{ width: 250,mt:5 }}
+    <Card sx={{ width: {xs:200,sm:250},mt:5 }}
     onMouseEnter={()=> setIsHovered(true)}
     onMouseLeave={()=> setIsHovered(false)}
     onClick={()=>navigate(`/product/${product._id}`)}>
@@ -54,7 +54,7 @@ export default function ProductCard({product}) {
                 </Box>
             </Tooltip>
             <Typography gutterBottom variant="h5" sx={{color:'white',fontWeight:'500'}}>
-                    $ {product.price}
+                    $ {new Intl.NumberFormat().format(product.price)}
             </Typography>
           
           

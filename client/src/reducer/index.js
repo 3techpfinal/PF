@@ -7,7 +7,8 @@ const initialState = {
   categories:[],
   users:[],
   orders:[],
-  isAdmin:false
+  isAdmin:false,
+  recommended:[]
 }
 
 const OrderByPrice=(state,action)=>{
@@ -76,6 +77,9 @@ const rootReducer = createReducer(initialState, (builder) => {
     })
     .addCase(actions.VERIFYADMIN.fulfilled, (state, action) => {
       state.isAdmin=action.payload
+    })
+    .addCase(actions.GETRECOMMENDED.fulfilled, (state, action) => {
+      state.recommended=action.payload
     })
 
 

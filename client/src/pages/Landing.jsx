@@ -79,7 +79,7 @@ const Landing=()=>{
                 </Box>
                 
                 <Box sx={{marginX:4,mt:1,maxWidth:'100%',display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-                    <Typography variant='h4' sx={{fontWeight:20}}>{nameCatg}</Typography>
+                    <Typography variant='h4' sx={{fontWeight:20,fontSize:{xs:20,md:30}}}>{nameCatg}</Typography>
                     <OrderByPrice/>
                 </Box>
                         <Divider sx={{marginX:3}}/>
