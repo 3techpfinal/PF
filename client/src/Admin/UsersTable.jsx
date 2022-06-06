@@ -4,10 +4,10 @@ import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-mate
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Grid, Select, MenuItem, Box, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {GETUSERS, GETORDERS,GETPRODUCTS,SEARCHBYNAMEUSERS} from '../../actions'
-import { AppDispatch,RootState } from '../../store'
-import NavBar from '../NavBar'
-import SearchBar from '../SearchBar'
+import {GETUSERS, GETORDERS,GETPRODUCTS,SEARCHBYNAMEUSERS} from '../actions'
+import { AppDispatch,RootState } from '../store'
+import NavBar from '../Components/NavBar'
+import SearchBar from '../Components/SearchBar'
 
 
 

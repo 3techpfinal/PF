@@ -1,14 +1,14 @@
 import { Router } from "express";
 import Order from "../models/Order.js";
-// import Product from "../models/Product.js";
+import Product from "../models/Product.js";
 import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 import User from "../models/User.js";
-// import axios from 'axios';
+import axios from 'axios';
 const router = Router()
 
-// import * as IPaypal from '../paypalInterface'
+ //import * as IPaypal from '../paypalInterface'
 
-router.get("/", verifyToken, async (req, res, next) => {
+router.get("/", /*verifyToken,*/ async (req, res, next) => {
     try {
 
         const actualUser = await User.findById(req.userId);
@@ -26,7 +26,7 @@ router.get("/", verifyToken, async (req, res, next) => {
 });
 
 
-router.get("/:id", verifyToken,  async(req, res, next) => {
+router.get("/:id",/* verifyToken,*/  async(req, res, next) => {
     const { id } = req.params
     try {
         const found=await Order.findById(id).populate({path: 'user', model : 'User'})
@@ -40,7 +40,7 @@ router.get("/:id", verifyToken,  async(req, res, next) => {
 
 
 
-router.post('/', verifyToken, async (req, res, next) => {
+router.post('/', /*verifyToken,*/ async (req, res, next) => {
     try {
 
     const newOrder = new Order(req.body); //adress, paymentId, totalPrice, products : [{},{}]
@@ -64,7 +64,7 @@ router.post('/', verifyToken, async (req, res, next) => {
 });
 
 
-router.put('/:id', verifyToken, async (req, res, next) => {
+router.put('/:id', /*verifyToken,*/ async (req, res, next) => {
 
     try {
         const { id } = req.params;
@@ -92,94 +92,94 @@ router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
 
 
 
-// router.post('/pay',async(req, res) => {
+router.post('/pay',async(req, res) => {
 
-//     // Todo: validar sesión del usuario
-//     // TODO: validar mongoID
+    // Todo: validar sesión del usuario
+    // TODO: validar mongoID
 
-//     const getPaypalBearerToken = async() => {
+    const getPaypalBearerToken = async() => {
     
-//         const PAYPAL_CLIENT = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
-//         const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
+        const PAYPAL_CLIENT = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+        const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
     
-//         const base64Token = Buffer.from(`${'AQ0xQs7KJfypFz2RqDQlSnT9qYlzBaGyXFsPaTVDQIbgpvD8n1TXUV5Qh-h6vzVdlzd4QjGDFdqOJrup'}:${'EKxV7dEu_rbAR5eJEaEGZnWxUcLTxy6VHTOUT27sYUI_3FzBzXbOBpMiAqRBq93epypbnlf2JqpbzHuI'}`, 'utf-8').toString('base64');
-//         const body = new URLSearchParams('grant_type=client_credentials');
+        const base64Token = Buffer.from(`${'AQ0xQs7KJfypFz2RqDQlSnT9qYlzBaGyXFsPaTVDQIbgpvD8n1TXUV5Qh-h6vzVdlzd4QjGDFdqOJrup'}:${'EKxV7dEu_rbAR5eJEaEGZnWxUcLTxy6VHTOUT27sYUI_3FzBzXbOBpMiAqRBq93epypbnlf2JqpbzHuI'}`, 'utf-8').toString('base64');
+        const body = new URLSearchParams('grant_type=client_credentials');
     
     
-//         try {
+        try {
             
-//             const { data} = await axios.post( process.env.PAYPAL_OAUTH_URL || '', body, {
-//                 headers: {
-//                     'Authorization': `Basic ${ base64Token }`,
-//                     'Content-Type': 'application/x-www-form-urlencoded'
-//                 }
-//             });
+            const { data} = await axios.post( 'https://api-m.sandbox.paypal.com/v1/oauth2/token' || '', body, {
+                headers: {
+                    'Authorization': `Basic ${ base64Token }`,
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            });
     
-//             return data.access_token;
-    
-    
-//         } catch (error) {
-//             if ( axios.isAxiosError(error) ) {
-//                 console.log(error.response?.data);
-//             } else {
-//                 console.log(error);
-//             }
-    
-//             return null;
-//         }
+            return data.access_token;
     
     
-//     }
-
-
-
-
-//     const paypalBearerToken = await getPaypalBearerToken();
-
-//     if ( !paypalBearerToken ) {
-//         return res.status(400).json({ message: 'No se pudo confirmar el token de paypal' })
-//     }
-
-//     const { transactionId = '', orderId = ''  } = req.body;
-
-
-//     const { data } = await axios.get<IPaypal.PaypalOrderStatusResponse>( `${ process.env.PAYPAL_ORDERS_URL }/${ transactionId }`, {
-//         headers: {
-//             'Authorization': `Bearer ${ paypalBearerToken }`
-//         }
-//     });
-
-//     if ( data.status !== 'COMPLETED' ) {
-//         return res.status(401).json({ message: 'Orden no reconocida' });
-//     }
-
-
-//     //await db.connect();
-//     const dbOrder = await Order.findById(orderId);
-
-//     if ( !dbOrder ) {
-//         //await db.disconnect();
-//         return res.status(400).json({ message: 'Orden no existe en nuestra base de datos' });
-//     }
+        } catch (error) {
+            if ( axios.isAxiosError(error) ) {
+                console.log(error.response?.data);
+            } else {
+                console.log(error);
+            }
+    
+            return null;
+        }
     
     
-//     if ( dbOrder.totalPrice !== Number(data.purchase_units[0].amount.value) ) {
-//         //await db.disconnect();
-//         return res.status(400).json({ message: 'Los montos de PayPal y nuestra orden no son iguales' });
-//     }
+    }
 
 
-//     dbOrder.paymentId = transactionId;
-//     dbOrder.isPaid = true;
-//     dbOrder.products.forEach(async (producto)=>{
-//         await Product.findByIdAndUpdate(producto._id,{stock:(producto.stock-producto.quantity)})
+
+
+    const paypalBearerToken = await getPaypalBearerToken();
+
+    if ( !paypalBearerToken ) {
+        return res.status(400).json({ message: 'No se pudo confirmar el token de paypal' })
+    }
+
+    const { transactionId = '', orderId = ''  } = req.body;
+
+
+    const { data } = await axios.get( `https://api.sandbox.paypal.com/v2/checkout/orders/${ transactionId }`, {
+        headers: {
+            'Authorization': `Bearer ${ paypalBearerToken }`
+        }
+    });
+
+    if ( data.status !== 'COMPLETED' ) {
+        return res.status(401).json({ message: 'Orden no reconocida' });
+    }
+
+
+    //-+await db.connect();
+    const dbOrder = await Order.findById(orderId);
+
+    if ( !dbOrder ) {
+        //await db.disconnect();
+        return res.status(400).json({ message: 'Orden no existe en nuestra base de datos' });
+    }
+    
+
+    if ( dbOrder.totalPrice !== Number(data.purchase_units[0].amount.value) ) {
+        //await db.disconnect();
+        return res.status(400).json({ message: 'Los montos de PayPal y nuestra orden no son iguales' });
+    }
+
+
+    dbOrder.paymentId = transactionId;
+    dbOrder.isPaid = true;
+    dbOrder.products.forEach(async (producto)=>{
+        await Product.findByIdAndUpdate(producto._id,{stock:(producto.stock-producto.quantity)})
         
-//     })
-//     await dbOrder.save();
-//    // await db.disconnect();
+    })
+    await dbOrder.save();
+   // await db.disconnect();
 
     
-//      res.status(200).json({ message: "Orden pagada con éxito" });
-// })
+     res.status(200).json({ message: "Orden pagada con éxito" });
+})
 
 export default router;

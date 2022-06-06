@@ -1,15 +1,15 @@
 import React from "react";
-import NavBar from "../components/NavBar"
-import { useState,useRef } from 'react';
+import NavBar from "../Components/NavBar"
+import { useState } from 'react';
 import {   useNavigate } from "react-router-dom"
-import { TextField,Select,Container, CardMedia,Link, Box, UploadOulined,InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import { useDispatch, useSelector } from 'react-redux'
+import { /*TextField,Select,Container, CardMedia,Link, FormLabel, FormControlLabel, UploadOulined, MenuItem*/ Box, InputLabel, OutlinedInput, InputAdornment, Typography, Button } from '@mui/material';
+//import { useDispatch } from 'react-redux'
 
 
 import IconButton from '@mui/material/IconButton';
-import Input from '@mui/material/Input';
-import FilledInput from '@mui/material/FilledInput';
-import FormHelperText from '@mui/material/FormHelperText';
+//import Input from '@mui/material/Input';
+//import FilledInput from '@mui/material/FilledInput';
+//import FormHelperText from '@mui/material/FormHelperText';
 import FormControl from '@mui/material/FormControl';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
@@ -33,7 +33,7 @@ function validate(newPass){
 
 export default function PasswordChange() {
 
-  const dispatch=useDispatch()
+  //const dispatch=useDispatch()
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
   const [newPass, setnewPass] = React.useState({
     password: '',

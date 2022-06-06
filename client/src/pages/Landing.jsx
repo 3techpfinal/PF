@@ -1,8 +1,8 @@
 import { Grid,CardMedia, Box, Typography, Divider } from '@mui/material'
 import { Container } from '@mui/system'
 import * as React from 'react'
-import ProductCard from '../components/Products/ProductCard'
-import NavBar from '../components/NavBar'
+import ProductCard from '../Products/ProductCard'
+import NavBar from '../Components/NavBar'
 import { Autoplay,Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -11,8 +11,8 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux'
 import { GETPRODUCTS } from '../actions'
-import Loading from '../components/Loading'
-import OrderByPrice from '../components/OrderByPrice'
+import Loading from '../Components/Loading'
+import OrderByPrice from '../Components/OrderByPrice'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 
@@ -24,15 +24,13 @@ const Landing=()=>{
     const [nameCatg,setNameCatg]=React.useState('Productos')
     const dispatch=useDispatch()
 
-    
     let products=useSelector((state)=>state.rootReducer.products)
+
     console.log("productos", products)
+
     React.useEffect(()=>{
         if(!products[0])dispatch(GETPRODUCTS())
     },[dispatch])
-
-    
-    
     
     React.useEffect(()=>
     {      
@@ -51,7 +49,6 @@ const Landing=()=>{
         products[0]?
             <Container sx={{mt:12,width:{xs:'100%'},minWidth:'100%',p:{xs:0}}}>
                 <NavBar/>
-
 
                 <Box >
                 <Swiper 

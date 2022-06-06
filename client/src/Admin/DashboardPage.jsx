@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { AttachMoneyOutlined, CreditCardOffOutlined, CreditCardOutlined, DashboardOutlined, GroupOutlined, CategoryOutlined, CancelPresentationOutlined, ProductionQuantityLimitsOutlined, AccessTimeOutlined, AddShoppingCart } from '@mui/icons-material';
-import NavBar from '../NavBar'
+import NavBar from '../Components/NavBar'
 import { Grid, Typography,Box,Button } from '@mui/material'
 import  CardDashboard  from './CardDashboard'
 import { useDispatch, useSelector } from 'react-redux';
-import {GETUSERS} from '../../actions'
-import { GETPRODUCTS } from '../../actions'
-import { GETORDERS } from '../../actions'
+import {GETUSERS} from '../actions'
+import { GETPRODUCTS } from '../actions'
+import { GETORDERS } from '../actions'
 import { Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 
 

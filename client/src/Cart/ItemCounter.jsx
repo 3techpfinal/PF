@@ -1,19 +1,10 @@
 
-import {FC} from 'react';
-import React, { PropsWithChildren } from 'react';
+
+import React from 'react';
 import {Box, IconButton, Typography} from '@mui/material';
 import {AddCircleOutline, RemoveCircleOutline} from '@mui/icons-material'
 
-/*
-interface Props{
-   
-    currentValue:number;
-    maxValue: number;
 
-    //methods
-    updatedQuantity:(newValue:number)=>void;
-}
-*/
 export default function ItemCounter({currentValue, updatedQuantity, maxValue}){
 
     const addOrRemove = ( value ) => {

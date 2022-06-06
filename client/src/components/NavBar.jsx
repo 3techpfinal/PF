@@ -12,6 +12,7 @@ import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -20,17 +21,25 @@ import Avatar from '@mui/material/Avatar';
 import { NavLink,Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import color from '../styles'
-import SearchBar from '../components/SearchBar'
+import SearchBar from './SearchBar'
 import FilterCategory from './FilterCategory'
 import { Container } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import { GETPRODUCTS,SEARCHBYCATEGORY } from '../actions';
-import CartContext from '../components/Cart/CartContext'
+import CartContext from '../Cart/CartContext'
 import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
 
-import { Box, Divider, Drawer, IconButton, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
+import { Box, Divider, Drawer, IconButton,CardMedia, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
 import { useAuth0 } from "@auth0/auth0-react";
 import { SEARCHBYNAMEPRODUCTS } from '../actions';
+import {CartList} from '../Cart/CartList'
+
+
+import { Dropdown } from 'rsuite';
+
+
+
+
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
   paddingTop: theme.spacing(1),
@@ -43,8 +52,20 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 
 export default function PrimarySearchAppBar() {
+
+  const [isHovered, setIsHovered] = React.useState (false);
+
+  const listaProductos = React.useMemo(()=>{
+    return isHovered?
+    <CartList/>
+    : <></>
+
+     
+},[isHovered])
+
+
   const categories=useSelector((state)=>state.rootReducer.categories)
-  const { numberOfItems } = React.useContext( CartContext );
+  const { numberOfItems,cart } = React.useContext( CartContext );
   const { user, isAuthenticated, isLoading } = useAuth0();
   console.log('usuario: ',user)
   const dispatch=useDispatch()
@@ -76,6 +97,10 @@ const handleOpenUserMenu = (event) => {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
+
+
+  const showWishList = () => { 
+  }
 
   const menuId = 'primary-search-account-menu';
 
@@ -229,9 +254,37 @@ const handleOpenUserMenu = (event) => {
             action={SEARCHBYNAMEPRODUCTS}
             />
           </Box>
+
+{/* 
+          <div style={{ width: 700}}>
+                  <Dropdown title="Favoritos">
+                    {cart.map(producto=>(
+                      <Dropdown.Item  sx={{paddingTop: 250}}>
+                                            <CardMedia 
+                                              image={producto.imageProduct[0]}
+                                              component='img'
+                                              sx={{ borderRadius: '5px',width: 50, height: 50, objectFit:'contain',paddingTop: 10}}
+                                              height="250"
+                                          />{producto.name}
+                      
+                      </Dropdown.Item>
+                    ))}
+                    
+                  </Dropdown>
+                </div> */}
         
-          <Box sx={{display:'flex',alignItems:'center'}}>
-            <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
+          <Box sx={{display:'flex',alignItems:'center', justifyContent:'flex-end'}}>
+
+
+              <IconButton onClick={ showWishList } style={{color: 'white'}}>
+                <FavoriteIcon 
+                >
+                  
+                </FavoriteIcon>
+              </IconButton>
+              
+
+              <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
                   <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                       <Badge badgeContent={numberOfItems} color="error">
                           <ShoppingCart />
@@ -239,16 +292,11 @@ const handleOpenUserMenu = (event) => {
                   </IconButton>
               </NavLink>
 
+
+
+
             <Box sx={{ display: {  md: 'flex' } }}>
-              <IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
+              <IconButton size="large"edge="end" aria-label="account of current user"aria-controls={menuId} aria-haspopup="true"onClick={handleProfileMenuOpen} color="inherit">
                 <Avatar alt="Remy Sharp" src={user?.picture} />
               </IconButton>
             </Box>

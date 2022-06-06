@@ -28,7 +28,7 @@ router.get("/", /*[verifyToken, isAdmin],*/ async (req, res, next) => {
     else {
         
         try {
-            //http://localhost:3000/products
+            //http://localhost:3000/users
             const allUsers = await User.find({});
             return res.json(allUsers)
             } catch (error) {

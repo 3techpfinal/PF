@@ -1,6 +1,6 @@
 import React from "react";
-import NavBar from "./components/NavBar"
-import ItemCounter from "./components/ItemCounter"
+import NavBar from "./Components/NavBar"
+import ItemCounter from "./Components/ItemCounter"
 import { useState } from 'react';
 
 

@@ -1,10 +1,10 @@
 import React from "react";
-import NavBar from "../NavBar"
+import NavBar from "../Components/NavBar"
 import { useState,useRef } from 'react';
 import {   useNavigate } from "react-router-dom"
 //import { Link } from "react-router-dom";
 import { TextField,Select,Container, CardMedia,Link, Box, UploadOulined,InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import {CREATEPRODUCT,GETCATEGORIES} from '../../actions'
+import {CREATEPRODUCT,GETCATEGORIES} from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -114,7 +114,7 @@ export default function CrearPublicacion() {
       e.preventDefault()
           const newPost={...input,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
           dispatch(CREATEPRODUCT(newPost))
-          alert("Se creo el Producto exitosamente!")
+          //alert("Se creo el Producto exitosamente!")
 
           swal({
             title:"Realizado",
@@ -125,7 +125,7 @@ export default function CrearPublicacion() {
 
 
           navegar("/")//se accede al home
-          window.location.reload();//se refresca para activar el dispatch de GETPRODUCTS()       
+         // window.location.reload();//se refresca para activar el dispatch de GETPRODUCTS()       
   }
 
 
