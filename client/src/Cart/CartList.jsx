@@ -5,25 +5,30 @@ import  ItemCounter  from './ItemCounter.jsx';
 import  CartContext  from './CartContext.jsx';
 import { NavLink, useParams } from 'react-router-dom';
 import { CreditScoreOutlined } from '@mui/icons-material';
-import {api} from '../../actions'
+import {api} from '../actions'
 import axios from 'axios'
 import Cookie from 'js-cookie'
+import colorStyles from '../styles'
+import ImageList from '@mui/material/ImageList';
+import ImageListItem from '@mui/material/ImageListItem';
+
+
 import { useDispatch, useSelector } from "react-redux";
-import {GETDETAIL} from '../../actions'
+import {GETDETAIL} from '../actions'
 
 
 
 
 export const CartList = ({ editable = false }) => {
 
-    /*const dispatch=useAppDispatch()
+    const dispatch=useDispatch()
     const {id} = useParams()
     useEffect(()=>{
       dispatch(GETDETAIL(id))
     },[dispatch,id])
-    const productDb=useSelector((State:RootState) => State.rootReducer.detail); 
+    const productDb=useSelector((State) => State.rootReducer.detail); 
 
-*/
+
 
     const { cart, updateCartQuantity, removeCartProduct,total } = useContext(CartContext);
 
@@ -45,19 +50,20 @@ export const CartList = ({ editable = false }) => {
     return (
         <>
             {
-                cart.map( product => (//product es un elemento del array cart
+                cart?.map( product => (//product es un elemento del array cart
                     <Grid container spacing={2} key={ product._id } sx={{ mb:1 }}>
                         <Grid item xs={3}>
                             
                             <NavLink to={`/product/${ product._id }`} >
                                <Card>
-                                    <CardActionArea>
+                                    { <CardActionArea>
                                         <CardMedia 
-                                            image={product.imageProduct[0]}
+                                            image={product.imageProduct?product.imageProduct[0]:"https://res.cloudinary.com/dnlooxokf/image/upload/v1651532672/sample.jpg"}
                                             component='img'
-                                            sx={{ borderRadius: '5px' }}
+                                            sx={{ borderRadius: '5px',width: 200, height: 200, objectFit:'contain'}}
+                                            height="250"
                                         />
-                                    </CardActionArea>
+                                    </CardActionArea> }
                                 </Card>
                             </NavLink>
                         </Grid>
@@ -108,7 +114,10 @@ export const CartList = ({ editable = false }) => {
                             </Box>
                         </Grid>
                         <Grid item xs={2} display='flex' alignItems='center' flexDirection='column'>
-                            <Typography variant='subtitle1'>{ `$${ product.price }` }</Typography>
+                            <Typography variant='subtitle1'>{ `$${ product.discount?product.price-product.discount:product.price }` }</Typography>
+                            
+                            {product.discount?<Chip label={`-${product.discount}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
+                            
                             
                             {
                                 editable && (

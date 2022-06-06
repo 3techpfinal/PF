@@ -1,16 +1,18 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
-import {Box,Button} from '@mui/material';
+
+import {Button} from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
-import IconButton from '@mui/material/IconButton';
 import Typography from '@mui/material/Typography';
+
 import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
 import MenuIcon from '@mui/icons-material/Menu';
 import SearchIcon from '@mui/icons-material/Search';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
@@ -19,18 +21,25 @@ import Avatar from '@mui/material/Avatar';
 import { NavLink,Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import color from '../styles'
-import SearchBar from '../ui/SearchInput'
+import SearchBar from './SearchBar'
 import FilterCategory from './FilterCategory'
 import { Container } from '@mui/system';
-import { Divider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { GETPRODUCTS,SEARCHBYCATEGORY,VERIFYADMIN } from '../actions';
-import CartContext from '../components/Cart/CartContext'
+import CartContext from '../Cart/CartContext'
+import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
 import axios from 'axios'
+import { Box, Divider, Drawer, IconButton,CardMedia, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
 import { useAuth0 } from "@auth0/auth0-react";
+import { SEARCHBYNAMEPRODUCTS } from '../actions';
+import {CartList} from '../Cart/CartList'
 import Cookie from 'js-cookie'
 import {api} from '../actions'
-import { cartReducer } from './Cart/cartReducer';
+import { cartReducer } from '../Cart/cartReducer';
+import { Dropdown } from 'rsuite';
+
+
+
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
@@ -44,6 +53,18 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 
 
 export default function PrimarySearchAppBar() {
+
+  const [isHovered, setIsHovered] = React.useState (false);
+
+  const listaProductos = React.useMemo(()=>{
+    return isHovered?
+    <CartList/>
+    : <></>
+
+     
+},[isHovered])
+
+
   const categories=useSelector((state)=>state.rootReducer.categories)
   const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
   const { numberOfItems,total } = React.useContext( CartContext );
@@ -84,7 +105,12 @@ export default function PrimarySearchAppBar() {
     setMobileMoreAnchorEl(event.currentTarget);
   };
 
+
+  const showWishList = () => { 
+  }
+
   const menuId = 'primary-search-account-menu';
+
   const renderMenu = (
     <Menu
       anchorEl={anchorEl}
@@ -101,14 +127,61 @@ export default function PrimarySearchAppBar() {
       open={isMenuOpen}
       onClose={handleMenuClose}
     >
-      <MenuItem onClick={()=>{navigate('/profile')}}>Profile</MenuItem>
-      {isAdmin && <MenuItem onClick={()=>{navigate('/admin/dashboard')}}>Dashboard</MenuItem>}
-      <MenuItem onClick={()=>{
-        Cookie.set('user',JSON.stringify([]))
-        Cookie.remove('cart')
-        Cookie.remove('token')
-        logout({ returnTo: window.location.origin })
-        }}>Cerrar sesión</MenuItem>
+
+      {isAuthenticated&&<ListItem 
+          button
+          onClick={ () => navigate('/profile') }>
+          <ListItemIcon>
+             <AdminPanelSettings/>
+          </ListItemIcon>
+          <ListItemText primary={'Mi perfil'} />
+        </ListItem>}
+
+        {isAuthenticated&&<ListItem 
+          button
+          onClick={ () => navigate('/orderstable') }>
+          <ListItemIcon>
+            <ConfirmationNumberOutlined/>
+          </ListItemIcon>
+          <ListItemText primary={'Ordenes'} />
+        </ListItem>}
+
+
+      {isAdmin&&<ListItem 
+          button
+          onClick={ () => navigate('/admin/uploadproduct') }>
+          <ListItemIcon>
+              <CategoryOutlined/> 
+          </ListItemIcon>
+          <ListItemText primary={'Publicar producto'} />
+        </ListItem>}
+
+      
+
+      {isAdmin&&<ListItem 
+          button
+          onClick={ () => navigate('/admin/dashboard') }>
+          <ListItemIcon>
+              <DashboardOutlined />
+          </ListItemIcon>
+          <ListItemText primary={'Dashboard'} />
+        </ListItem>}
+
+        {isAuthenticated&&<ListItem 
+          button
+          onClick={ () => {
+            Cookie.set('user',JSON.stringify([]))
+            Cookie.remove('cart')
+            Cookie.remove('token')
+            logout({ returnTo: window.location.origin })
+          }}>
+          <ListItemIcon>
+              <VpnKeyOutlined/>
+          </ListItemIcon>
+          <ListItemText primary={'Salir'} />
+        </ListItem>}
+
+      
     </Menu>
   );
 
@@ -186,11 +259,44 @@ export default function PrimarySearchAppBar() {
 
 
           <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-            <SearchBar />
+            <SearchBar 
+            placeholder="buscar por producto o categoria"
+            url='/'
+            dinamic={false}
+            action={SEARCHBYNAMEPRODUCTS}
+            />
           </Box>
+
+{/* 
+          <div style={{ width: 700}}>
+                  <Dropdown title="Favoritos">
+                    {cart.map(producto=>(
+                      <Dropdown.Item  sx={{paddingTop: 250}}>
+                                            <CardMedia 
+                                              image={producto.imageProduct[0]}
+                                              component='img'
+                                              sx={{ borderRadius: '5px',width: 50, height: 50, objectFit:'contain',paddingTop: 10}}
+                                              height="250"
+                                          />{producto.name}
+                      
+                      </Dropdown.Item>
+                    ))}
+                    
+                  </Dropdown>
+                </div> */}
         
-          <Box sx={{display:'flex',alignItems:'center'}}>
-            <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
+          <Box sx={{display:'flex',alignItems:'center', justifyContent:'flex-end'}}>
+
+
+              <IconButton onClick={ showWishList } style={{color: 'white'}}>
+                <FavoriteIcon 
+                >
+                  
+                </FavoriteIcon>
+              </IconButton>
+              
+
+              <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
                   <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                       <Badge badgeContent={numberOfItems} color="error">
                           <ShoppingCart />
@@ -198,7 +304,7 @@ export default function PrimarySearchAppBar() {
                   </IconButton>
               </NavLink>
 
-            <Box sx={{ display: { xs: 'none', md: 'flex' } }}>
+            <Box sx={{ display: { md: 'flex' } }}>
               {isAuthenticated?<IconButton
                 size="large"
                 edge="end"
@@ -243,7 +349,7 @@ export default function PrimarySearchAppBar() {
                 </Button>}
             </Box>
 
-            <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+            {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
               <IconButton
                 size="large"
                 aria-label="show more"
@@ -254,33 +360,34 @@ export default function PrimarySearchAppBar() {
               >
                 <MoreIcon />
               </IconButton>
-            </Box>
+            </Box> */}
+
           </Box>
 
 
           
         </StyledToolbar>
+
         <Divider sx={{bgcolor:color.color3,m:1}}/>
+
         <Box sx={{display:'flex',justifyContent:'center',mb:1,alignItems:'center'}}>
           <Typography variant='body2' sx={{mr:2}}>Categorias: </Typography>
           <FilterCategory/>
           <Divider orientation="vertical" flexItem sx={{display:{xs:'none',md:'flex'},bgcolor:'white',marginX:1}}/>
-            <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
-            {categories.map((e)=>(
-              <>
-              <Button key={e._id} onClick={()=>{
-                dispatch(SEARCHBYCATEGORY(e._id))
-                navigate('/')
-                }}>
-              <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>
-              </Button>
-              <Divider orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
-              </>               
-            ))}
-            </Box>
+              <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
+                {categories.map((e)=>(
+                <>
+                    <Button onClick={()=>{dispatch(SEARCHBYCATEGORY(e._id)); navigate('/') }}>
+                      <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>
+                    </Button>
+                  <Divider orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
+                </>               
+              ))}
+              </Box>
         </Box>
+
       </AppBar>
-      {renderMobileMenu}
+      {/* {renderMobileMenu} */}
       {renderMenu}
     </Container>
     </>

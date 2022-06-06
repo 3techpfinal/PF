@@ -2,7 +2,7 @@ import * as React from 'react'
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import { Box, Typography,Avatar,Divider, IconButton,TextField,Input } from '@mui/material'
-import NavBar from '../components/NavBar'
+import NavBar from '../Components/NavBar'
 import LocalMallIcon from '@mui/icons-material/LocalMall';
 import EditIcon from '@mui/icons-material/Edit';
 import CheckIcon from '@mui/icons-material/Check';
@@ -13,7 +13,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import color from '../styles'
 import { useAuth0 } from "@auth0/auth0-react";
-import Loading from './Loading'
+import Loading from '../Components/Loading'
 
 
 const Profile=()=>{

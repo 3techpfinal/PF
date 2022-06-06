@@ -17,6 +17,12 @@ const productSchema = new Schema({
         default: 0
     },
 
+    discount: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+
     description: {
         type: String,
         required: true,
@@ -24,6 +30,12 @@ const productSchema = new Schema({
     },
 
     stock: {
+        type: Number,
+        required: true,
+        default: 0
+    },
+
+    amountOfSales: {
         type: Number,
         required: true,
         default: 0
