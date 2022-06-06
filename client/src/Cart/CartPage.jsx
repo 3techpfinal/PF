@@ -11,9 +11,9 @@ const CartPage=()=>{
     return(
         <>
             <NavBar/>
-            <Typography variant='h1' component='h1'  sx={{mt:15}} display='flex' justifyContent='center'> Carrito</Typography>
-
-            <Grid container>
+            <Typography variant='h4'  sx={{mt:15,fontWeight:20}} display='flex' justifyContent='center'> Carrito</Typography>
+            <Divider sx={{m:1,marginX:'10%'}}/>
+            <Grid container sx={{mt:3}}>
                 <Grid item xs={12} sm={7}>
                     <CartList editable/>
                 </Grid>
