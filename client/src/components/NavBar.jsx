@@ -25,12 +25,12 @@ import { Container } from '@mui/system';
 import { Divider } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import { GETPRODUCTS,SEARCHBYCATEGORY,VERIFYADMIN } from '../actions';
-import CartContext from '../components/Cart/CartContext'
+import CartContext from '../Cart/CartContext'
 import axios from 'axios'
 import { useAuth0 } from "@auth0/auth0-react";
 import Cookie from 'js-cookie'
 import {api} from '../actions'
-import { cartReducer } from './Cart/cartReducer';
+import { cartReducer } from '../Cart/cartReducer';
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',

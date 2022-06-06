@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Container,Box } from '@mui/system'
-import NavBar from '../NavBar'
+import NavBar from '../components/NavBar'
 import { Divider, Typography,Chip,Rating, IconButton,CardMedia } from '@mui/material'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import color from '../../styles'
+import color from '../styles'
 import ProductCard from './ProductCard'
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
@@ -20,8 +20,8 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import Loading from '../../pages/Loading'
-import { GETDETAIL,GETRECOMMENDED } from '../../actions';
+import Loading from '../components/Loading'
+import { GETDETAIL,GETRECOMMENDED } from '../actions';
 
 
 const ProductDetails=()=>{

@@ -10,7 +10,7 @@ import '@fontsource/roboto/500.css';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import{useMemo,useState} from 'react'
 import { Swiper, SwiperSlide } from 'swiper/react';
-import color from '../../styles'
+import color from '../styles'
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';

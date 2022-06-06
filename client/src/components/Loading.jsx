@@ -1,5 +1,5 @@
 import * as React from 'react'
-import NavBar from '../components/NavBar'
+import NavBar from './NavBar'
 import { Box, Typography } from '@mui/material'
 
 import '@fontsource/roboto/300.css';
