@@ -12,7 +12,7 @@ import CargarProducto from './Products/UploadProduct'
 import ProductDetails from './Products/ProductDetails';
 import Loading from './Components/Loading';
 import Profile from './Pages/Profile'
-import LoginButton from './Components/Login.jsx'
+
 import Cart from './Cart/CartPage.jsx'
 import Dashboard from './Admin/DashboardPage'
 import UserTable from './Admin/UsersTable'
@@ -38,7 +38,7 @@ function App() {
           <Route path='/product/:id' element={<ProductDetails/>}/>
           <Route path='/loading' element={<Loading/>}/>
           <Route path='/admin/profile' element={<Profile/>}/>
-          <Route path='/login' element={<LoginButton/>}/>
+  
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/admin/dashboard' element={<Dashboard/>}/>
           <Route path='/admin/userstable' element={<UserTable/>}/>
