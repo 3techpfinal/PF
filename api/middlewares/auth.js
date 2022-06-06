@@ -2,6 +2,7 @@ import User from '../models/User.js';
 import jwt from 'jsonwebtoken';
 import jwt_decode from "jwt-decode";
 import * as encrypter from '../helpers/encrypter.js'
+import { verifyAccount } from '../controllers/sendMailer.js';
 
 
 
@@ -21,6 +22,7 @@ export const signUp = async (req, res, next) => {
             newUser.setCreationDate();
 
             // verificación cuenta vía mail 
+            verifyAccount(newUser._id, newUser.email);
 
             //aunque se haya guardado, necesita confirmar la cuenta para poder logearse
             await newUser.save();
@@ -67,31 +69,14 @@ export const logIn = async (req, res) => {
             return res.json({ user : found, token : tokenBack });
         }
     }
-    else{
+    else { //login manual-no google
         const { email }=decoded
-        const found = await User.findOne({ email })
+        const found = await User.findOne({ email }) //if(!found)
          // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
-         // if(!found.verified) return res.status(401).json({message : 'You need to verify your account first.'})
-         const token = jwt.sign({ id: found._id },  "secret", { expiresIn: 86400 })
+         if(!found.verifiedAccount) return res.status(401).json({message : 'You need to verify your account first.'})
+         
+         const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
          return res.json({ user : found, token });
     }
-    // const { email, password } = req.body;
-
-    // const found = await User.findOne({ email })
-
-    // if (!found) return res.status(400).json({ message: 'Incorrect mail' });
-
-    // // ban => ver modelo User
-    // // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
-    // // if(!found.verified) return res.status(401).json({message : 'You need to verify your account first.'})
-
-    // const matchPassword = await encrypter.comparePasswords(password, found.password);
-
-    // if (!matchPassword) return res.status(401).json({ message: 'Incorrect password' })
-    // const token = jwt.sign({ id: found._id },  "secret", { expiresIn: 86400 })
-
-    // // lo mando para que el Front lo capte y guarde, cookies, localStorage, reducer, donde sea más cómodo
-    // // https://rajaraodv.medium.com/securing-react-redux-apps-with-jwt-tokens-fcfe81356ea0
-    // res.json({ user : found, token });
 }
 

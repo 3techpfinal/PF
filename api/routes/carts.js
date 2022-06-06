@@ -83,14 +83,6 @@ router.put('/', verifyToken, async (req, res, next) => {
                 {upsert: true, new : true})
 
             res.send('')
-    // try {
-    //     const { id } = req.params;
-    //     await Product.findByIdAndUpdate({ _id: id }, req.body);
-    //     const updatedProduct = await Product.findById({ _id: id })
-    //     res.send(updatedProduct)
-    // } catch (err) {
-    //     next(err)
-    // }
 
 });
 
