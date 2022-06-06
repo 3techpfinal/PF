@@ -122,7 +122,7 @@ const ProductDetails=()=>{
                     <Box sx={{flexDirection:'column'}}>
                         <Box sx={{m:1,border:'1px solid lightgray',p:3,pt:1,borderRadius:5}}>
                             <Box sx={{display:'flex',justifyContent:'space-between'}}>
-                                <Typography sx={{fontSize:{xs:30},maxHeight:100}}>{product.name.length>40?product.name.slice(0,40)+'...':product.name}</Typography>
+                                <Typography sx={{fontSize:{xs:30},maxHeight:100}}>{product.name.length>40?product.name.slice(0,35)+'...':product.name}</Typography>
                                 <IconButton 
                                 sx={{bgcolor:color.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
                                 onClick={ onAddProduct }>
