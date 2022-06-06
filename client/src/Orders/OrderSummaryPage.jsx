@@ -4,6 +4,9 @@ import { CartList, OrderSummary } from '../Cart';
 import NavBar from '../Components/NavBar'
 import {useContext} from 'react'
 import CartContext from '../Cart/CartContext'
+import Cookie from 'js-cookie';
+import axios from 'axios';
+import {api} from '../actions'
 
 //import { PayPalButtons } from "@paypal/react-paypal-js";
 //import { useRouter } from 'next/router';
@@ -32,6 +35,13 @@ export default function SummaryPage(){ // esta es la funcion principal
     const crearOrden = async ()=> {
      let ordenNueva = await dispatch(CREATEORDER(order))
      await dispatch(GETORDER(ordenNueva.payload))
+     Cookie.remove('cart')
+     const token=Cookie.get('token')
+     axios.put(`${api}/cart`,{cart:[],totalPrice:0},{
+         headers:{
+             'x-access-token':token
+         }
+     })
      navegar(`/orderpayment/${ordenNueva.payload}`)
     }
 

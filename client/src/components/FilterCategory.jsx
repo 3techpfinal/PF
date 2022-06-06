@@ -32,7 +32,6 @@ export default function FilterByCategory() {
       
     }
 
-    console.log("categorias",categories)
   return (
     <Box sx={{minWidth:100}}>
         <FormControl fullWidth>

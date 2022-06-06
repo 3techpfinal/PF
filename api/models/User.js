@@ -34,20 +34,17 @@ const userSchema = new Schema({
     role: {
         type: String,
         enum : ['user','admin','superadmin'],
-        default: 'admin'
+        default: 'user'
     },
 
     profilePic:{
         type: String
     },
 
-
-    cart: 
-        {
+    cart:{
             type: Schema.Types.ObjectId,
             ref: 'Cart'
-        }
-    ,
+    },
 
     wishList: [
         {
@@ -58,7 +55,7 @@ const userSchema = new Schema({
 
     verifiedAccount: {
         type: Boolean,
-        default: true,
+        default: false,
         required: true
     },
 
@@ -83,12 +80,10 @@ userSchema.methods.setCreationDate = function () {
     const formatedDate = format(new Date(), 'yyyy/MM/dd')
     this.creationDate = formatedDate
     return
-}
-
-
+};
 
 
 
 const User = model("User", userSchema)
 
-export default User
+export default User;

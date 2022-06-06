@@ -120,7 +120,7 @@ export default function ProductCard({product}) {
             </Tooltip>
 
             <Typography gutterBottom variant="h6" sx={{color:'white',fontWeight:'500'}}>
-                    $ {product.discount?product.price*product.discount/100:product.price}
+                    $ {product.discount?new Intl.NumberFormat().format(product.price*product.discount/100):new Intl.NumberFormat().format(product.price)}
             </Typography> 
 
             <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>

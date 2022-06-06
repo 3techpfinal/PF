@@ -1,7 +1,8 @@
 import axios from "axios"
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
-//const { URL } = process.env
-const api='http://localhost:3000'
+import Cookie from 'js-cookie'
+
+export const api='http://localhost:3000'
 
                         /////////////////////////////////////   
                         //      ACCIONES PARA PRODUCTOS    //   
@@ -42,6 +43,23 @@ export const ORDERBYPRICE=createAction('ORDERBYPRICE',(order)=>{ //realiza un or
     }
 })
 
+export const VERIFYADMIN=createAsyncThunk('VERIFYADMIN',async ()=>{
+    const user=JSON.parse( Cookie.get('user') )
+    if(user){
+        if(user.role==='admin')return true
+    }
+    return false
+})
+
+export const GETRECOMMENDED=createAsyncThunk('GETRECOMMENDED',async (id)=>{
+    const all = await axios(`${api}/products`)
+    const response = await axios(`${api}/products/${id}`)
+    const final=all.data.filter(e=>{
+        if(e.category._id===response.data.category&&e._id!==id)return true
+        else return false
+      })
+    return final
+})
 
 
                         ///////////////////////////////////////   
@@ -64,7 +82,12 @@ export const SEARCHBYNAMEUSERS=createAsyncThunk('SEARCHBYNAMEUSERS',async (name)
                         /////////////////////////////////////    
 
 export const GETORDERS = createAsyncThunk('GETORDERS', async () => { // trae todas las ordenes
-    const response = await axios(`${api}/orders`)
+    const token=Cookie.get('token')
+    const response = await axios(`${api}/orders`,{
+        headers:{
+            'x-access-token':token
+        }
+    })
     return response.data
 })
 
@@ -75,7 +98,12 @@ export const GETORDER=createAsyncThunk('GETORDER',async (id)=>{
 
 
 export const CREATEORDER=createAsyncThunk('CREATEORDER',async (data)=>{
-    const result=await axios.post(`${api}/orders`,data)
+    const token=Cookie.get('token')
+    const result=await axios.post(`${api}/orders`,data,{
+        headers:{
+            'x-access-token':token
+        }
+    })
     return result.data._id
 })
   

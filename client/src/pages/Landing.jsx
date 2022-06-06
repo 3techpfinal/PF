@@ -25,9 +25,6 @@ const Landing=()=>{
     const dispatch=useDispatch()
 
     let products=useSelector((state)=>state.rootReducer.products)
-
-    console.log("productos", products)
-
     React.useEffect(()=>{
         if(!products[0])dispatch(GETPRODUCTS())
     },[dispatch])
@@ -63,13 +60,14 @@ const Landing=()=>{
                       }}
                 >
                     {categories.map(e=>
-                        <SwiperSlide>
+                        <SwiperSlide key={e._id}>
                             <CardMedia
                             component="img"
                             height="300"
                             image={e}
                             alt="gf"
                             sx={{objectFit:'cover'}}
+                            key={e._id}
                             />
                         </SwiperSlide>)
                     }
@@ -77,7 +75,7 @@ const Landing=()=>{
                 </Box>
                 
                 <Box sx={{marginX:4,mt:1,maxWidth:'100%',display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
-                    <Typography variant='h4' sx={{fontWeight:20}}>{nameCatg}</Typography>
+                    <Typography variant='h4' sx={{fontWeight:20,fontSize:{xs:20,md:30}}}>{nameCatg}</Typography>
                     <OrderByPrice/>
                 </Box>
                         <Divider sx={{marginX:3}}/>
@@ -89,7 +87,7 @@ const Landing=()=>{
                 :
                 <Grid container spacing={1} sx={{justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>
                     {products.map(e=>
-                        <Grid item xs={5} md={3}  sx={{display:'flex',justifyContent:'center',m:'auto',marginX:0}}>
+                        <Grid key={e._id} item xs={5} md={3}  sx={{display:'flex',justifyContent:'center',m:'auto',marginX:0}}>
                             <ProductCard key={e._id} product={e}/>
                         </Grid>)}
                 </Grid>}

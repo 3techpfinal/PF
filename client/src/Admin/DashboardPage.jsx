@@ -67,14 +67,14 @@ const DashboardPage = () => {
             />
 
             <CardDashboard 
-                link='admin/paidorders'
+                link='admin/orderstable'
                 title={ ordenesPagas?.length }
                 subTitle="Ordenes pagadas"
                 icon={ <AttachMoneyOutlined color="success" sx={{ fontSize: 40 }} /> }
             />
             
             <CardDashboard 
-                link='admin/notpaidorders'
+                link='admin/orderstable'
                 title={ orders?.length-ordenesPagas?.length }
                 subTitle="Ordenes sin pagar"
                 icon={ <CreditCardOffOutlined color="error" sx={{ fontSize: 40 }} /> }
@@ -97,14 +97,14 @@ const DashboardPage = () => {
             />
 
             <CardDashboard 
-                link='admin/noinventorytableproducts'
+                link='admin/productstable'
                 title={ productsWithNoInventory?.length }
                 subTitle="Sin inventario"
                 icon={ <CancelPresentationOutlined color="error" sx={{ fontSize: 40 }} /> }
             />
 
             <CardDashboard 
-                link='admin/lowinventorytableproducts'
+                link='admin/productstable'
                 title={ lowInventory?.length }
                 subTitle="Bajo Inventario (<10)"
                 icon={ <ProductionQuantityLimitsOutlined color="warning" sx={{ fontSize: 40 }} /> }

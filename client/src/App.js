@@ -1,5 +1,6 @@
 import './App.css';
 /////////// PROVIDERS ///////////////
+
 import { Route, Routes } from 'react-router-dom';
 import { PayPalScriptProvider} from "@paypal/react-paypal-js";
 import  CartProvider  from './Cart/CartProvider';
@@ -12,7 +13,6 @@ import CargarProducto from './Products/UploadProduct'
 import ProductDetails from './Products/ProductDetails';
 import Loading from './Components/Loading';
 import Profile from './Pages/Profile'
-
 import Cart from './Cart/CartPage.jsx'
 import Dashboard from './Admin/DashboardPage'
 import UserTable from './Admin/UsersTable'
@@ -21,6 +21,7 @@ import ProductsTable from './Admin/ProductsTable'
 import PasswordChange from './Pages/PasswordChange'
 import OrderSummary from './Orders/OrderSummaryPage'
 import OrderPayment from './Orders/OrderPaymentPage'
+
 
 import WishList from './Components/ListComponents'
 
@@ -37,12 +38,11 @@ function App() {
           <Route path='/admin/uploadproduct' element={<CargarProducto/>}/>
           <Route path='/product/:id' element={<ProductDetails/>}/>
           <Route path='/loading' element={<Loading/>}/>
-          <Route path='/admin/profile' element={<Profile/>}/>
-  
+          <Route path='/profile' element={<Profile/>}/>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/admin/dashboard' element={<Dashboard/>}/>
           <Route path='/admin/userstable' element={<UserTable/>}/>
-          <Route path='/admin/orderstable' element={<OrdersTable/>}/>
+          <Route path='/orderstable' element={<OrdersTable/>}/>
           <Route path='/admin/productstable' element={<ProductsTable/>}/>
           <Route path='/passwordchange' element={<PasswordChange/>}/>
           <Route path='/ordersummary' element={<OrderSummary/>}/>

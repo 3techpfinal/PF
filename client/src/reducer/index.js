@@ -7,6 +7,8 @@ const initialState = {
   categories:[],
   users:[],
   orders:[],
+  isAdmin:false,
+  recommended:[],
   order:[]
 }
 
@@ -74,11 +76,16 @@ const rootReducer = createReducer(initialState, (builder) => {
       state.products=[]
       state.products=action.payload 
     })
-
     .addCase(actions.ORDERBYPRICE, (state, action) => {
       const sortedProductsByPrice = OrderByPrice(state,action)
       state.products=[]
       state.products=sortedProductsByPrice
+    })
+    .addCase(actions.VERIFYADMIN.fulfilled, (state, action) => {
+      state.isAdmin=action.payload
+    })
+    .addCase(actions.GETRECOMMENDED.fulfilled, (state, action) => {
+      state.recommended=action.payload
     })
 
                           /////////////////////////////////////   

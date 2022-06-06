@@ -25,16 +25,17 @@ import SearchBar from './SearchBar'
 import FilterCategory from './FilterCategory'
 import { Container } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
-import { GETPRODUCTS,SEARCHBYCATEGORY } from '../actions';
+import { GETPRODUCTS,SEARCHBYCATEGORY,VERIFYADMIN } from '../actions';
 import CartContext from '../Cart/CartContext'
 import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
-
+import axios from 'axios'
 import { Box, Divider, Drawer, IconButton,CardMedia, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
 import { useAuth0 } from "@auth0/auth0-react";
 import { SEARCHBYNAMEPRODUCTS } from '../actions';
 import {CartList} from '../Cart/CartList'
-
-
+import Cookie from 'js-cookie'
+import {api} from '../actions'
+import { cartReducer } from '../Cart/cartReducer';
 import { Dropdown } from 'rsuite';
 
 
@@ -65,15 +66,21 @@ export default function PrimarySearchAppBar() {
 
 
   const categories=useSelector((state)=>state.rootReducer.categories)
-  const { numberOfItems,cart } = React.useContext( CartContext );
-  const { user, isAuthenticated, isLoading } = useAuth0();
-  console.log('usuario: ',user)
+  const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
+  const { numberOfItems,total } = React.useContext( CartContext );
+  const { user, isAuthenticated,getIdTokenClaims,logout,loginWithPopup } = useAuth0();
   const dispatch=useDispatch()
   const navigate=useNavigate()
-  const [anchorElUser, setAnchorElUser] = React.useState(null);
-const handleOpenUserMenu = (event) => {
-  setAnchorElUser(event.currentTarget);
-};
+  const [logged,setLogged]=React.useState(false)
+
+
+  React.useEffect(()=>{
+    dispatch(VERIFYADMIN())
+  },[isAuthenticated])
+
+  React.useEffect(()=>{
+    if(!Cookie.get('cart'))Cookie.set('cart',JSON.stringify([]))
+  },[])
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
@@ -121,53 +128,58 @@ const handleOpenUserMenu = (event) => {
       onClose={handleMenuClose}
     >
 
-      <ListItem 
+      {isAuthenticated&&<ListItem 
           button
-          onClick={ () => navigate('/admin/profile') }>
+          onClick={ () => navigate('/profile') }>
           <ListItemIcon>
              <AdminPanelSettings/>
           </ListItemIcon>
           <ListItemText primary={'Mi perfil'} />
-        </ListItem>
+        </ListItem>}
 
-        <ListItem 
+        {isAuthenticated&&<ListItem 
           button
-          onClick={ () => navigate('/admin/orders') }>
+          onClick={ () => navigate('/orderstable') }>
           <ListItemIcon>
             <ConfirmationNumberOutlined/>
           </ListItemIcon>
           <ListItemText primary={'Ordenes'} />
-        </ListItem>
+        </ListItem>}
 
 
-      <ListItem 
+      {isAdmin&&<ListItem 
           button
           onClick={ () => navigate('/admin/uploadproduct') }>
           <ListItemIcon>
               <CategoryOutlined/> 
           </ListItemIcon>
           <ListItemText primary={'Publicar producto'} />
-        </ListItem>
+        </ListItem>}
 
       
 
-      <ListItem 
+      {isAdmin&&<ListItem 
           button
           onClick={ () => navigate('/admin/dashboard') }>
           <ListItemIcon>
               <DashboardOutlined />
           </ListItemIcon>
           <ListItemText primary={'Dashboard'} />
-        </ListItem>
+        </ListItem>}
 
-        <ListItem 
+        {isAuthenticated&&<ListItem 
           button
-          onClick={ () => navigate('/admin/') }>
+          onClick={ () => {
+            Cookie.set('user',JSON.stringify([]))
+            Cookie.remove('cart')
+            Cookie.remove('token')
+            logout({ returnTo: window.location.origin })
+          }}>
           <ListItemIcon>
               <VpnKeyOutlined/>
           </ListItemIcon>
           <ListItemText primary={'Salir'} />
-        </ListItem>
+        </ListItem>}
 
       
     </Menu>
@@ -292,13 +304,49 @@ const handleOpenUserMenu = (event) => {
                   </IconButton>
               </NavLink>
 
-
-
-
-            <Box sx={{ display: {  md: 'flex' } }}>
-              <IconButton size="large"edge="end" aria-label="account of current user"aria-controls={menuId} aria-haspopup="true"onClick={handleProfileMenuOpen} color="inherit">
+            <Box sx={{ display: { md: 'flex' } }}>
+              {isAuthenticated?<IconButton
+                size="large"
+                edge="end"
+                aria-label="account of current user"
+                aria-controls={menuId}
+                aria-haspopup="true"
+                onClick={handleProfileMenuOpen}
+                color="inherit"
+              >
                 <Avatar alt="Remy Sharp" src={user?.picture} />
               </IconButton>
+              :<Button sx={{bgcolor:color.color2,color:'black',ml:2}}
+              onClick={()=>loginWithPopup().then(()=>getIdTokenClaims()).then(r=>axios.post(`${api}/users/login`,{token:r.__raw})).then(r=>{
+                Cookie.set('token',r.data.token)
+                Cookie.set('user',JSON.stringify(r.data.user))
+                axios.post(`${api}/cart`,{
+                  cart:JSON.parse( Cookie.get('cart') ),
+                  totalPrice:total
+                },{
+                  headers:{
+                    'x-access-token':r.data.token
+                  }
+                })
+     
+              }).then(()=>{
+
+                const token= Cookie.get('token')
+                axios(`${api}/cart`,
+                {
+                    headers:{
+                         'x-access-token':token
+                    }
+                }).then((r)=>{
+                    Cookie.set('cart',JSON.stringify(r.data.cart))            
+                })
+
+              }).then(()=>{
+                dispatch(VERIFYADMIN())
+                window.location.reload()
+                })}>
+                Login
+                </Button>}
             </Box>
 
             {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>

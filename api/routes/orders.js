@@ -8,12 +8,13 @@ const router = Router()
 
  //import * as IPaypal from '../paypalInterface'
 
-router.get("/", /*verifyToken,*/ async (req, res, next) => {
+router.get("/", verifyToken, async (req, res, next) => {
     try {
 
         const actualUser = await User.findById(req.userId);
-        const allOrders = await Order.find().populate(['products', 'user']);   
-        if(roles[0] === 'admin'){
+        const allOrders = await Order.find().populate(['products', 'user']);
+        console.log(allOrders) 
+        if(actualUser.role.includes('admin')){
             return res.send(allOrders)
         } else {
             const userOrders = allOrders.filter(order => order.user._id.toString() === actualUser._id.toString());
@@ -40,12 +41,11 @@ router.get("/:id",/* verifyToken,*/  async(req, res, next) => {
 
 
 
-router.post('/', /*verifyToken,*/ async (req, res, next) => {
+router.post('/', verifyToken, async (req, res, next) => {
     try {
 
     const newOrder = new Order(req.body); //adress, paymentId, totalPrice, products : [{},{}]
-    newOrder.user = req.userId 
-    //newOrder.user = "62818cbf2ac82b39cd2d0783"      
+    newOrder.user = req.userId      
     
     await newOrder.save()
    
