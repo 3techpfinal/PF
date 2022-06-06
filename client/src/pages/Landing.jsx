@@ -2,7 +2,7 @@ import { Grid,CardMedia, Box, Typography, Divider } from '@mui/material'
 import { Container } from '@mui/system'
 import * as React from 'react'
 import ProductCard from '../Products/ProductCard'
-import NavBar from '../components/NavBar'
+import NavBar from '../Components/NavBar'
 import { Autoplay,Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -11,8 +11,8 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux'
 import { GETPRODUCTS } from '../actions'
-import Loading from '../components/Loading'
-import OrderByPrice from '../components/OrderByPrice'
+import Loading from '../Components/Loading'
+import OrderByPrice from '../Components/OrderByPrice'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 
@@ -24,24 +24,20 @@ const Landing=()=>{
     const [nameCatg,setNameCatg]=React.useState('Productos')
     const dispatch=useDispatch()
 
-    
     let products=useSelector((state)=>state.rootReducer.products)
     React.useEffect(()=>{
         if(!products[0])dispatch(GETPRODUCTS())
     },[dispatch])
-
     
-    
-    
-    React.useEffect(()=>{      
+    React.useEffect(()=>
+    {      
             var inicial='Productos'
-            if(typeof products === "string")return setNameCatg(()=>inicial)//si es string es porque el back tira error, no encontro producto por ej
-            if(!products[0])return setNameCatg(()=>inicial)
+            if(typeof products === "string"){ setNameCatg("")}//si es string es porque el back tira error, no encontro producto por ej
             else{
-                var ref=products[0].category.name
+                var ref=products[0]?.category.name
+                setNameCatg(ref)
                 products.forEach((e)=>{
-                    setNameCatg(()=>e.category.name)
-                    if(e.category.name!==ref)setNameCatg(()=>inicial)
+                    if(e.category.name!==ref){  setNameCatg(inicial)}
                 })
             }
     },[products])
@@ -50,7 +46,6 @@ const Landing=()=>{
         products[0]?
             <Container sx={{mt:12,width:{xs:'100%'},minWidth:'100%',p:{xs:0}}}>
                 <NavBar/>
-
 
                 <Box >
                 <Swiper 
@@ -74,7 +69,8 @@ const Landing=()=>{
                             sx={{objectFit:'cover'}}
                             key={e._id}
                             />
-                        </SwiperSlide>)}
+                        </SwiperSlide>)
+                    }
                 </Swiper>
                 </Box>
                 
@@ -86,16 +82,14 @@ const Landing=()=>{
 
                 {typeof products === "string" ? 
                 <Box sx={{display:'flex',flexDirection:'row',justifyContent:'center',mt:3}}>
-                <Typography variant='h4' sx={{m:3}}>No hay productos con este nombre</Typography>
+                    <Typography variant='h4' sx={{m:3}}>No hay productos con este nombre</Typography>
                 </Box>
                 :
                 <Grid container spacing={1} sx={{justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>
-                
                     {products.map(e=>
                         <Grid key={e._id} item xs={5} md={3}  sx={{display:'flex',justifyContent:'center',m:'auto',marginX:0}}>
                             <ProductCard key={e._id} product={e}/>
                         </Grid>)}
-
                 </Grid>}
 
                

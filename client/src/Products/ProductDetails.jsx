@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { Container,Box } from '@mui/system'
-import NavBar from '../components/NavBar'
+import NavBar from '../Components/NavBar'
 import { Divider, Typography,Chip,Rating, IconButton,CardMedia } from '@mui/material'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
@@ -9,7 +9,7 @@ import color from '../styles'
 import ProductCard from './ProductCard'
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
-import { useState, useEffect, useContext } from "react";
+import { useState, useContext } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import  CartContext from '../Cart/CartContext';
 
@@ -20,11 +20,12 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
-import Loading from '../components/Loading'
+import Loading from '../Components/Loading'
 import { GETDETAIL,GETRECOMMENDED } from '../actions';
 
 
 const ProductDetails=()=>{
+
     const dispatch=useDispatch()
     const product=useSelector((state)=>state.rootReducer.detail)
     const recommended=useSelector((state)=>state.rootReducer.recommended)
@@ -42,16 +43,16 @@ const ProductDetails=()=>{
             <Typography sx={{m:1,p:1,ml:3}}>{texto}</Typography>
         )
     }
+
     const divider=()=>{
         return(
             <Divider sx={{marginX:3}}/>
         )
     }
 
-    const { addProductToCart} = useContext( CartContext )
-    const { cart } = React.useContext( CartContext );
+    const { addProductToCart,cart} = useContext( CartContext )
 
-    useEffect(()=>setTempCartProduct({
+    React.useEffect(()=>setTempCartProduct({
         _id: product._id,
         imageProduct: product.imageProduct,
         price: product.price,
@@ -62,9 +63,10 @@ const ProductDetails=()=>{
         //rating: product.rating,
         //review: product.review,
         description: product.description,
-        stock: product.stock
-      }),[product])
-
+        stock: product.stock,
+        discount:product.discount
+      })
+    )
       const onUpdateQuantity = ( quantity ) => {
         setTempCartProduct( currentProduct => ({
           ...currentProduct,
@@ -73,26 +75,16 @@ const ProductDetails=()=>{
       }
 
     const onAddProduct = () => {  
-
-
-        //cuando uso addProductToCart me acttualiza tempCartProduct.quantity no se porque, 
-        //entonces lo guardo en una variable y al final lo vuelvo a 
-        //asignar con onUpdateQuantity(cant), esto me soluciona un bug del itemCounter
-       
-
+      //cuando uso addProductToCart me acttualiza tempCartProduct.quantity no se porque, 
+      //entonces lo guardo en una variable y al final lo vuelvo a 
+      //asignar con onUpdateQuantity(cant), esto me soluciona un bug del itemCounter      
         let cant = tempCartProduct.quantity 
-
-         addProductToCart(tempCartProduct) //meto el producto en el carrito
-         
-        
-         //luego de agregar el producto en el carrtio mapeo todos los productos y si el stock es menor 
-         //a la cantidad pedida lo aviso y solamente dejo que hayan pedidos la cantidad de productos en stock
-          cart.map( product => (       
+        addProductToCart(tempCartProduct) //agrego el producto en el carrito
+        cart.map( product => ( // mapeo todos los productos y si el stock es menor a la cantidad pedida lo aviso con alert y... 
             (product._id===tempCartProduct._id && product.quantity>=product.stock) && (product.quantity=product.stock,alert("no hay stock"))
-          ))
-          onUpdateQuantity(cant)
-
-     }
+        ))
+        onUpdateQuantity(cant) //solamente dejo que hayan pedidos la cantidad de productos en stock, aca seteo el
+   }
 
 
     return (
@@ -139,6 +131,8 @@ const ProductDetails=()=>{
                             
                         </Box>
                     </Box>
+                   
+
                     <Box sx={{flexDirection:'column',p:0}}>
                         <Box sx={{m:1,border:'1px solid lightgray',borderRadius:5}}>
                             {typo('Marca: Apple')}

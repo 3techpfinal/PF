@@ -1,7 +1,6 @@
 import Cookie from 'js-cookie'; 
 import axios from 'axios'
-import {api} from '../../actions'
-import { useAuth0 } from '@auth0/auth0-react';
+import {api} from '../actions'
 
 export const cartReducer = ( state, action) => {
    

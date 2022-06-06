@@ -8,10 +8,13 @@ const initialState = {
   users:[],
   orders:[],
   isAdmin:false,
-  recommended:[]
+  recommended:[],
+  order:[]
 }
 
-const OrderByPrice=(state,action)=>{
+
+
+const OrderByPrice=(state,action)=>{  //Ordenar por precio mayor a menos Funcion
         const sortedProductsByPrice =
           action.payload === "precioMax"
             ? state.products.sort(function (a, b) {
@@ -37,8 +40,16 @@ const OrderByPrice=(state,action)=>{
 }
 
 
+
+
 const rootReducer = createReducer(initialState, (builder) => {
   builder
+
+
+
+                          /////////////////////////////////////   
+                         //      ACCIONES PARA PRODUCTOS    //   
+                        ///////////////////////////////////// 
 
     .addCase(actions.GETPRODUCTS.fulfilled, (state, action) => {
       state.products=[]
@@ -48,24 +59,19 @@ const rootReducer = createReducer(initialState, (builder) => {
       state.categories=action.payload
     })
 
-    .addCase(actions.GETORDERS.fulfilled, (state, action) => {
-      state.categories=action.payload
-    })
-
-    .addCase(actions.GETUSERS.fulfilled, (state, action) => {
-      state.users=action.payload
+    .addCase(actions.CREATEPRODUCT.fulfilled, (state, action) => {
     })
 
     .addCase(actions.GETDETAIL.fulfilled, (state, action) => {
       state.detail=[]
       state.detail=action.payload
     })
-    .addCase(actions.CREATEPRODUCT.fulfilled, (state, action) => {
-    })
-    .addCase(actions.SEARCHBYNAME.fulfilled, (state, action) => {
+
+    .addCase(actions.SEARCHBYNAMEPRODUCTS.fulfilled, (state, action) => {
       state.products=[]
       state.products=action.payload
     })
+
     .addCase(actions.SEARCHBYCATEGORY.fulfilled, (state, action) => {
       state.products=[]
       state.products=action.payload 
@@ -80,6 +86,38 @@ const rootReducer = createReducer(initialState, (builder) => {
     })
     .addCase(actions.GETRECOMMENDED.fulfilled, (state, action) => {
       state.recommended=action.payload
+    })
+
+                          /////////////////////////////////////   
+                         //      ACCIONES PARA USUARIOS    //   
+                        ///////////////////////////////////// 
+
+    .addCase(actions.GETUSERS.fulfilled, (state, action) => {
+        state.users=action.payload
+    })
+                        
+    .addCase(actions.SEARCHBYNAMEUSERS.fulfilled, (state, action) => {
+      state.users=[]
+      state.users=action.payload
+    })
+
+                          /////////////////////////////////////   
+                         //      ACCIONES PARA ORDENES    //   
+                        ///////////////////////////////////// 
+
+    .addCase(actions.CREATEORDER.fulfilled, (state, action) => {
+    })
+
+    .addCase(actions.GETORDERS.fulfilled, (state, action) => {
+      state.orders=action.payload
+      
+    })
+
+    .addCase(actions.GETORDER.fulfilled, (state, action) => {
+      state.order=action.payload
+    })
+
+    .addCase(actions.PAYORDER.fulfilled, (state, action) => {
     })
 
 

@@ -6,7 +6,7 @@ import  CartContext  from './CartContext';
 //import { IOrder } from '../Orders/orderInterface';
 import {useAuth0} from '@auth0/auth0-react'
 import axios from 'axios'
-import {api} from '../../actions'
+import {api} from '../actions'
 
 /*
 export interface CartState {
