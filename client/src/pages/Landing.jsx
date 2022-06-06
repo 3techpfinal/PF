@@ -3,7 +3,7 @@ import { Container } from '@mui/system'
 import * as React from 'react'
 import ProductCard from '../components/products/ProductCard'
 import NavBar from '../components/NavBar'
-import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
+import { Autoplay,Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -15,34 +15,34 @@ import Loading from './Loading'
 import OrderByPrice from '../components/OrderByPrice'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
-import color from '../styles'
 
 const categories=['https://cdn.forbes.pe/2022/05/CELULARES.jpg','https://www.lifeder.com/wp-content/uploads/2016/11/video-juegos-1.jpg']
 
 const Landing=()=>{
+
+
     const [nameCatg,setNameCatg]=React.useState('Productos')
     const dispatch=useDispatch()
+
     
     let products=useSelector((state)=>state.rootReducer.products)
-
     React.useEffect(()=>{
         if(!products[0])dispatch(GETPRODUCTS())
     },[dispatch])
 
     
-    console.log("productos", products)
     
-    React.useEffect(()=>{
-            
+    
+    React.useEffect(()=>{      
             var inicial='Productos'
-            if(typeof products === "string")return setNameCatg(()=>inicial)
+            if(typeof products === "string")return setNameCatg(()=>inicial)//si es string es porque el back tira error, no encontro producto por ej
             if(!products[0])return setNameCatg(()=>inicial)
             else{
                 var ref=products[0].category.name
                 products.forEach((e)=>{
-                setNameCatg(()=>e.category.name)
-                if(e.category.name!==ref)setNameCatg(()=>inicial)
-            })
+                    setNameCatg(()=>e.category.name)
+                    if(e.category.name!==ref)setNameCatg(()=>inicial)
+                })
             }
     },[products])
 
@@ -54,27 +54,28 @@ const Landing=()=>{
 
                 <Box >
                 <Swiper 
-                    modules={[Navigation, Pagination, Scrollbar, A11y]}
+                    modules={[Autoplay, Navigation, Pagination, Scrollbar, A11y]}
                     spaceBetween={40}
                     slidesPerView={1}
                     navigation
                     height={50}
+                    autoplay={{
+                        delay: 2500,
+                        disableOnInteraction: true,
+                      }}
                 >
-                    {categories.map(e=><SwiperSlide>
-                        <Box sx={{display:'flex',flexDirection:'row'}}>
-                            <Box sx={{bgcolor:color.color3,width:'30%',display:'flex',justifyContent:'center',alignItems:'center'}}>
-                                <Typography variant='h3' sx={{fontWeight:20}}>Celulares</Typography>
-                            </Box>
-                        <CardMedia
-                        component="img"
-                        height="350"
-                        image={e}
-                        alt="gf"
-                        sx={{objectFit:'cover'}}
-                        />
-                        </Box>
-                </SwiperSlide>)}
-                    </Swiper>
+                    {categories.map(e=>
+                        <SwiperSlide key={e._id}>
+                            <CardMedia
+                            component="img"
+                            height="300"
+                            image={e}
+                            alt="gf"
+                            sx={{objectFit:'cover'}}
+                            key={e._id}
+                            />
+                        </SwiperSlide>)}
+                </Swiper>
                 </Box>
                 
                 <Box sx={{marginX:4,mt:1,maxWidth:'100%',display:'flex',flexDirection:'row',justifyContent:'space-between',alignItems:'center'}}>
@@ -91,7 +92,7 @@ const Landing=()=>{
                 <Grid container spacing={1} sx={{justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>
                 
                     {products.map(e=>
-                        <Grid item xs={5} md={3}  sx={{display:'flex',justifyContent:'center',m:'auto',marginX:0}}>
+                        <Grid key={e._id} item xs={5} md={3}  sx={{display:'flex',justifyContent:'center',m:'auto',marginX:0}}>
                             <ProductCard key={e._id} product={e}/>
                         </Grid>)}
 
@@ -101,6 +102,7 @@ const Landing=()=>{
             </Container>
 
         :<Loading/> 
+   
     )
 }
 

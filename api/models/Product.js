@@ -6,26 +6,26 @@ const { Schema, model } = mongoose;
 const productSchema = new Schema({
     name: {
         type: String,
-        //required: true,
+        required: true,
         unique: true
 
     },
 
     price: {
         type: Number,
-        //required: true,
+        required: true,
         default: 0
     },
 
     description: {
         type: String,
-        //required: true,
+        required: true,
         maxLength: 1000
     },
 
     stock: {
         type: Number,
-        //required: true,
+        required: true,
         default: 0
     },
 

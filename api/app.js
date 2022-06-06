@@ -6,7 +6,7 @@ import logger from 'morgan';
 import indexRouter from './routes/index.js';
 import cors from 'cors'
 
-var app = express();
+const app = express();
 
 // view engine setup
 app.use(cors());

@@ -1,7 +1,8 @@
 import axios from "axios"
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
-//const { URL } = process.env
-const api='http://localhost:3000'
+import Cookie from 'js-cookie'
+
+export const api='http://localhost:3000'
 
 
 export const GETPRODUCTS = createAsyncThunk('GETPRODUCTS', async () => {
@@ -19,13 +20,20 @@ export const GETDETAIL = createAsyncThunk('GETDETAIL', async (id) => {
     return response.data
 })
 
-export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => {
-    await axios.post(`${api}/products`,input,{
-        headers:{
-            'x-access-token':'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYyOTdmN2MwOGJmZjU5M2E5MGI1Mzg0ZCIsImlhdCI6MTY1NDEyNjUyOCwiZXhwIjoxNjU0MjEyOTI4fQ.O4dxO7iHN_11U9hu549YwT_NgRmp5piU4JlTY2NAWQs'
-        }
-    })
+export const GETUSERS = createAsyncThunk('GETUSERS', async () => {
+    const response = await axios(`${api}/users`)
+    return response.data
 })
+
+export const GETORDERS = createAsyncThunk('GETORDERS', async () => {
+    const response = await axios(`${api}/orders`)
+    return response.data
+})
+
+export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => {
+    await axios.post(`${api}/products`,input)
+})
+
 
 export const SEARCHBYNAME=createAsyncThunk('SEARCHBYNAME',async (name)=>{
     const result=await axios(`${api}/products?name=${name}`) 
@@ -43,5 +51,10 @@ export const ORDERBYPRICE=createAction('ORDERBYPRICE',(order)=>{
     }
 })
 
-
-
+export const VERIFYADMIN=createAsyncThunk('VERIFYADMIN',async ()=>{
+    const user=JSON.parse( Cookie.get('user') )
+    if(user){
+        if(user.role==='admin')return true
+    }
+    return false
+})
