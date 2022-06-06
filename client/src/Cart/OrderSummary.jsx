@@ -4,9 +4,12 @@ import  CartContext  from './CartContext';
 
 
 
-export const OrderSummary = () => {
+export const OrderSummary = ({order=false}) => {
 
     const { numberOfItems, total } = useContext( CartContext );
+
+    const items=order?order.products.length:numberOfItems
+    const amount=order?order.totalPrice:total
   return (
     <Grid container>
         
@@ -14,7 +17,7 @@ export const OrderSummary = () => {
             <Typography>No. Productos</Typography>
         </Grid>
         <Grid item xs={6} display='flex' justifyContent='end'>
-            <Typography>{numberOfItems} { numberOfItems > 1 ? 'productos': 'producto' }</Typography>
+            <Typography>{items} { items > 1 ? 'productos': 'producto' }</Typography>
         </Grid>
 
 
@@ -23,9 +26,10 @@ export const OrderSummary = () => {
             <Typography variant="subtitle1">Total:</Typography>
         </Grid>
         <Grid item xs={6} sx={{ mt:2 }} display='flex' justifyContent='end'>
-            <Typography variant="subtitle1">{ `$ ${total}` }</Typography>
+            <Typography variant="subtitle1">{ `$ ${amount}` }</Typography>
             
         </Grid>
+
 
     </Grid>
   )

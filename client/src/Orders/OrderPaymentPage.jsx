@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link, Chip } from '@mui/material';
+import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link, Chip,Container } from '@mui/material';
 import { CartList, OrderSummary } from '../Cart';
 import CartContext from '../Cart/CartContext'
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
@@ -7,6 +7,7 @@ import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
 import { GETORDER, PAYORDER,GETDETAIL } from '../actions';
+import NavBar from '../Components/NavBar'
 
 
 const amount = "2";
@@ -82,8 +83,10 @@ const OrderPage=()=>{
     }
   
     return(
-        <>
-            <Typography variant='h1' component='h1'> Orden: {order._id}</Typography>
+        <>  
+            <NavBar/>
+            <Box sx={{display:'flex',mt:15,alignItems:'center',justifyContent:'space-between',marginX:3}}>
+            <Typography variant='h4'  sx={{fontWeight:20}}> Orden: {order._id}</Typography>
             {isPaid===false?
                     <Chip
                         sx={{my:2}}
@@ -100,15 +103,17 @@ const OrderPage=()=>{
                         color="success"
                         icon={ <CreditScoreOutlined/>}
                     />
-            }           
+            }
+            </Box>
+            <Divider sx={{m:1,marginX:'10%'}}/>
+                       
 
             <Grid container>
 
 
                 <Grid item xs={12} sm={7}>
-                    <CartList editable={false}/>
+                    <CartList editable={false} order={order.products}/>
                 </Grid>
-
                 <Grid item xs={12} sm={5}>
                     <Card className='summary-card'>
                         <CardContent>
@@ -145,7 +150,7 @@ const OrderPage=()=>{
                                
                             </Box>
 
-                            <OrderSummary/>
+                            <OrderSummary order={order}/>
 
                             <Box sx={{mt:3}}>
                                 
@@ -162,7 +167,6 @@ const OrderPage=()=>{
                                 :
                                 <PayPalButtons
                                 disabled={false}
-                                forceReRender={[order.totalPrice]}
                                 fundingSource={undefined}
                                 createOrder={(data, actions) => {
                                     return actions.order

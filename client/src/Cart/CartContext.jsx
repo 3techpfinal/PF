@@ -10,8 +10,8 @@ const obj= {
     // Methods
     addProductToCart: (product) => {},
     updateCartQuantity: (product) => {},
-    removeCartProduct: (product) => {}
-
+    removeCartProduct: (product) => {},
+    removeAllCartProduct: (product) => {}
     // Orders
     //createOrder: () => Promise<{ hasError: boolean; message: string; }>;
 }
