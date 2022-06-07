@@ -60,7 +60,7 @@ export const CartList = ({ editable = false,order=false }) => {
                                         <CardMedia 
                                             image={product.imageProduct?product.imageProduct[0]:"https://res.cloudinary.com/dnlooxokf/image/upload/v1651532672/sample.jpg"}
                                             component='img'
-                                            sx={{ borderRadius: '5px',width: 200, height: 200, objectFit:'contain'}}
+                                            sx={{ borderRadius: '5px',width: 150, height: 200, objectFit:'contain'}}
                                         />
                                     </CardActionArea> }
                                 </Card>

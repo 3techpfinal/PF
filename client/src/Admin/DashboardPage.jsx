@@ -60,21 +60,21 @@ const DashboardPage = () => {
         <Grid container spacing={2}>
 
             <CardDashboard 
-                link='admin/orderstable'
+                link='/orderstable'
                 title={ orders?.length }
                 subTitle="Ordenes totales"
                 icon={ <CreditCardOutlined color="secondary" sx={{ fontSize: 40 }} /> }
             />
 
             <CardDashboard 
-                link='admin/orderstable'
+                link='/orderstable'
                 title={ ordenesPagas?.length }
                 subTitle="Ordenes pagadas"
                 icon={ <AttachMoneyOutlined color="success" sx={{ fontSize: 40 }} /> }
             />
             
             <CardDashboard 
-                link='admin/orderstable'
+                link='/orderstable'
                 title={ orders?.length-ordenesPagas?.length }
                 subTitle="Ordenes sin pagar"
                 icon={ <CreditCardOffOutlined color="error" sx={{ fontSize: 40 }} /> }

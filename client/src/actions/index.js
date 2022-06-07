@@ -24,7 +24,12 @@ export const GETDETAIL = createAsyncThunk('GETDETAIL', async (id) => { //reciben
 })
 
 export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => { //recibe info por post y crea un producto
-    await axios.post(`${api}/products`,input)
+    const token=Cookie.get('token')
+    await axios.post(`${api}/products`,input ,{
+        headers:{
+            'x-access-token':token
+        }
+    })
 })
 
 export const SEARCHBYNAMEPRODUCTS=createAsyncThunk('SEARCHBYNAMEPRODUCTS',async (name)=>{// recibe un string por query y busca un producto
