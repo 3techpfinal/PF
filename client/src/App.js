@@ -6,26 +6,35 @@ import { PayPalScriptProvider} from "@paypal/react-paypal-js";
 import  CartProvider  from './Cart/CartProvider';
 import { useAuth0 } from "@auth0/auth0-react";
 
+/////////// PROVIDERS FIN ///////////////
 
-/////////// RUTAS ///////////////
+//////////////////////////////// RUTAS ///////////////////////////////////////
+
+////home////
 import Landing from './Pages/Landing';
-import CargarProducto from './Products/UploadProduct'
+
+////products////
+import UploadProduct from './Products/UploadProduct'
+import EditProduct from './Products/EditProduct'
 import ProductDetails from './Products/ProductDetails';
-import Loading from './Components/Loading';
-import Profile from './Pages/Profile'
-import Cart from './Cart/CartPage.jsx'
+
+////admin////
 import Dashboard from './Admin/DashboardPage'
-import UserTable from './Admin/UsersTable'
-import OrdersTable from './Admin/OrdersTable'
 import ProductsTable from './Admin/ProductsTable'
+import UserTable from './Admin/UsersTable'
+
+/// user ////
+import Profile from './Pages/Profile'
 import PasswordChange from './Pages/PasswordChange'
+import WishList from './Components/ListComponents'
+
+/// payment ////
+import Cart from './Cart/CartPage.jsx'
+import OrdersTable from './Admin/OrdersTable'
 import OrderSummary from './Orders/OrderSummaryPage'
 import OrderPayment from './Orders/OrderPaymentPage'
 
-
-import WishList from './Components/ListComponents'
-
-
+//////////////////////////////// RUTAS FIN ///////////////////////////////////////
 
 function App() {
   return (
@@ -35,9 +44,9 @@ function App() {
         <Routes>
           {/* <Route path='/' element={<><SearchInput /> <FilterByCategory />  <Btn href={"/contact"} text={"Contact Us!"} />  <Btn href={"/login"} text={"Login"} /> </>} /> */}
           <Route path='/' element={<Landing/>} />
-          <Route path='/admin/uploadproduct' element={<CargarProducto/>}/>
+          <Route path='/admin/uploadproduct' element={<UploadProduct/>}/>
+          <Route path='/admin/editdproduct/:id' element={<EditProduct/>}/>
           <Route path='/product/:id' element={<ProductDetails/>}/>
-          <Route path='/loading' element={<Loading/>}/>
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/admin/dashboard' element={<Dashboard/>}/>

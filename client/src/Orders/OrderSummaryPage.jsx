@@ -2,7 +2,7 @@ import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { CartList, OrderSummary } from '../Cart';
 import NavBar from '../Components/NavBar'
-import {useContext} from 'react'
+import {useContext,useEffect} from 'react'
 import CartContext from '../Cart/CartContext'
 import Cookie from 'js-cookie';
 import axios from 'axios';
@@ -28,6 +28,10 @@ export default function SummaryPage(){ // esta es la funcion principal
     const navegar = useNavigate()    
     const dispatch= useDispatch();
     const { cart,total,removeAllCartProduct } = useContext(CartContext);
+
+    useEffect(()=>{ //si el carrito esta vacio no puede entrar a esta pagina
+        if(!cart[0])navegar('/')
+    },[])
 
     const order = {products:cart, adress: "gandhi", isPaid: false, totalPrice: total }
     console.log('orden creada', order)

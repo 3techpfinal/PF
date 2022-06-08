@@ -1,10 +1,10 @@
 import React from "react";
 import NavBar from "../Components/NavBar"
-import { useState,useRef } from 'react';
+import { useState,useRef,useEffect } from 'react';
 import {   useNavigate } from "react-router-dom"
 //import { Link } from "react-router-dom";
 import { TextField,Select,Container, CardMedia,Link, Box, UploadOulined,InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import {CREATEPRODUCT,GETCATEGORIES} from '../actions'
+import {GETCATEGORIES,GETDETAIL,MODIFYPRODUCT} from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -15,7 +15,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
-
+import { useParams } from 'react-router-dom';
 import swal from 'sweetalert';
 
 //var cloudinary = require('cloudinary').v2;
@@ -26,19 +26,53 @@ import swal from 'sweetalert';
 //const regex=/^[0-9]+$/
 
 
-export default function CrearPublicacion() {
-
-
-  const fileInputRef=useRef(null)
+export default function EditarPublicacion() {
   const dispatch=useDispatch()
-  React.useEffect(()=>{
-      dispatch(GETCATEGORIES())
-  },[dispatch])
+
+  const {id}=useParams()
+  const product=useSelector((state)=>state.rootReducer.detail)
+
+  useEffect(()=>{
+    dispatch(GETDETAIL(id))
+},[dispatch])
+
+useEffect(()=>{
+  dispatch(GETCATEGORIES())
+},[dispatch])
+
+ 
+
+
+  const fileInputRef=useRef(null) //para esconder el boton feo de input
+  const fileInputRef2=useRef(null) //para esconder el boton feo de input
+
+
   const categories=useSelector((state)=>state.rootReducer.categories)
-  const[input,setInput]=useState({name:'',price:'',priceOriginal:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
+  const[input,setInput]=useState({name:'' ,price:0, priceOriginal:0,category:'',description:'',stock:1,imageProduct:[""],rating:0})
   const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
+
+  console.log('productos',product)
+  console.log('input',input)
+
+
+  useEffect(()=>(setInput({
+    _id: product._id,
+    imageProduct: product.imageProduct,
+    price: product.price,
+    name: product.name,
+    category: product.category,
+    description: product.description,
+    stock: product.stock,
+    priceOriginal: product.priceOriginal||product.price
+  })),[product]
+  )
+  //React.useEffect(setImages(product?.imageProduct))
+  
+
+
+
 
   const handleUpload=  (e)=>{
     const pics = e.target.files;
@@ -56,7 +90,7 @@ export default function CrearPublicacion() {
       })
         .then((res)=>res.json())
         .then((res)=> {
-          setImages(images=>[...images,res.url]);
+          setInput({imageProduct:[...input.imageProduct,res.url]});
           setUpLoading(false);
         })
         .catch(error=>console.log(error));
@@ -73,12 +107,8 @@ export default function CrearPublicacion() {
   //         //await cloudinary.uploader.destroy( fileId );
   //     }
   // });
-
-  setImages(images.filter(element=>//deja afuera el elemento que tenga la url a eliminar
-    element!==image
-  ))
-
-
+  
+  setInput(input.imageProduct.filter(element=>element!==image))//deja afuera el elemento que tenga la url a eliminar
 
   }
 
@@ -115,7 +145,8 @@ export default function CrearPublicacion() {
   
     async function handleSubmit(e){
       e.preventDefault()
-      if(input.price>input.priceOriginal){return swal({
+      if(input.price>input.priceOriginal){
+        return swal({
         title:"Error",
         text:"El precio con descuento no puede ser mayor al original!",
         icon:"error",
@@ -125,8 +156,8 @@ export default function CrearPublicacion() {
       if(!input.price){input.price=input.priceOriginal}
 
       
-          const newPost={...input,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
-          dispatch(CREATEPRODUCT(newPost))
+          const newPost={...input,imageProduct:input.imageProduct[0]?input.imageProduct:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
+          dispatch(MODIFYPRODUCT(newPost))
           //alert("Se creo el Producto exitosamente!")
 
           await swal({
@@ -136,89 +167,79 @@ export default function CrearPublicacion() {
             button:"Aceptar"
           }).then(() => { navegar("/"); window.location.reload()})
 
-
          //se accede al home
          // window.location.reload();//se refresca para activar el dispatch de GETPRODUCTS()       
   }
 
 
   return (
-    <div>
-        <NavBar/>
+  <div>
+    <NavBar/>
 
-        <Box display='flex' justifyContent='center'>
-          <div id='formnuevo'>
+    <Box display='flex' justifyContent='center'>
+    <div id='formnuevo'>
 
-        <Typography display='flex' justifyContent='center' mt={15}>PUBLICAR ARTICULO</Typography>
+        <Typography display='flex' justifyContent='center' mt={15}> EDITAR ARTICULO</Typography>
 
-          <Box
-            display='flex' 
-            flexDirection='column'
-            margin='auto'
-            component="form"
-            sx={{
-              '& > :not(style)': { m: 1 , width:'70ch' },
-            }}
-            noValidate
-            autoComplete="off"
-          >
+      <Box
+        display='flex' 
+        flexDirection='column'
+        margin='auto'
+        component="form"
+        sx={{
+          '& > :not(style)': { m: 1 , width:'70ch' },
+        }}
+        noValidate
+        autoComplete="off"
+      >
             <TextField id="formtitle" label="Nombre" variant="outlined" name='title' value={input.name}
-            onChange={(e)=>validate(e)}/>
+            onChange={(e)=>validate(e)}></TextField>
 
             <Box sx={{display:'flex'}}>
-            <TextField id="formprecio" label="Precio Original" variant="outlined"  name='precioOriginal' value={parseFloat(input.priceOriginal)} type='number'
-                InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}
-                onChange={(e)=>validate(e)} fullWidth
-            /> 
-            <TextField id="formprecioOrginial" label="Precio con descuento (opcional) " variant="outlined"  name='precio' value={parseFloat(input.price)} type='number'
-                InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}
-                onChange={(e)=>validate(e)} fullWidth
-            /> 
+                <TextField id="formprecio" label="Precio Original" variant="outlined"  name='precioOriginal' value={parseFloat(input.priceOriginal)} type='number'
+                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}
+                    onChange={(e)=>validate(e)} fullWidth
+                /> 
+                <TextField id="formprecioOrginial" label="Precio con descuento (opcional) " variant="outlined"  name='precio' value={parseFloat(input.price)} type='number'
+                    InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}
+                    onChange={(e)=>validate(e)} fullWidth
+                /> 
             </Box>                     
-{/*          
-            <label>Cantidad:</label>
-            <input id="productStock" name='stock' value={input.stock}
-                onChange={(e)=>validate(e)}
-              min="1" max="100" type="number"/> */}
 
-            <TextField id="productStock" label="Cantidad" variant="outlined" name='stock' value={parseInt(input.stock)} type='number'
-            onChange={(ev)=>validate(ev)}>
-            </TextField>
+            <TextField id="productStock" label="Cantidad" variant="outlined" name='stock' value={parseInt(input.stock)} type='number'onChange={(ev)=>validate(ev)}> </TextField>
 
             <Box>
-            <Select
-              id="formcats"
-              select
-              label="Categorias"
-              value={input.category}
-              onChange={(e)=>validate(e)}
-              name='category'
-              fullWidth
-            >
-                <MenuItem key='select' value='Select'>Select</MenuItem>
+              <Select
+                id="formcats"
+                select
+                label="Categorias"
+                value={input.category}
+                onChange={(e)=>validate(e)}
+                name='category'
+                fullWidth
+              >
+                 
                   {categories.map((category) => (
-                <MenuItem key={category._id} value={category._id}>{category.name}</MenuItem>
-              ))}
-            </Select>
+                  <MenuItem key={category._id} value={category._id}>{category.name}</MenuItem>
+                ))}
+              </Select>
             </Box>         
    
 
             <TextField multiline rows={10} id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
-            onChange={(e)=>validate(e)}/>
-
-                <Button
-                    color="secondary"
-                    fullWidth
-                    startIcon={ <UploadOutlined /> }
-                   
-                    
-                    onClick={ () => fileInputRef.current?.click() }
+            onChange={(e)=>validate(e)}></TextField>
+            
+            <Box dispay='flex' justifyContent='center'>
+              <Button 
+                color="secondary"
+                fullWidth
+                startIcon={ <UploadOutlined /> }
+                onClick={ () => fileInputRef.current?.click() }
                 >
-                    Cargar imagen
-                </Button>
-
-            
-            
+                Cargar imagen
+              </Button>
+            </Box>
+   
             {
             <input 
               multiple
@@ -229,20 +250,19 @@ export default function CrearPublicacion() {
               style={{ display: 'none' }}
             />}
 
-              <Container display='flex' flexDirection='row' justifyContent='center' width={10}  >
+              <Box display='flex' flexDirection='row' justifyContent='center' width={10}  >
+              
+              
               <Swiper
                       modules={[Navigation, Pagination, A11y]}
                       spaceBetween={20}
                       slidesPerView={4}
                       navigation={true}
                       loop={false}
-                     
-                  
                      // pagination={{ clickable: true }}
                     >
-                {images[0]?images.map(image=>(
-                  <Container>
-
+                  {input.imageProduct?.map(image=>( 
+              <>
                     <SwiperSlide>
                       <Link target="_blank" href={image}>
                       <CardMedia
@@ -251,38 +271,55 @@ export default function CrearPublicacion() {
                         height="250"
                         image={image}
                         alt="gf"
-                        sx={{objectFit:'contain',  zIndex: 'modal' }}
-
+                        sx={{objectFit:'contain'}}
                       />
                       </Link>
                     
-                      <Box display='flex' justifyContent='center' sx={{ zIndex: 'tooltip' }} onClick={(e)=>{handleDelete(e,image)}}>
+                      <Box display='flex' ref={ fileInputRef2 } justifyContent='center' sx={{ zIndex: 'tooltip', display:'none' }} onClick={(e)=>{handleDelete(e,image)}}  >
                         <Button  color = 'error' >Borrar</Button>
                       </Box>
 
+                      <Box display='flex'   justifyContent='center' sx={{ zIndex: 'tooltip' }} onClick={ () => fileInputRef2.current?.click()} >
+                       <Button  color = 'error' >Borrar</Button>
+                      </Box>
+
                     </SwiperSlide>
-                   
-                   </Container>
-                )):<></>}
+
+                               </>
+                   ))}
+              
                 </Swiper>
-              </Container>
+                  
+              </Box>
               {upLoading && <p>Subiendo Foto...</p> }
-              <Typography display='flex' justifyContent='center'>subiste {images.length} fotos</Typography>
 
-             <div>
-            <Button fullWidth sx={{ mb: 3 }} disabled={input.name===""||input.category==="Select"?true:false||input.description===""||input.priceOriginal===""}  width="100%" type="submit" onClick={(e) => handleSubmit(e)}>Crear Pubicación</Button>
-            </div>   
+              <Box dispay='flex' justifyContent='center'>
+                <Typography display='flex' justifyContent='center'>subiste {input?.imageProduct?.length} fotos</Typography>
+              </Box>
 
-          </Box>
+             <Box  dispay='flex' justifyContent='right' flexDirection='row'>
+              <Button   disabled={(input.name===product.name &&
+                input.category===product.category &&
+                input.description===product.description && 
+                input.imageProduct===product.imageProduct&& 
+                (input.priceOriginal==product.priceOriginal))&&
+                (input.price==product.price)&&
+                (input.stock==product.stock)
+              }  
+                type="submit" onClick={(e) => handleSubmit(e)}>Guardar</Button>
+              <Button >Cancelar</Button>
+             </Box>   
+
+      </Box>
 
 
 
         </div>
     </Box>
-    </div>
-    );
-  }
-
+  </div>
+  );
+}
+//||input.category!==product.category||input.description!==product.description||input.priceOriginal!==product.priceOrignal||input.imageProduct!==product.imageProduct
 
   // <button onClick={(e)=>{handleDelete(e,image)}}>X</button>
 

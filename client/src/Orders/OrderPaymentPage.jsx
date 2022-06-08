@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link, Chip,Container } from '@mui/material';
+import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link, Chip,Container, CardMedia } from '@mui/material';
 import { CartList, OrderSummary } from '../Cart';
 import CartContext from '../Cart/CartContext'
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
@@ -8,16 +8,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
 import { GETORDER, PAYORDER,GETDETAIL } from '../actions';
 import NavBar from '../Components/NavBar'
+import Swal from 'sweetalert2/src/sweetalert2.js'
+import swal from 'sweetalert';
+import Cookie from 'js-cookie'
 
-
-const amount = "2";
 const currency = "USD";
-const style = {"layout":"vertical"};
+
+
+
 const OrderPage=()=>{
 
+    const actualUser = JSON.parse(Cookie.get('user'))
+    //console.log("usuario",actualUser)
     const dispatch1=useDispatch()
     
-    const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+    const [{ options }, dispatch] = usePayPalScriptReducer();
     useEffect(() => {
         dispatch({
             type: "resetOptions",
@@ -28,9 +33,9 @@ const OrderPage=()=>{
         });
     }, [currency]);
 
-    
-    
-    const { cart,total } = useContext(CartContext);
+
+
+
     const {id} = useParams()
 
     useEffect(()=>{
@@ -38,7 +43,11 @@ const OrderPage=()=>{
     },[])
 
     const order=useSelector((State) => State.rootReducer.order);
+    console.log("order",order)
     const [isPaid,setIsPaid]=useState(order.isPaid?true:false)
+    const [isPaid2,setIsPaid2]=useState(false)
+
+
      //const detalle=useSelector((State) => State.rootReducer.detail);
 
     /* const producto=async(ide)=>{
@@ -50,8 +59,6 @@ const OrderPage=()=>{
         },[order])
 
     const onOrderCompleted = async( details ) => {
-
-        
         if ( details.status !== 'COMPLETED' ) {
             return alert('No hay pago en Paypal');
         }
@@ -71,6 +78,16 @@ const OrderPage=()=>{
             dispatch1(PAYORDER({transactionId: details.id, orderId: order._id}))
 
             setIsPaid(()=>true)
+
+           
+
+            swal({
+                title:"Felicitaciones!!",
+                text:"Haz realizado el pago exitosamente",
+                icon:"success",
+                button:"Aceptars"
+              })
+
     
         } catch (error) {
             //setIsPaying(false);
@@ -85,7 +102,17 @@ const OrderPage=()=>{
     return(
         <>  
             <NavBar/>
+
+      
             <Box sx={{display:'flex',mt:15,alignItems:'center',justifyContent:'space-between',marginX:3}}>
+            <CardMedia
+            component="img"
+            height="200"
+            image={'https://tuderechoasaber.com.do/wp-content/uploads/2020/07/fuego.gif'}
+            alt="gf"
+            sx={{objectFit:'contain'}}
+           />
+           
             <Typography variant='h4'  sx={{fontWeight:20}}> Orden: {order._id}</Typography>
             {isPaid===false?
                     <Chip
@@ -153,9 +180,11 @@ const OrderPage=()=>{
                             <OrderSummary order={order}/>
 
                             <Box sx={{mt:3}}>
-                                
+                             { console.log("actual",actualUser)}
+                                { console.log("user",order)}
 
-                            {
+
+{
                                 isPaid?
                                 <Chip
                                     sx={{my:2}}
@@ -165,6 +194,11 @@ const OrderPage=()=>{
                                     icon={ <CreditScoreOutlined/>}
                                 />
                                 :
+
+                                (
+                                 (actualUser?._id||0)!==order?.user._id||0?
+                                 <></>
+                                 :
                                 <PayPalButtons
                                 disabled={false}
                                 fundingSource={undefined}
@@ -191,7 +225,7 @@ const OrderPage=()=>{
                                         onOrderCompleted( details );
                                     });
                                 }}
-                            />
+                            />)
                                 }
                                        
 
@@ -200,6 +234,7 @@ const OrderPage=()=>{
                     </Card>
                 </Grid> 
             </Grid>
+
             </>
 
     )

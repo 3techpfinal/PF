@@ -2,9 +2,9 @@
 import { useState, useEffect } from 'react';
 import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-material'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { Grid, Select, MenuItem, Box,CardMedia } from '@mui/material';
+import { Grid, Select, MenuItem, Box,CardMedia,Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {GETUSERS, GETORDERS,GETPRODUCTS,GETDETAIL,SEARCHBYNAMEPRODUCTS} from '../actions'
+import {MODIFYPRODUCT, GETORDERS,GETPRODUCTS,GETDETAIL,SEARCHBYNAMEPRODUCTS} from '../actions'
 import { AppDispatch,RootState } from '../store'
 import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
@@ -14,6 +14,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 const useAppDispatch = () => useDispatch();
 
 const UsersPage = () => {
+    
     const dispatch=useAppDispatch()
     const navigate= useNavigate()
     useEffect(()=>{
@@ -23,6 +24,36 @@ const UsersPage = () => {
 
     const products=useSelector((State) => State.rootReducer.products);
     const orders=useSelector((State) => State.rootReducer.orders);
+    
+    const productosmap=products.map(product=>( //esto es para cargar el estado productState
+        {id:product._id,
+        isActive:product.isActive}
+    ))
+    const [productState,setProductState]=useState([])
+   
+
+    useEffect(()=>{
+        setProductState(()=>productosmap)
+    },[products])
+
+
+    const handleChange=(e,row)=>{
+        setProductState((state)=>state.map(e=>{
+            if(e.id===row.id){
+                return {
+                    id:e.id,
+                    isActive:!e.isActive} //a la prop isActive le paso su valor negado
+            }
+            else return e
+        }))
+        dispatch(MODIFYPRODUCT({_id:row.id,isActive: e.target.value==='online'?true:false}))
+
+ }
+
+
+
+
+
 
       const calcularCantidadDeVentasDeUnProducto = (ordenes,producto)=> {
         let contador = 0
@@ -39,7 +70,9 @@ const UsersPage = () => {
         await dispatch(GETDETAIL(id))
         navigate(`/products/${id}`)
     }
-    console.log("product:",products)
+    
+
+
 
     const columns = [
         { 
@@ -60,25 +93,34 @@ const UsersPage = () => {
             }
         },
 
+        { 
+            field: 'edit', 
+            headerName: 'Editar',
+            
+            renderCell: ({ row } ) => {
+                return (
+                    <a href={ `/admin/editdproduct/${ row.id }` }  rel="noreferrer">
+                        <Typography color='black'>editar</Typography>
+                    </a>
+                )
+            }
+        },
+
         { field: 'name', headerName: 'Producto', width: 350 },
         { field: 'date', headerName: 'Fecha de publicacion', width: 250 },
         { field: 'rating', headerName: 'calificacion de usuarios', width: 250 },
         { field: 'price', headerName: 'Precio ($)', width: 250 },
         { field: 'stock', headerName: 'En stock', width: 250 },
-        { field: 'salesQuantity', headerName: 'Cantidad de ventas', width: 250 },
-        {
-            field: 'status', 
+        { field: 'salesQuantity', headerName: 'Cantidad de ventas totales', width: 250 },
+        { field: 'status', 
             headerName: 'Estado', 
             width: 300,
             renderCell: ({row}) => {
                 return (
                         <Select
-                            value={ row.estado?'online':'bloqueado' }
+                            value={ productState.filter(e=> e.id===row.id)[0]?.isActive?'online':'bloqueado' }
                             label="state"
-                            onChange={ (e)=> {
-                                //dispatch(MODIFYUSER({_id:row.id,suspendedAccount: e.target.value==='online'?false:true}))
-                                window.location.reload()
-                            }   }
+                            onChange={(e)=>handleChange(e,row) }
                             sx={{ width: '300px' }}
                         >
                             <MenuItem value='online'> online </MenuItem>
@@ -95,7 +137,7 @@ const UsersPage = () => {
         price: `$${product.price}`,
         stock: product.stock,
         image: product.imageProduct[0],
-        estado: product.isActive || "true",
+        estado: product.isActive,
         date:product.date||"sin fecha en BDD",
         rating:product.rating? product.rating : "no tiene rating",
         salesQuantity: calcularCantidadDeVentasDeUnProducto(orders,product)
@@ -105,7 +147,7 @@ const UsersPage = () => {
 <>
     <NavBar/>
     <Box mt={15} >
-
+    <Typography variant='h2'>Productos</Typography>
     <SearchBar 
                 placeholder="buscar por nombre de producto"
                 url='/admin/userstable'
