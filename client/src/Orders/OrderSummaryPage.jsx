@@ -34,9 +34,9 @@ export default function SummaryPage(){ // esta es la funcion principal
 
     const crearOrden = async ()=> {
      let ordenNueva = await dispatch(CREATEORDER(order))
-     await dispatch(GETORDER(ordenNueva.payload))
+     dispatch(GETORDER(ordenNueva.payload)).then(()=>
+     navegar(`/orderpayment/${ordenNueva.payload}`))
      removeAllCartProduct()
-     navegar(`/orderpayment/${ordenNueva.payload}`)
     }
 
     return(
