@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { styled, alpha } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
-
 import {Button} from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
@@ -37,7 +36,6 @@ import Cookie from 'js-cookie'
 import {api} from '../actions'
 import { cartReducer } from '../Cart/cartReducer';
 import { Dropdown } from 'rsuite';
-
 
 
 
@@ -260,7 +258,7 @@ export default function PrimarySearchAppBar() {
 
           <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
             <SearchBar 
-            placeholder="buscar por producto o categoria"
+            placeholder="Buscar por producto o categoria"
             url='/'
             dinamic={false}
             action={SEARCHBYNAMEPRODUCTS}
