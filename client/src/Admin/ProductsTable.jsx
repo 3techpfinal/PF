@@ -4,23 +4,41 @@ import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-mate
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Grid, Select, MenuItem, Box,CardMedia } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {GETUSERS, GETORDERS,GETPRODUCTS,SEARCHBYNAMEPRODUCTS} from '../actions'
+import {GETUSERS, GETORDERS,GETPRODUCTS,GETDETAIL,SEARCHBYNAMEPRODUCTS} from '../actions'
 import { AppDispatch,RootState } from '../store'
 import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
-
+import { NavLink, useNavigate } from 'react-router-dom';
 
 
 const useAppDispatch = () => useDispatch();
 
 const UsersPage = () => {
     const dispatch=useAppDispatch()
-
+    const navigate= useNavigate()
     useEffect(()=>{
         dispatch(GETPRODUCTS())
+        dispatch(GETORDERS())
       },[dispatch])
 
     const products=useSelector((State) => State.rootReducer.products);
+    const orders=useSelector((State) => State.rootReducer.orders);
+
+      const calcularCantidadDeVentasDeUnProducto = (ordenes,producto)=> {
+        let contador = 0
+        ordenes.map((orden)=>(
+            orden.isPaid&&
+            orden.products.map((product)=>(
+               ( product._id===producto._id) && (contador=contador + product.quantity)       
+            ))   
+        ));
+        return contador 
+      }
+
+      const verOrden=async (id)=>{
+        await dispatch(GETDETAIL(id))
+        navigate(`/products/${id}`)
+    }
     console.log("product:",products)
 
     const columns = [
@@ -74,13 +92,13 @@ const UsersPage = () => {
     const rows = products.map( (product) => ({
         id: product._id,
         name: product.name,
-        price: product.price,
+        price: `$${product.price}`,
         stock: product.stock,
         image: product.imageProduct[0],
         estado: product.isActive || "true",
         date:product.date||"sin fecha en BDD",
         rating:product.rating? product.rating : "no tiene rating",
-        salesQuantity: product.salesquantity? product.salesquantity : "0"
+        salesQuantity: calcularCantidadDeVentasDeUnProducto(orders,product)
     }))
     
   return (
@@ -96,12 +114,12 @@ const UsersPage = () => {
         />
 
         <Grid container className='fadeIn'>
-            <Grid item xs={12} sx={{ height:660, width: 40000 }}>
+            <Grid item xs={12} sx={{ height:900, width: 40000 }}>
                 <DataGrid 
                     rows={ rows }
                     columns={ columns }
-                    pageSize={ 12 }
-                    rowsPerPageOptions={ [20] }
+                    pageSize={ 20 }
+                    rowsPerPageOptions={ [30] }
                 />
 
             </Grid>

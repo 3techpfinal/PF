@@ -253,6 +253,12 @@ export default function PrimarySearchAppBar() {
               </Link>
             </Typography>
           </Box>
+          <Box display='flex' flexDirection='row'>
+             
+            <img width='50' src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="MDN Logo"></img>
+            <Typography variant='h5'>($)</Typography>
+             
+          </Box>
 
 
 

@@ -22,6 +22,7 @@ import PasswordChange from './Pages/PasswordChange'
 import OrderSummary from './Orders/OrderSummaryPage'
 import OrderPayment from './Orders/OrderPaymentPage'
 
+
 import WishList from './Components/ListComponents'
 
 
@@ -41,7 +42,6 @@ function App() {
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/admin/dashboard' element={<Dashboard/>}/>
           <Route path='/admin/userstable' element={<UserTable/>}/>
-          <Route path='/admin/orderstable' element={<OrdersTable/>}/>
           <Route path='/orderstable' element={<OrdersTable/>}/>
           <Route path='/admin/productstable' element={<ProductsTable/>}/>
           <Route path='/passwordchange' element={<PasswordChange/>}/>

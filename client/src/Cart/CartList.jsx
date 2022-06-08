@@ -52,16 +52,15 @@ export const CartList = ({ editable = false,order=false }) => {
             {
                 array?.map( product => (//product es un elemento del array cart
                     <Grid container spacing={2} key={ product._id } sx={{ mb:1 }}>
-                        <Grid item xs={3}>
+                        <Grid item xs={2}>
                             
                             <NavLink to={`/product/${ product._id }`} >
-                               <Card>
+                               <Card >
                                     { <CardActionArea>
                                         <CardMedia 
                                             image={product.imageProduct?product.imageProduct[0]:"https://res.cloudinary.com/dnlooxokf/image/upload/v1651532672/sample.jpg"}
                                             component='img'
-                                            sx={{ borderRadius: '5px',width: 200, height: 200, objectFit:'contain'}}
-                                            height="250"
+                                            sx={{ borderRadius: '5px',width: 150, height: 200, objectFit:'contain'}}
                                         />
                                     </CardActionArea> }
                                 </Card>
@@ -114,9 +113,20 @@ export const CartList = ({ editable = false,order=false }) => {
                             </Box>
                         </Grid>
                         <Grid item xs={2} display='flex' alignItems='center' flexDirection='column'>
-                            <Typography variant='subtitle1'>{ `$${ product.discount?product.price-product.discount:product.price }` }</Typography>
+
                             
-                            {product.discount?<Chip label={`-${product.discount}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
+                        {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
+
+                        {product.priceOriginal && product.price!==product.priceOriginal ?
+                                <div>
+                                    {'$'+new Intl.NumberFormat().format(product.price)}
+                                    <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
+                                </div>
+                            :
+                                    new Intl.NumberFormat().format(product.price)}
+
+                            
+                            
                             
                             
                             {

@@ -64,7 +64,7 @@ const ProductDetails=()=>{
         //review: product.review,
         description: product.description,
         stock: product.stock,
-        discount:product.discount
+        priceOriginal: product.priceOriginal||product.price
       })
     )
       const onUpdateQuantity = ( quantity ) => {
@@ -123,7 +123,17 @@ const ProductDetails=()=>{
                                     <AddShoppingCartIcon sx={{ml:1}}/>
                                 </IconButton>
                             </Box>
-                            <Typography variant='h5' sx={{mt:1,fontWeight:12}}>$ {new Intl.NumberFormat().format(product.price)+' '} <Chip label="-10%" sx={{bgcolor:color.color2}}/></Typography>
+                            {product.priceOriginal && product.price!==product.priceOriginal ?
+                                <div>
+                                    <Typography variant='h5' sx={{mt:1,fontWeight:12}}>{'$'+new Intl.NumberFormat().format(product.price)} </Typography>
+                                    <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
+                                </div>
+                                :
+                                <Typography variant='h5' sx={{mt:1,fontWeight:12}}> {'$'+new Intl.NumberFormat().format(product.price)} </Typography>}
+
+                                {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:color.color2}}/>:<></>}
+
+                            
                             
                             <Typography overflow={'auto'} variant='body1' sx={{mt:2,maxHeight:200}}>{product.description}</Typography>
 

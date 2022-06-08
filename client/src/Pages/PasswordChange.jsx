@@ -15,6 +15,7 @@ import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 
 import swal from 'sweetalert';
+import Swal from 'sweetalert2/src/sweetalert2.js'
 
 function validate(newPass){
   let errors = {} //creo un objeto vacio
@@ -73,7 +74,23 @@ export default function PasswordChange() {
             icon:"success",
             button:"Aceptars"
           })
-          navegar("/")//se accede al home
+
+          Swal.fire({
+            title: 'Custom width, padding, color, background.',
+            width: 600,
+            padding: '3em',
+            color: '#716add',
+            background: '#fff url(/images/trees.png)',
+            backdrop: `
+              rgba(0,0,123,0.4)
+              url("/images/nyan-cat.gif")
+              left top
+              no-repeat
+            `
+          })
+
+
+          //navegar("/")//se accede al home
          // window.location.reload();//se refresca para activar el dispatch de GETPRODUCTS()       
   }
 

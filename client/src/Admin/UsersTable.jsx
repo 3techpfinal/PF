@@ -4,7 +4,7 @@ import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-mate
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Grid, Select, MenuItem, Box, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {GETUSERS, GETORDERS,GETPRODUCTS,SEARCHBYNAMEUSERS} from '../actions'
+import {GETUSERS, GETORDERS,SEARCHBYNAMEUSERS} from '../actions'
 import { AppDispatch,RootState } from '../store'
 import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
@@ -18,19 +18,35 @@ const UsersPage = () => {
 
     useEffect(()=>{
         dispatch(GETUSERS())
+        dispatch(GETORDERS())
       },[dispatch])
 
     const usuarios=useSelector((State) => State.rootReducer.users);
+    const orders=useSelector((State) => State.rootReducer.orders);
     console.log("usuarios:",usuarios)
+    console.log("ordenes:",orders)
+
+
+
+    const calcularCantidadProductosCompradosTotales = (ordenes,usuario)=> {
+        let contador = 0
+        ordenes?.map((orden)=>(
+            (orden.user?.email===usuario?.email && orden.isPaid)&&
+            orden.products.map((product)=>(
+                contador=contador+product.quantity
+            ))
+        ))
+        return contador 
+      }
 
     const columns = [
         { field: 'name', headerName: 'Nombre completo', width: 300 },
         { field: 'email', headerName: 'Correo', width: 250 },
-        { field: 'products', headerName: 'Publicaciones', width: 250 },
+        { field: 'amountOfBuys', headerName: 'Cantidad de productos comprados totales', width: 350 },
         {
             
             headerName: 'Role', 
-            width: 300,
+            width: 200,
             renderCell: ({row}) => {
                 return (
                             row.rol==='superadmin'?
@@ -56,7 +72,7 @@ const UsersPage = () => {
         
         { 
             headerName: 'Estado', 
-            width: 300,
+            width: 200,
             renderCell: ({row}) => {
                 return (
                             row.rol==='superadmin'?
@@ -81,12 +97,16 @@ const UsersPage = () => {
 
     const rows = usuarios.map( (user) => ({
         id: user._id,
-        email: user.email,
-        products: user.products?.length,
         name: user.name||"sin nombre",
+        email: user.email,
+        products: user?.products?.length,
         rol: user.role,
-        estado: user?.suspendedAccount
+        estado: user?.suspendedAccount,
+        amountOfBuys: calcularCantidadProductosCompradosTotales(orders,user)
     }))
+
+
+
 
   return (
 <>
