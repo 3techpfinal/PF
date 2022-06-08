@@ -53,6 +53,13 @@ const userSchema = new Schema({
         }
     ],
 
+    orders: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Order'
+        }
+    ],
+    
     verifiedAccount: {
         type: Boolean,
         default: false,

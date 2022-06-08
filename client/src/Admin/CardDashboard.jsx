@@ -28,7 +28,7 @@ export default function SummaryTile ({ title, subTitle, icon,link})  {
           
           {link!==undefined?
             <NavLink to={`/${link}`}> 
-                <Card sx={{ display: 'flex', height:'100' }}>
+                <Card sx={{ display: 'flex', height:'200' }}>
                     <CardContent sx={{ width: 50, display:'flex', justifyContent: 'center', alignItems: 'center' }}>
                         {/* <CreditCardOffOutlined color="secondary" sx={{ fontSize: 40 }} /> */}
                         { icon }

@@ -1,5 +1,6 @@
 import { createReducer } from '@reduxjs/toolkit'
 import * as actions from '../actions/index'
+import Cookie from 'js-cookie'
 
 const initialState = {
   products:[],
@@ -88,6 +89,12 @@ const rootReducer = createReducer(initialState, (builder) => {
       state.recommended=action.payload
     })
 
+    .addCase(actions.MODIFYPRODUCT.fulfilled,(state,action)=>{
+
+      state.product=action.payload 
+      
+    })
+
                           /////////////////////////////////////   
                          //      ACCIONES PARA USUARIOS    //   
                         ///////////////////////////////////// 
@@ -99,6 +106,18 @@ const rootReducer = createReducer(initialState, (builder) => {
     .addCase(actions.SEARCHBYNAMEUSERS.fulfilled, (state, action) => {
       state.users=[]
       state.users=action.payload
+    })
+
+
+    .addCase(actions.MODIFYUSER.fulfilled,(state,action)=>{
+      if(state.user._id===action.payload._id){//si el usuario que tengo en cookies actualmente es igual al que modifique, modifica las cookies
+      Cookie.set('user',JSON.stringify( action.payload ),{expires:0.08})
+      state.user=action.payload
+      alert('Cambios Guardados')
+      }
+      else{
+        state.user=Cookie.get('user')?JSON.parse(Cookie.get('user')):[]
+      }
     })
 
                           /////////////////////////////////////   

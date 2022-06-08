@@ -1,23 +1,33 @@
-import { useContext } from 'react';
-import { Grid, Typography,Del } from '@mui/material';
-import  CartContext  from './CartContext';
+import { useEffect } from 'react';
+import { Grid, Typography } from '@mui/material';
+import { useSelector,useDispatch } from 'react-redux';
+import { GETORDER } from '../actions';
+import { useParams } from 'react-router-dom';
 
 
 
-export const OrderSummary = ({order=false}) => {
+export const OrderSummary = () => {
+    const {id}=useParams()
+    const dispatch=useDispatch()
 
-    const {numberOfItems, total } = useContext( CartContext );
+    const order=useSelector((state)=>state.rootReducer.order)
 
-    const items=order?order.products.length:numberOfItems
-    const amount=order?order.totalPrice:total
+    useEffect(()=>{
+        dispatch(GETORDER(id))
+    },[dispatch,id])
+
+    // const items=order?order.products.length:numberOfItems
+    // const amount=order?order.totalPrice:total
   return (
+    order.products?
+    
     <Grid container>
         
         <Grid item xs={6}>
             <Typography>No. Productos</Typography>
         </Grid>
         <Grid item xs={6} display='flex' justifyContent='end'>
-            <Typography>{items} { items > 1 ? 'productos': 'producto' }</Typography>
+            <Typography>{order.products.length} { order.products.length > 1 ? 'productos': 'producto' }</Typography>
         </Grid>
 
 
@@ -30,11 +40,11 @@ export const OrderSummary = ({order=false}) => {
 
 
           
-            <Typography  variant="subtitle1">{ `$ ${amount}` }</Typography>
+            <Typography  variant="subtitle1">{ `$ ${order.totalPrice}` }</Typography>
           
         </Grid>
 
 
-    </Grid>
+    </Grid>:<></>
   )
 }

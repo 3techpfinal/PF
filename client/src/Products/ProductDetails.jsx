@@ -6,7 +6,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import color from '../styles'
-import ProductCard from './ProductCard'
+import ProductCard from './CardProduct'
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { useState, useContext } from "react";
@@ -43,7 +43,6 @@ const ProductDetails=()=>{
             <Typography sx={{m:1,p:1,ml:3}}>{texto}</Typography>
         )
     }
-
     const divider=()=>{
         return(
             <Divider sx={{marginX:3}}/>
@@ -116,13 +115,21 @@ const ProductDetails=()=>{
                         <Box sx={{m:1,border:'1px solid lightgray',p:3,pt:1,borderRadius:5}}>
                             <Box sx={{display:'flex',justifyContent:'space-between'}}>
                                 <Typography sx={{fontSize:{xs:20,sm:30},maxHeight:100}}>{product.name.length>40?product.name.slice(0,35)+'...':product.name}</Typography>
-                                <IconButton 
+                                {product.isActive?<IconButton 
                                 sx={{bgcolor:color.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
                                 onClick={ onAddProduct }>
                                     Agregar al carrito 
                                     <AddShoppingCartIcon sx={{ml:1}}/>
+                                </IconButton>:
+                                <IconButton 
+                                sx={{bgcolor:'red',borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
+                                >
+                                    Este producto no esta disponible 
                                 </IconButton>
+                                }
+                                
                             </Box>
+                            <Chip label={`${product.stock} En Stock`} sx={{bgcolor:color.color2}}/>
                             {product.priceOriginal && product.price!==product.priceOriginal ?
                                 <div>
                                     <Typography variant='h5' sx={{mt:1,fontWeight:12}}>{'$'+new Intl.NumberFormat().format(product.price)} </Typography>
@@ -130,6 +137,8 @@ const ProductDetails=()=>{
                                 </div>
                                 :
                                 <Typography variant='h5' sx={{mt:1,fontWeight:12}}> {'$'+new Intl.NumberFormat().format(product.price)} </Typography>}
+                            
+
 
                                 {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:color.color2}}/>:<></>}
 
@@ -184,7 +193,7 @@ const ProductDetails=()=>{
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 navigation
                 >
-                {recommended.map(e=><SwiperSlide><ProductCard product={e}/></SwiperSlide>)}
+                {recommended.filter((e)=>e.isActive===true).map(e=><SwiperSlide><ProductCard product={e}/></SwiperSlide>)}
             </Swiper>
                 </Container>
             </Box>

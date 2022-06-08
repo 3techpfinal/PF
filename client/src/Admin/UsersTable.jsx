@@ -4,7 +4,7 @@ import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-mate
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Grid, Select, MenuItem, Box, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {GETUSERS, GETORDERS,SEARCHBYNAMEUSERS} from '../actions'
+import {GETUSERS, GETORDERS,SEARCHBYNAMEUSERS,MODIFYUSER} from '../actions'
 import { AppDispatch,RootState } from '../store'
 import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
@@ -23,9 +23,69 @@ const UsersPage = () => {
 
     const usuarios=useSelector((State) => State.rootReducer.users);
     const orders=useSelector((State) => State.rootReducer.orders);
-    console.log("usuarios:",usuarios)
-    console.log("ordenes:",orders)
+   // console.log("usuarios:",usuarios)
+   // console.log("ordenes:",orders)
 
+//////////////////////////////  modificar el estado del usuario /////////////////////////
+    const [userState,setUserState]=useState([]) //estado de usuarios para mostrar
+    
+    const userStatemap=usuarios.map(user=>( //esto es para cargar el estado productState con los datos de la BDD
+        {id:user._id,
+        cuentaSuspendida:user.suspendedAccount}
+    ))
+
+    useEffect(()=>{
+        setUserState(()=>userStatemap)
+    },[usuarios])
+
+    const handleChangeState=(e,row)=>{
+        setUserState((state)=>state.map(e=>{
+            if(e.id===row.id){
+                return {
+                    id:e.id,
+                    cuentaSuspendida:!e.cuentaSuspendida}
+            }
+            else return e
+        }))
+        dispatch(MODIFYUSER({_id:row.id,suspendedAccount: e.target.value==='online'?true:false}))
+ }
+//|||||______________________________  modificar el estado del usuario ____________________////
+
+
+//////////////////////////////  modificar el ROL del usuario /////////////////////////
+const [userRol,setUserRol]=useState([]) //estado de usuarios para mostrar
+
+const userRolStatemap=usuarios.map(user=>( //esto es para cargar el estado productState con los datos de la BDD
+    {id:user._id,
+    rolUser:user.role}
+))
+
+// console.log("roleUser",userRolStatemap) 
+//                  ejemplo:
+// 0: {id: '6294228a1ceba51474078b13', rolUser: 'admin'}
+// 1: {id: '629521f73a2bff0012f073fb', rolUser: 'user'}
+// 2: {id: '62952463148bb70013a80741', rolUser: 'user'}
+// 3: {id: '629536d0ca35de00110052c4', rolUser: 'user'}
+
+useEffect(()=>{
+    setUserRol(()=>userRolStatemap)
+},[usuarios])
+
+console.log("estado userRol:", userRol)
+
+const handleChangeRol=(e,row)=>{ //e es el nuevo valor 
+    setUserRol((rol)=>rol.map(e=>{
+        if(e.id===row.id){ //row id es el valor quee se trae de la BDD
+            return {
+                id: e.id,
+                rolUser: e.rolUser==='admin'?'user':'admin'} //a la prop rolUser le paso su valor negado
+        }
+        else return e
+    }))
+    dispatch(MODIFYUSER({_id:row.id, role:e.target.value}))
+}
+
+//|||||______________________________  modificar el ROL del usuario ____________________////
 
 
     const calcularCantidadProductosCompradosTotales = (ordenes,usuario)=> {
@@ -44,7 +104,7 @@ const UsersPage = () => {
         { field: 'email', headerName: 'Correo', width: 250 },
         { field: 'amountOfBuys', headerName: 'Cantidad de productos comprados totales', width: 350 },
         {
-            
+            field: 'Role',
             headerName: 'Role', 
             width: 200,
             renderCell: ({row}) => {
@@ -53,12 +113,9 @@ const UsersPage = () => {
                             <Typography color="error" value='superadmin'> superadmin </Typography> 
                             :
                             <Select
-                                value={ row.rol }
+                                value={ userRol.filter(e=> e.id===row.id)[0]?.rolUser}
                                 label="Rol"
-                                onChange={ (e) => {
-                                    //dispatch(MODIFYUSER({_id:row.id,roles: e.target.value==='admin'?['6278836b2eda1997d8769ad3']:['6278836b2eda1997d8769ad2']}))
-                                    window.location.reload()
-                                } }
+                                onChange={(e)=>handleChangeRol(e,row) }
                                 sx={{ width: '300px' }}
                             >
                                 <MenuItem value='admin'> admin </MenuItem>
@@ -72,6 +129,7 @@ const UsersPage = () => {
         
         { 
             headerName: 'Estado', 
+            field: 'Estado',
             width: 200,
             renderCell: ({row}) => {
                 return (
@@ -79,12 +137,9 @@ const UsersPage = () => {
                             <Typography color="error" value='superadmin'> superadmin </Typography> 
                             :
                             <Select
-                                value={ row.estado?'bloqueado':'online' }
+                                value={ userState.filter(e=> e.id===row.id)[0]?.cuentaSuspendida?'bloqueado':'online' }
                                 label="state"
-                                onChange={ (e)=> {
-                                    //dispatch(MODIFYUSER({_id:row.id,suspendedAccount: e.target.value==='online'?false:true}))
-                                    window.location.reload()
-                                }   }
+                                onChange={(e)=>handleChangeState(e,row) }
                                 sx={{ width: '300px' }}
                             > 
                                 <MenuItem value='online'> online </MenuItem>

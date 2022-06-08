@@ -1,15 +1,16 @@
 
-import { useState, useEffect } from 'react';
-import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-material'
-import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { Grid, Select, MenuItem, Box, Button } from '@mui/material';
+import { useEffect, useState} from 'react';
+import { DataGrid,} from '@mui/x-data-grid';
+import { Grid, Box, Button, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {GETUSERS, GETORDERS,GETPRODUCTS,SEARCHBYNAMEPRODUCTS,GETORDER} from '../actions'
-import { AppDispatch,RootState } from '../store'
+import {GETORDERS,SEARCHBYNAMEPRODUCTS,GETORDER,DELETEORDER} from '../actions'
 import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
 import { Chip } from '@mui/material'
-import { NavLink, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
+import swal from 'sweetalert'
+
+
 const useAppDispatch = () => useDispatch();
 
 const UsersPage = () => {
@@ -22,30 +23,73 @@ const UsersPage = () => {
         ))
         return contador      
     }
+
+
+    const orders=useSelector((State) => State.rootReducer.orders);
+
+    const [orderDelete,setOrderDelete]=useState([])
+    const ordersmap=orders.map(order=>( //esto es para cargar el estado productState
+        {id:order._id,
+        delete:false}
+    ))
+    useEffect(()=>{
+        setOrderDelete(()=>ordersmap)
+    },[orders])
+
+
     const navigate= useNavigate()
+
     useEffect(()=>{
         dispatch(GETORDERS())
       },[dispatch])
 
 
       const verOrden=async (id)=>{
-        await dispatch(GETORDER(id))
-        navigate(`/orderpayment/${id}`)
+        dispatch(GETORDER(id)).then(()=>navigate(`/orderpayment/${id}`))
+    }
+
+    const deleteOrder=async(e,row,id)=>{
+
+        setOrderDelete((state)=>state.map(e=>{
+            if(e.id===row.id){
+                return {
+                    id:e.id,
+                    delete:!e.delete} //a la prop isActive le paso su valor negado
+            }
+            else return e
+        }))
+
+
+
+        swal({
+            title: "Estas seguro que deseas eliminar la orden?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+             dispatch (DELETEORDER(id))
+
+
+            //   swal("has eliminado la orden!", { icon: "success",});
+            } else {
+            }
+          });
     }
 
 
 
 
-    //const usuarios=useSelector((State) => State.rootReducer.users);
-    const orders=useSelector((State) => State.rootReducer.orders);
-    //const products=useSelector((State) => State.rootReducer.products);
-console.log("orders",orders)
+
+    console.log("orders",orders)
     const columns = [
         { field: 'name', headerName: 'Usuario', width: 250 },
         { field: 'email', headerName: 'email', width: 250 },
         { field: 'orderNumber', headerName: 'Nº de Orden', width: 250 },
-        { field: 'amountOfProducts', headerName: 'Cantidad de productos de un tipo', width: 150 },
-        { field: 'amountOfProductsTotal', headerName: 'Cantidad de productos totales', width: 150 },
+        { field: 'amountOfProducts', headerName: 'Cantidad de productos \n de un tipo', width: 280 },
+        { field: 'amountOfProductsTotal', headerName: 'Cantidad de productos totales', width: 280 },
         { field: 'totalPrice', headerName: 'Precio total', width: 150 },
         {
             field: 'isPaid',
@@ -68,11 +112,26 @@ console.log("orders",orders)
                         // <NavLink to={`/order/${params.row.id}`}>
                         //     <Link underline='always'>
                                 <Button onClick={()=>verOrden(params.row.id)}>
-                                    Ver Orden
+                                     Ver Orden
                                 </Button>
                         //     </Link>
                         // </NavLink>
 
+                        )
+                
+            }
+         },
+
+         {
+            field:'delete',
+            headerName:'eliminar',
+            width: 200,
+            sortable: false,
+            renderCell: (params)=>{
+                return (           
+                        <Button onClick={()=> deleteOrder(params.row.id) }>
+                                   eliminar
+                        </Button>
                         )
                 
             }
@@ -101,6 +160,8 @@ console.log("orders",orders)
     <NavBar/>
     <Box mt={15} >
 
+    <Typography variant='h2'>Ordenes</Typography>
+
     <SearchBar 
                 placeholder="buscar por nombre de producto"
                 url='/orderstable'
@@ -108,15 +169,17 @@ console.log("orders",orders)
                 action={SEARCHBYNAMEPRODUCTS}
         />
 
+        
+
 
    
             <Grid container className='fadeIn'>
-                <Grid item xs={12} sx={{ height:750, width: 40000 }}>
+                <Grid item xs={12} sx={{ height:650, width: 40000 }}>
                     <DataGrid 
                         rows={ rows }
                         columns={ columns }
                         pageSize={ 20 }
-                        rowsPerPageOptions={ [20] }
+                        rowsPerPageOptions={ [30] }
                     />
 
                 </Grid>

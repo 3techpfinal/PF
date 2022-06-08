@@ -17,7 +17,7 @@ router.get("/", verifyToken, async (req, res, next) => {
         if(actualUser.role.includes('admin')){
             return res.send(allOrders)
         } else {
-            const userOrders = allOrders.filter(order => order.user._id.toString() === actualUser._id.toString());
+            const userOrders = allOrders.filter(order => order?.user?._id.toString() === req?.userId.toString());
             return res.send(userOrders)
         }
 
@@ -27,7 +27,7 @@ router.get("/", verifyToken, async (req, res, next) => {
 });
 
 
-router.get("/:id",/* verifyToken,*/  async(req, res, next) => {
+router.get("/:id",verifyToken,  async(req, res, next) => {
     const { id } = req.params
     try {
         const found=await Order.findById(id).populate({path: 'user', model : 'User'})
@@ -64,7 +64,7 @@ router.post('/', verifyToken, async (req, res, next) => {
 });
 
 
-router.put('/:id', /*verifyToken,*/ async (req, res, next) => {
+router.put('/:id', verifyToken, async (req, res, next) => {
 
     try {
         const { id } = req.params;

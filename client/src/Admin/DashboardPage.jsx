@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { AttachMoneyOutlined, CreditCardOffOutlined, CreditCardOutlined, DashboardOutlined, GroupOutlined, CategoryOutlined, CancelPresentationOutlined, ProductionQuantityLimitsOutlined, AccessTimeOutlined, AddShoppingCart } from '@mui/icons-material';
 import NavBar from '../Components/NavBar'
-import { Grid, Typography,Box,Button } from '@mui/material'
+import { Grid, Typography,Box,Button,Container } from '@mui/material'
 import  CardDashboard  from './CardDashboard'
 import { useDispatch, useSelector } from 'react-redux';
 import {GETUSERS} from '../actions'
@@ -45,7 +45,7 @@ const DashboardPage = () => {
 
 
   return (
-    <Box>
+    <Container>
 
       <NavBar/>
 
@@ -60,21 +60,21 @@ const DashboardPage = () => {
         <Grid container spacing={2}>
 
             <CardDashboard 
-                link='/orderstable'
+                link='orderstable'
                 title={ orders?.length }
                 subTitle="Ordenes totales"
                 icon={ <CreditCardOutlined color="secondary" sx={{ fontSize: 40 }} /> }
             />
 
             <CardDashboard 
-                link='/orderstable'
+                link='orderstable'
                 title={ ordenesPagas?.length }
                 subTitle="Ordenes pagadas"
                 icon={ <AttachMoneyOutlined color="success" sx={{ fontSize: 40 }} /> }
             />
             
             <CardDashboard 
-                link='/orderstable'
+                link='orderstable'
                 title={ orders?.length-ordenesPagas?.length }
                 subTitle="Ordenes sin pagar"
                 icon={ <CreditCardOffOutlined color="error" sx={{ fontSize: 40 }} /> }
@@ -92,7 +92,7 @@ const DashboardPage = () => {
               
                 link='admin/productstable'
                 title={products?.length }
-                subTitle="Publicaciones"
+                subTitle="Productos"
                 icon={ <CategoryOutlined color="warning" sx={{ fontSize: 40 }} /> }
             />
 
@@ -119,7 +119,7 @@ const DashboardPage = () => {
         </Grid>
 
 
-    </Box>
+    </Container>
   )
 }
 

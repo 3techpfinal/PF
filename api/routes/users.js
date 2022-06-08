@@ -13,12 +13,12 @@ router.post('/signup', signUp);
 router.post('/login', logIn);
 
 
-router.get("/", /*[verifyToken, isAdmin],*/ async (req, res, next) => {
+router.get("/", [verifyToken, isAdmin], async (req, res, next) => {
    
     const {name} = req.query
     if(name){
         try {
-            const userName = await User.find({ name: {$regex: req.query.name, $options:'i'}}).populate('cart',['wishList'])
+            const userName = await User.find({ name: {$regex: req.query.name, $options:'i'}}).populate(['cart','wishList','orders'])
             return userName.length === 0 ? res.send("user not found") : res.json(userName)
             } catch (error) {
             next(error)
@@ -70,7 +70,7 @@ router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
 router.put('/:id', verifyToken, async (req, res, next) => {
     try {
         const { id } = req.params;
-        if(req.body.role || req.body.roles) return res.status(403).json({message : 'Unauthorized action'})
+        //if(req.body.role || req.body.roles) return res.status(403).json({message : 'Unauthorized action'})
         if (req.body.password) {
             // defino si el valor es password para darle un tratamientoo específico
             const encryptedPassword = await encryptPassword(req.body.password)
