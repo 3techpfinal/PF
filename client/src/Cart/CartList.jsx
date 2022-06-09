@@ -53,7 +53,7 @@ export const CartList = ({ editable = false,order=false }) => {
             {
                 array?.map( product => (//product es un elemento del array cart
                     <Grid container spacing={2} key={ product._id } sx={{ mb:1 }}>
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             
                             <NavLink to={`/product/${ product._id }`} >
                                <Card >
@@ -72,7 +72,7 @@ export const CartList = ({ editable = false,order=false }) => {
 
                         <Grid item xs={7}>
                             <Box display='flex' flexDirection='column'>
-                                <Typography variant='body1'>{ product.name }</Typography>
+                                <Typography variant='body1' sx={{fontWeight:20}}>{ product.name }</Typography>
 
                                 {
                                     editable 

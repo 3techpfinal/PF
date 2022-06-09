@@ -90,8 +90,7 @@ export const MODIFYPRODUCT=createAsyncThunk('MODIFYPRODUCT',async (input)=>{
 
                         ///////////////////////////////////////   
                         //      ACCIONES PARA USUARIOS      //   
-                        /////////////////////////////////////     
-
+                        /////////////////////////////////////    
 export const GETUSERS = createAsyncThunk('GETUSERS', async () => { //trae todos los usuarios
     const token=Cookie.get('token')
     const response = await axios(`${api}/users`,{headers:{

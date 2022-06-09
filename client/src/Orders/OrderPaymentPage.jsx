@@ -20,7 +20,7 @@ const currency = "USD";
 
 const OrderPage=()=>{
 
-    const actualUser = JSON.parse(Cookie.get('user'))
+    const actualUser = Cookie.get('user') && JSON.parse(Cookie.get('user'))
     //console.log("usuario",actualUser)
     const dispatch1=useDispatch()
     
@@ -135,7 +135,7 @@ const OrderPage=()=>{
             {isPaid===false?
                     <Chip
                         sx={{my:2}}
-                        label="pendiente de pago"
+                        label="Pendiente de pago"
                         variant='outlined'
                         color="error"
                         icon={ <CreditCardOffOutlined/>}
@@ -195,7 +195,7 @@ const OrderPage=()=>{
                                
                             </Box>
 
-                            <OrderSummary order={order}/>
+                            <OrderSummary/>
 
                             <Box sx={{mt:3}}>
                              { console.log("actual",actualUser)}

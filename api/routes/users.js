@@ -81,7 +81,8 @@ router.put('/:id', verifyToken, async (req, res, next) => {
             await User.findByIdAndUpdate({ _id: id }, req.body);
             // le paso todo el body, el método compara y cambia todo automáticamente
             const updatedUser = await User.findById({ _id: id })
-            res.send(updatedUser)
+            req.userId===id?res.send(updatedUser):res.send('ok')
+            
     } catch (err) {
         next(err)
     }

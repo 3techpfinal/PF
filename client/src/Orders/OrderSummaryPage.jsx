@@ -2,35 +2,52 @@ import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { CartList, OrderSummary } from '../Cart';
 import NavBar from '../Components/NavBar'
-import {useContext,useEffect} from 'react'
+import {useContext,useEffect,useState} from 'react'
 import CartContext from '../Cart/CartContext'
 import Cookie from 'js-cookie';
 import axios from 'axios';
 import {api} from '../actions'
 import { useDispatch } from "react-redux";
-//import { PayPalButtons } from "@paypal/react-paypal-js";
-//import { useRouter } from 'next/router';
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/500.css';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import swal from 'sweetalert'
 
 import {CREATEORDER, GETORDER} from '../actions'
 
 export default function SummaryPage(){ // esta es la funcion principal
-
-    const navegar = useNavigate()    
+    const [user,setUser]=useState([])
+    const navigate = useNavigate()    
     const dispatch= useDispatch();
     const { cart,total,removeAllCartProduct } = useContext(CartContext);
 
     useEffect(()=>{ //si el carrito esta vacio no puede entrar a esta pagina
-        if(!JSON.parse(Cookie.get('cart'))[0])navegar('/') //para refrescar la pagina, si esta vacio navega al home
+        console.log(user)
+        setUser(()=>Cookie.get('user')&&JSON.parse(Cookie.get('user')))
+        if(!JSON.parse(Cookie.get('cart'))[0])navigate('/') //para refrescar la pagina, si esta vacio navega al home
     },[])
 
-    const order = {products:cart, adress: "gandhi", isPaid: false, totalPrice: total }
-    console.log('orden creada', order)
+    const order = {products:cart, adress: user.adress, isPaid: false, totalPrice: total }
+    
 
     const crearOrden = async ()=> {
-     let ordenNueva = await dispatch(CREATEORDER(order))
-     dispatch(GETORDER(ordenNueva.payload)).then(()=>
-     navegar(`/orderpayment/${ordenNueva.payload}`))
-     removeAllCartProduct()
+        if(user.adress&&user.city&&user.phone){
+            let ordenNueva = await dispatch(CREATEORDER(order))
+            dispatch(GETORDER(ordenNueva.payload)).then(()=>
+            navigate(`/orderpayment/${ordenNueva.payload}`))
+            removeAllCartProduct()
+        }
+        else{
+            swal({
+                title: "Por favor complete sus datos de entrega para realizar la compra",
+                text: "",
+                icon: "warning",
+                buttons: ["Cancelar","Ir a mi perfil"]
+              }).then((go) => {
+                if (go)navigate('/profile')
+              })
+            
+        }
     }
 
     return(
@@ -48,20 +65,28 @@ export default function SummaryPage(){ // esta es la funcion principal
                 <Grid item xs={12} sm={5}>
                     <Card className='summary-card'>
                         <CardContent>
-                            <Typography variant='h2'>Resumen</Typography>
+                            <Typography variant='h4' sx={{fontWeigth:20}}>Resumen</Typography>
                             <Divider sx={{my:1}}/>
                             <Box display='flex' justifyContent='space-between'>
-                                <Typography variant='subtitle1'> Dirección de entrega</Typography>
-                                    <Link to="/modifyuser">
+                                <Typography variant='subtitle1'> Datos para la entrega:</Typography>
+                                    <Button onClick={()=>navigate('/profile')}>
                                         Editar
-                                    </Link>
+                                    </Button>
                             </Box>
 
                             
-                            {/* <Typography>{usuario?.name}</Typography>
-                            <Typography>{usuario?.adress}</Typography>
-                            <Typography>{usuario?.city}</Typography>
-                            <Typography>{usuario?.phone}</Typography> */}
+                            {user.adress&&user.city&&user.phone?
+                            <Box>
+                                <Typography>{user?.name}</Typography>
+                                <Typography>{user?.adress}</Typography>
+                                <Typography>{user?.city}</Typography>
+                                <Typography>{user?.phone}</Typography>
+                            </Box>
+                            :
+                            <Box sx={{display:'flex',justifyContent:'center'}}>
+                                <InfoOutlinedIcon color='error'/>
+                                <Typography>Por favor completar sus datos para poder realizar la compra</Typography>
+                            </Box>}
 
                             <Divider sx={{my:1}}/>
 
