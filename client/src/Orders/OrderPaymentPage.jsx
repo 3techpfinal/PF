@@ -196,7 +196,7 @@ const OrderPage=()=>{
                                 :
 
                                 (
-                                 (actualUser?._id||0)!==order?.user._id||0?
+                                 (actualUser?._id||0)!==order?.user?._id||0?
                                  <></>
                                  :
                                 <PayPalButtons
