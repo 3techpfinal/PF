@@ -92,11 +92,12 @@ router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
     try {
         const { id } = req.params;
         const found = await Product.findByIdAndRemove({ _id: id })
-        res.json({ message: `Product : ${found.productName} - ID : ${found._id} successfully deleted` })
+        res.json({ message: `Product successfully deleted` })
     } catch (err) {
         next(err)
     }
 });
+//        res.json({ message: `Product : ${found.productName} - ID : ${found._id} successfully deleted` })
 
 router.put('/:id',/* [verifyToken, isAdmin],*/ async (req, res, next) => {
     try {

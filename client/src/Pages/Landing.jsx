@@ -27,9 +27,9 @@ const Landing=()=>{
     let products=useSelector((state)=>state.rootReducer.products)
     React.useEffect(()=>{
         if(!products[0])dispatch(GETPRODUCTS())
-    },[dispatch])
+    },[dispatch, products])
     
-    React.useEffect(()=>
+    React.useEffect(()=> // Esto es para Que se muestre El titulo de la categoria que se  muestra
     {      
             var inicial='Productos'
             if(typeof products === "string"){ setNameCatg("")}//si es string es porque el back tira error, no encontro producto por ej
@@ -91,12 +91,7 @@ const Landing=()=>{
                             <ProductCard key={e._id} product={e}/>
                         </Grid>)}
                 </Grid>}
-<Box>
-<div style={{ backgroundImage: `url(https://i.pinimg.com/originals/9f/5d/34/9f5d34242941aa388fc3ec559501543c.gif)` }}>
-                     Hello World
-                    </div>
-    
-</Box>
+
                
           
             </Container>

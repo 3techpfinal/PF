@@ -11,6 +11,8 @@ import NavBar from '../Components/NavBar'
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import swal from 'sweetalert';
 import Cookie from 'js-cookie'
+import { display } from '@mui/system';
+import Sound from '../Pruebas/Audios'
 
 const currency = "USD";
 
@@ -72,47 +74,63 @@ const OrderPage=()=>{
     
         //setIsPaying(true);
     
-        try {
+        try { //realizo el pago
             console.log("verifico idOrden:", order._id)
         
-            dispatch1(PAYORDER({transactionId: details.id, orderId: order._id}))
-
-            setIsPaid(()=>true)
-
-           
-
-            swal({
-                title:"Felicitaciones!!",
-                text:"Haz realizado el pago exitosamente",
-                icon:"success",
-                button:"Aceptars"
-              })
-
+            dispatch1(PAYORDER({transactionId: details.id, orderId: order._id})).then((r)=>{
+                console.log('resBackend',r)
+                if(r.payload.message==='Orden pagada con éxito'){
+                    setIsPaid(()=>true)
+                    setIsPaid2(()=>true)
+                    
+                    swal({
+                        title:"Felicitaciones!!",
+                        text:"Haz realizado el pago exitosamente",
+                        icon:"success",
+                        button:"Aceptar"
+                    }).then(() =>  setIsPaid2(()=>false))
+                }
+               
+            })
     
         } catch (error) {
             //setIsPaying(false);
             console.log(error);
-            alert('Error');
+            swal({
+                title:"Hubo un problema con el pago!!",
+                text:"pago no realizado",
+                icon:"error",
+                button:"Aceptar"
+            })
         }
-    
+      
        //window.location.reload();
      
     }
   
     return(
+        
+        isPaid2?    
+        <div style={{ 
+            backgroundImage: `url("https://tuderechoasaber.com.do/wp-content/uploads/2020/07/fuego.gif")`, 
+            height:'100vh',
+            marginTop:'-70px',
+            fontSize:'50px',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            
+            }}>
+                <Sound reproducir={true} />
+                <h1>halo</h1>
+        </div>
+        :
         <>  
             <NavBar/>
+            <Sound reproducir={false} />
 
-      
+
             <Box sx={{display:'flex',mt:15,alignItems:'center',justifyContent:'space-between',marginX:3}}>
-            <CardMedia
-            component="img"
-            height="200"
-            image={'https://tuderechoasaber.com.do/wp-content/uploads/2020/07/fuego.gif'}
-            alt="gf"
-            sx={{objectFit:'contain'}}
-           />
-           
+              
             <Typography variant='h4'  sx={{fontWeight:20}}> Orden: {order._id}</Typography>
             {isPaid===false?
                     <Chip
@@ -196,7 +214,7 @@ const OrderPage=()=>{
                                 :
 
                                 (
-                                 (actualUser?._id||0)!==order?.user._id||0?
+                                 (actualUser?._id||0)!==order?.user?._id||0?
                                  <></>
                                  :
                                 <PayPalButtons
@@ -234,9 +252,10 @@ const OrderPage=()=>{
                     </Card>
                 </Grid> 
             </Grid>
-
+        
             </>
 
+        
     )
 }
 

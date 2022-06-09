@@ -7,30 +7,20 @@ import CartContext from '../Cart/CartContext'
 import Cookie from 'js-cookie';
 import axios from 'axios';
 import {api} from '../actions'
-
+import { useDispatch } from "react-redux";
 //import { PayPalButtons } from "@paypal/react-paypal-js";
 //import { useRouter } from 'next/router';
 
-import { AppDispatch,RootState } from '../store/index';
-import { useDispatch, useSelector } from "react-redux";
-
 import {CREATEORDER, GETORDER} from '../actions'
 
-import { CartState } from '../Cart';
-import { cartReducer } from '../Cart';
-import { createDraftSafeSelector } from '@reduxjs/toolkit';
-
-
 export default function SummaryPage(){ // esta es la funcion principal
-
-    const usuario=useSelector((State)=>State.rootReducer.user)
 
     const navegar = useNavigate()    
     const dispatch= useDispatch();
     const { cart,total,removeAllCartProduct } = useContext(CartContext);
 
     useEffect(()=>{ //si el carrito esta vacio no puede entrar a esta pagina
-        if(!cart[0])navegar('/')
+        if(!JSON.parse(Cookie.get('cart'))[0])navegar('/') //para refrescar la pagina, si esta vacio navega al home
     },[])
 
     const order = {products:cart, adress: "gandhi", isPaid: false, totalPrice: total }

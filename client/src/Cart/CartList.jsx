@@ -32,6 +32,7 @@ export const CartList = ({ editable = false,order=false }) => {
 
     const { cart, updateCartQuantity, removeCartProduct,total } = useContext(CartContext);
     const array=order || cart
+
     const onNewCartQuantityValue = (product, newQuantityValue) => {
         product.quantity = newQuantityValue;
         updateCartQuantity( product );
@@ -40,7 +41,7 @@ export const CartList = ({ editable = false,order=false }) => {
         cart.forEach((e)=>{
             totalPrice=totalPrice+e.price*e.quantity
         })
-        axios.put(`${api}/cart`,{cart:cart,totalPrice},{
+        axios.put(`${api}/cart`,{cart:cart,totalPrice},{ //modicia la base de datos
                headers:{
                   'x-access-token':token
                }

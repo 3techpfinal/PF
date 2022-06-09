@@ -4,7 +4,7 @@ import { useState,useRef,useEffect } from 'react';
 import {   useNavigate } from "react-router-dom"
 //import { Link } from "react-router-dom";
 import { TextField,Select,Container, CardMedia,Link, Box, UploadOulined,InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import {GETCATEGORIES,GETDETAIL,MODIFYPRODUCT} from '../actions'
+import {GETCATEGORIES,GETDETAIL,MODIFYPRODUCT,GETPRODUCTS} from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -157,16 +157,20 @@ useEffect(()=>{
 
       
           const newPost={...input,imageProduct:input.imageProduct[0]?input.imageProduct:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
-          dispatch(MODIFYPRODUCT(newPost))
-          //alert("Se creo el Producto exitosamente!")
-
-          await swal({
-            title:"Realizado",
-            text:"Se creo el Producto exitosamente!",
-            icon:"success",
-            button:"Aceptar"
-          }).then(() => { navegar("/"); window.location.reload()})
-
+          dispatch(MODIFYPRODUCT(newPost)).then(async(r)=>{
+            console.log('resBackend',r)
+            dispatch(GETPRODUCTS())
+            if(r.meta.requestStatus==="fulfilled"){
+              await swal({
+                title:"Realizado",
+                text:"Se modifico el Producto exitosamente!",
+                icon:"success",
+                button:"Aceptar"
+              }).then(() => {navegar("/");
+             // window.location.reload()
+              })
+            }
+          })
          //se accede al home
          // window.location.reload();//se refresca para activar el dispatch de GETPRODUCTS()       
   }

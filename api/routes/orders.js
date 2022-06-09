@@ -82,13 +82,13 @@ router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
     try {
         const { id } = req.params;
         const found = await Order.findByIdAndRemove({_id: id })
-        res.json({ message: `Order : ${found.name} successfully deleted` })
+        res.json({ message: `Order successfully deleted` })
     } catch (err) {
         next(err)
     }
 });
 
-
+// `Order : ${found._id} successfully deleted
 
 
 
