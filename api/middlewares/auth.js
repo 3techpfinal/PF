@@ -42,35 +42,35 @@ export const signUp = async (req, res, next) => {
 
 
 export const logIn = async (req, res) => {
-     const { token } = req.body;  
-    const decoded = jwt_decode(token) 
+    //  const { token } = req.body;  
+    // const decoded = jwt_decode(token) 
 
-    if(decoded.sub.includes('google')){
-        const found=await User.findOne({email:decoded.email})
-        if(!found){
-            const newUser = new User({ 
-                name: decoded.given_name, 
-                lastName: decoded.family_name, 
-                avatar: decoded.picture, 
-                email : decoded.email, 
-                verifiedAccount: decoded.email_verified, 
-                googleId : decoded.sub })
+    // if(decoded.sub.includes('google')){
+    //     const found=await User.findOne({email:decoded.email})
+    //     if(!found){
+    //         const newUser = new User({ 
+    //             name: decoded.given_name, 
+    //             lastName: decoded.family_name, 
+    //             avatar: decoded.picture, 
+    //             email : decoded.email, 
+    //             verifiedAccount: decoded.email_verified, 
+    //             googleId : decoded.sub })
         
-            newUser.setCreationDate();
-            await newUser.save();
+    //         newUser.setCreationDate();
+    //         await newUser.save();
 
-            const tokenBack = jwt.sign({ id: newUser._id },"secret", { expiresIn: 86400 })
+    //         const tokenBack = jwt.sign({ id: newUser._id },"secret", { expiresIn: 86400 })
 
-            return res.json({ user : newUser, token : tokenBack });
-        }
-        else{
-            const tokenBack = jwt.sign({ id: found._id },"secret", { expiresIn: 86400 })
+    //         return res.json({ user : newUser, token : tokenBack });
+    //     }
+    //     else{
+    //         const tokenBack = jwt.sign({ id: found._id },"secret", { expiresIn: 86400 })
 
-            return res.json({ user : found, token : tokenBack });
-        }
-    }
-    else { //login manual-no google
-        const { email }=decoded
+    //         return res.json({ user : found, token : tokenBack });
+    //     }
+    // }
+    // else { //login manual-no google
+        const { email }= req.body /*decoded*/
         const found = await User.findOne({ email }) //if(!found)
          // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
          //if(!found.verifiedAccount) return res.status(401).json({message : 'You need to verify your account first.'})
@@ -78,5 +78,4 @@ export const logIn = async (req, res) => {
          const token = jwt.sign({ id: found._id },  process.env.JWT_SECRET, { expiresIn: 86400 })
          return res.json({ user : found, token });
     }
-}
-
+// }

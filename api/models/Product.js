@@ -55,6 +55,13 @@ const productSchema = new Schema({
         ref: 'Category'
     },
 
+    questions : [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Product_Question'
+        }
+    ],
+
     inCart: {
         type: Boolean,
         default: false
