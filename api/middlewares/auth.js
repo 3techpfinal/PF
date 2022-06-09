@@ -70,7 +70,7 @@ export const logIn = async (req, res) => {
         }
     }
     else { //login manual-no google
-        const { email }= req.body /*decoded*/
+        const { email } = decoded
         const found = await User.findOne({ email }) //if(!found)
          // if(found.suspendedAccount) return res.status(401).json({ message: 'Your account it´s temporary suspended.' })
          //if(!found.verifiedAccount) return res.status(401).json({message : 'You need to verify your account first.'})
