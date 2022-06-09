@@ -41,7 +41,7 @@ export default function SummaryPage(){ // esta es la funcion principal
             <Grid container sx={{mt:3}}>
                 <Grid item xs={12} sm={7}>
 
-                    <CartList editable={false}/>
+                     <CartList editable={false}/>  {/*COMPONENTE LISTA DEL CARRITO */}
 
                 </Grid>
 

@@ -6,7 +6,7 @@ import { PayPalButtons,usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
-import { GETORDER, PAYORDER,GETDETAIL } from '../actions';
+import { GETORDER, PAYORDER,GETDETAIL,GETPRODUCTS } from '../actions';
 import NavBar from '../Components/NavBar'
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import swal from 'sweetalert';
@@ -42,9 +42,11 @@ const OrderPage=()=>{
 
     useEffect(()=>{
         dispatch1(GETORDER(id))
+        dispatch1(GETPRODUCTS())
     },[])
 
     const order=useSelector((State) => State.rootReducer.order);
+    const products=useSelector((State) => State.rootReducer.products);
     console.log("order",order)
     const [isPaid,setIsPaid]=useState(order.isPaid?true:false)
     const [isPaid2,setIsPaid2]=useState(false)
@@ -56,14 +58,44 @@ const OrderPage=()=>{
          await dispatch(GETDETAIL(ide))
     }
 */
+
+    const verificarSihayStock=(orden,productsBDD)=>{
+    let verificacion=[true,'']
+    orden.products.map((productOrder)=>(
+        productsBDD.map((productBDD)=>(
+            (productOrder._id===productBDD._id)&&
+                (productOrder.stock>productBDD.stock)&&
+                    (verificacion[0] = false),
+                    (verificacion[1]=productBDD.name)
+        ))
+    ))
+    return verificacion
+    }
+
+
         useEffect(()=>{
             order.isPaid && setIsPaid(()=>true)
         },[order])
 
-    const onOrderCompleted = async( details ) => {
+        const onOrderCompleted = async( details ) => { //Funcion de verificar la COMPRA
+
         if ( details.status !== 'COMPLETED' ) {
             return alert('No hay pago en Paypal');
         }
+
+        await dispatch(GETPRODUCTS())
+        let arrayVerificacion = verificarSihayStock(order,products)
+        if(!arrayVerificacion[0]){                    
+            return swal({
+                title:"Error!!",
+                text:`el producto ${arrayVerificacion[1]} no tiene stock`,
+                icon:"error",
+                button:"Aceptar"
+            })
+        }
+
+   
+
 
         // order.products.forEach(async (product:any)=>{
         //     await producto(product._id)
@@ -120,7 +152,7 @@ const OrderPage=()=>{
             backgroundRepeat: 'no-repeat',
             
             }}>
-                <Sound reproducir={true} />
+                <Sound reproducir={false} />
                 <h1>halo</h1>
         </div>
         :

@@ -14,7 +14,7 @@ import ImageListItem from '@mui/material/ImageListItem';
 
 
 import { useDispatch, useSelector } from "react-redux";
-import {GETDETAIL} from '../actions'
+import {GETDETAIL,GETPRODUCTS} from '../actions'
 
 
 
@@ -23,15 +23,28 @@ export const CartList = ({ editable = false,order=false }) => {
 
     const dispatch=useDispatch()
     const {id} = useParams()
-    useEffect(()=>{
-      dispatch(GETDETAIL(id))
-    },[dispatch,id])
-    
-    
-    
 
-    const { cart, updateCartQuantity, removeCartProduct,total } = useContext(CartContext);
+    useEffect(()=>{
+        dispatch(GETDETAIL(id))
+        dispatch(GETPRODUCTS())
+      },[dispatch,id])
+
+
+    const productsBDD=useSelector((State) => State.rootReducer.products);
+    const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext);
+
+    const calcularStockDeBDD = (product,productsBDD)=>{
+        productsBDD.map((productBDD)=>{
+            if(productBDD._id===product._id)
+                return productBDD.stock
+        })
+    }
+
+    
     const array=order || cart
+
+    console.log("producotsBDD",productsBDD)
+    console.log("Cart",cart)
 
     const onNewCartQuantityValue = (product, newQuantityValue) => {
         product.quantity = newQuantityValue;
@@ -71,78 +84,74 @@ export const CartList = ({ editable = false,order=false }) => {
 
 
                         <Grid item xs={7}>
-                            <Box display='flex' flexDirection='column'>
-                                <Typography variant='body1'>{ product.name }</Typography>
-
-                                {
-                                    editable 
-                                    ? ( <div>
+                                <Box display='flex' flexDirection='column'>
+                                    <Typography variant='body1'>{ product.name }</Typography>
+                                    { editable ? 
+                                    ( 
                                         <ItemCounter 
                                             currentValue={ product.quantity }
                                             maxValue={ product.stock  } 
                                             updatedQuantity={ ( value ) => onNewCartQuantityValue(product, value )}
-                                        />
-                                        
-                                        <Typography variant='h6'>{ product.stock } {'Disponibles'}</Typography>
-                                        {
-                                            (product.quantity <= product.stock) ?
-                                            <Chip
-                                            sx={{my:1}}
-                                            label="En stock"
-                                            variant='outlined'
-                                            color="success"
-                                            icon={ <CreditScoreOutlined/>}
-                                            />
-                                            :
-                                            <Chip
-                                            sx={{my:1}}
-                                            label="No hay stock"
-                                            variant='outlined'
-                                            color="error"
-                                            icon={ <CreditScoreOutlined/>}
-                                            />
-                                        }
-
-                                        
-                                        </div>
+                                        />                           
                                     )
-                                    : (
+                                    : 
+                                    (
                                         <Typography variant='h5'>{ product.quantity } { product.quantity > 1 ? 'productos':'producto' }</Typography>
-                                    )
+                                    )                             
                                 }
-                                
-                            </Box>
+                                </Box>
+                                <Box display='flex' flexDirection='column' >
+                                    <Typography variant='h6'>{calcularStockDeBDD(product,productsBDD) } {'Disponibles'}</Typography>
+                                    {console.log("stockEnBDD",calcularStockDeBDD(product,productsBDD))}
+                                    {
+                                 
+                                        
+                                        (product.quantity <= calcularStockDeBDD(product,productsBDD)) ?
+                                        <Chip
+                                        sx={{my:1, width:200}}
+                                        label="En stock"
+                                        variant='outlined'
+                                        color="success"
+                                        icon={ <CreditScoreOutlined/>}
+                                        />
+                                        :
+                                        <Chip
+                                        sx={{my:1, width:200}}
+                                        label="No hay stock"
+                                        variant='outlined'
+                                        color="error"
+                                        icon={ <CreditScoreOutlined/>}
+                                        />
+                                    }   
+                                </Box>
+                        
                         </Grid>
-                        <Grid item xs={2} display='flex' alignItems='center' flexDirection='column'>
 
-                            
+                        <Grid item xs={2} display='flex' alignItems='center' flexDirection='column'>
+                         {/*mustro el porcentaje de descuento??*/}   
                         {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
 
-                        {product.priceOriginal && product.price!==product.priceOriginal ?
-                                <div>
-                                    {'$'+new Intl.NumberFormat().format(product.price)}
-                                    <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
-                                </div>
-                            :
-                                    new Intl.NumberFormat().format(product.price)}
-
+                        {product.priceOriginal && product.price!==product.priceOriginal ?//muestro los dos precios, uno tachado?
+                        <div>
+                            {'$'+new Intl.NumberFormat().format(product.price)}
+                            <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
+                        </div>
+                        :
+                        new Intl.NumberFormat().format(product.price)}
                             
-                            
-                            
-                            
-                            {
-                                editable && (
-                                    <Button 
-                                        variant='text' 
-                                        color='secondary' 
-                                        onClick={ () => removeCartProduct( product ) }
-                                    >
-                                        Borrar
-                                    </Button>
-                                )
-                            }
-                        </Grid>
+                        {editable && //saco el boton borrar si esta en las ordenes
+                            (
+                                <Button 
+                                    variant='text' 
+                                    color='secondary' 
+                                    onClick={ () => removeCartProduct( product ) }
+                                >
+                                    Borrar
+                                </Button>
+                            )
+                        }
                     </Grid>
+                </Grid>
                 ))
             }
         </>
