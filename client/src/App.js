@@ -36,6 +36,8 @@ import OrderPayment from './Orders/OrderPaymentPage'
 
 //////////////////////////////// RUTAS FIN ///////////////////////////////////////
 
+import Prueba from './Pruebas/LineChart'
+
 function App() {
   return (
 
@@ -57,6 +59,7 @@ function App() {
           <Route path='/ordersummary' element={<OrderSummary/>}/>
           <Route path='/orderpayment/:id' element={<OrderPayment/>}/>
           <Route path='/wishlist' element={<WishList/>}/>
+          <Route path='/prueba' element={<Prueba/>}/>
         </Routes>
       </CartProvider>
     </PayPalScriptProvider>

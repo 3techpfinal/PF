@@ -14,8 +14,13 @@ import swal from 'sweetalert'
 const useAppDispatch = () => useDispatch();
 
 const UsersPage = () => {
-    const dispatch=useAppDispatch()
     
+    const dispatch=useAppDispatch()
+    useEffect(()=>{
+        dispatch(GETORDERS())
+      },[dispatch])
+      
+      
     const calcularCantidaddeProductosTotalesEnOrden = (order) =>{
         let contador = 0
         order.products.map((product)=>(
@@ -24,43 +29,30 @@ const UsersPage = () => {
         return contador      
     }
 
-
     const orders=useSelector((State) => State.rootReducer.orders);
+    const [rows,setRows]=useState([])
 
-    const [orderDelete,setOrderDelete]=useState([])
-    const ordersmap=orders.map(order=>( //esto es para cargar el estado productState
-        {id:order._id,
-        delete:false}
-    ))
-    useEffect(()=>{
-        setOrderDelete(()=>ordersmap)
+    useEffect(()=>{ //una vez que llegan las ordenes se llenana las rows
+        setRows(()=>orders.map( (order) => ({
+            id:order._id,
+            name: order?.user?.name || "no hay nombres",
+            email: order?.user?.email || "no hay nombres",
+            orderNumber: order?._id || "no hay orden",
+            amountOfProducts: order?.products.length || "",
+            amountOfProductsTotal: calcularCantidaddeProductosTotalesEnOrden(order),
+            totalPrice: `${'$'+ new Intl.NumberFormat().format(order?.totalPrice)}` || "sin precio",
+            isPaid: order.isPaid
+        })))
     },[orders])
 
 
     const navigate= useNavigate()
 
-    useEffect(()=>{
-        dispatch(GETORDERS())
-      },[dispatch])
-
-
       const verOrden=async (id)=>{
         dispatch(GETORDER(id)).then(()=>navigate(`/orderpayment/${id}`))
     }
 
-    const deleteOrder=async(e,row,id)=>{
-
-        setOrderDelete((state)=>state.map(e=>{
-            if(e.id===row.id){
-                return {
-                    id:e.id,
-                    delete:!e.delete} //a la prop isActive le paso su valor negado
-            }
-            else return e
-        }))
-
-
-
+    const deleteOrder=async(row)=>{
         swal({
             title: "Estas seguro que deseas eliminar la orden?",
             text: "",
@@ -70,10 +62,17 @@ const UsersPage = () => {
           })
           .then((willDelete) => {
             if (willDelete) {
-             dispatch (DELETEORDER(id))
 
-
-            //   swal("has eliminado la orden!", { icon: "success",});
+             dispatch (DELETEORDER(row.id)).then((r)=>{
+                 console.log('resBackend',r)
+                 if(r.payload.message==='Order successfully deleted'){
+                    setRows((state)=>state.filter(e=>
+                        e.id!==row.id
+                    ))
+                    //   swal("has eliminado la orden!", { icon: "success",});
+                 }
+             })
+     
             } else {
             }
           });
@@ -129,7 +128,7 @@ const UsersPage = () => {
             sortable: false,
             renderCell: (params)=>{
                 return (           
-                        <Button onClick={()=> deleteOrder(params.row.id) }>
+                        <Button onClick={(e)=> deleteOrder(params.row) }>
                                    eliminar
                         </Button>
                         )
@@ -140,16 +139,9 @@ const UsersPage = () => {
 
     ];
 
-    const rows = orders.map( (order) => ({
-        id:order._id,
-        name: order?.user?.name || "no hay nombres",
-        email: order?.user?.email || "no hay nombres",
-        orderNumber: order?._id || "no hay orden",
-        amountOfProducts: order?.products.length || "",
-        amountOfProductsTotal: calcularCantidaddeProductosTotalesEnOrden(order),
-        totalPrice: `${'$'+ new Intl.NumberFormat().format(order?.totalPrice)}` || "sin precio",
-        isPaid: order.isPaid
-    }))
+
+
+    
 
 
 

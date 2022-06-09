@@ -2,14 +2,14 @@
 import { useState, useEffect } from 'react';
 import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-material'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { Grid, Select, MenuItem, Box,CardMedia,Typography } from '@mui/material';
+import { Grid, Select, MenuItem, Box,CardMedia,Typography,Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {MODIFYPRODUCT, GETORDERS,GETPRODUCTS,GETDETAIL,SEARCHBYNAMEPRODUCTS} from '../actions'
+import {MODIFYPRODUCT, GETORDERS,GETPRODUCTS,DELETEPRODUCT,SEARCHBYNAMEPRODUCTS} from '../actions'
 import { AppDispatch,RootState } from '../store'
 import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
 import { NavLink, useNavigate } from 'react-router-dom';
-
+import swal from 'sweetalert'
 
 const useAppDispatch = () => useDispatch();
 
@@ -17,6 +17,7 @@ const UsersPage = () => {
     
     const dispatch=useAppDispatch()
     const navigate= useNavigate()
+
     useEffect(()=>{
         dispatch(GETPRODUCTS())
         dispatch(GETORDERS())
@@ -24,20 +25,36 @@ const UsersPage = () => {
 
     const products=useSelector((State) => State.rootReducer.products);
     const orders=useSelector((State) => State.rootReducer.orders);
+    const [rows,setRows]=useState([])
     
+
+    useEffect(()=>{ //una vez que llegan las ordenes se llenana las rows
+        setRows(()=>products.map( (product) => ({
+            id: product._id,
+            name: product.name,
+            price: `$${product.price}`,
+            stock: product.stock,
+            image: product.imageProduct[0],
+            estado: product.isActive,
+            date:product.date||"sin fecha en BDD",
+            rating:product.rating? product.rating : "no tiene rating",
+            salesQuantity: calcularCantidadDeVentasDeUnProducto(orders,product)
+        })))
+    },[products])
+
     const productosmap=products.map(product=>( //esto es para cargar el estado productState
         {id:product._id,
         isActive:product.isActive}
     ))
     const [productState,setProductState]=useState([])
    
-
-    useEffect(()=>{
+    useEffect(()=>{ //eto es para actualizar el estado del producto cuando se pone bloqueado 
         setProductState(()=>productosmap)
     },[products])
 
 
-    const handleChange=(e,row)=>{
+    const handleChange=(e,row)=>{ //funcion que maneja el estado del producto
+       
         setProductState((state)=>state.map(e=>{
             if(e.id===row.id){
                 return {
@@ -50,11 +67,6 @@ const UsersPage = () => {
 
  }
 
-
-
-
-
-
       const calcularCantidadDeVentasDeUnProducto = (ordenes,producto)=> {
         let contador = 0
         ordenes.map((orden)=>(
@@ -66,14 +78,33 @@ const UsersPage = () => {
         return contador 
       }
 
-      const verOrden=async (id)=>{
-        await dispatch(GETDETAIL(id))
-        navigate(`/products/${id}`)
+
+      const deleteOrder=async(row)=>{
+        swal({
+            title: "Estas seguro que deseas eliminar la orden?",
+            text: "",
+            icon: "warning",
+            buttons: true,
+            dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+
+             dispatch (DELETEPRODUCT(row.id)).then((r)=>{
+                 console.log('resBackend',r)
+                 if(r.payload.message==='Product successfully deleted'){
+                    setRows((state)=>state.filter(e=>
+                        e.id!==row.id
+                    ))
+                    //   swal("has eliminado la orden!", { icon: "success",});
+                 }
+             })
+     
+            } else {//si presiona  cancel
+            }
+          });
     }
     
-
-
-
     const columns = [
         { 
             field: 'img', 
@@ -125,23 +156,12 @@ const UsersPage = () => {
                         >
                             <MenuItem value='online'> online </MenuItem>
                             <MenuItem value='bloqueado'> bloqueado </MenuItem>
+                            <MenuItem onClick={(e)=> deleteOrder(row)} display='flex' flexDirection='center' color='red'  >Eliminar</MenuItem>
                         </Select>
                 )
             }
         },
     ];
-
-    const rows = products.map( (product) => ({
-        id: product._id,
-        name: product.name,
-        price: `$${product.price}`,
-        stock: product.stock,
-        image: product.imageProduct[0],
-        estado: product.isActive,
-        date:product.date||"sin fecha en BDD",
-        rating:product.rating? product.rating : "no tiene rating",
-        salesQuantity: calcularCantidadDeVentasDeUnProducto(orders,product)
-    }))
     
   return (
 <>

@@ -77,6 +77,16 @@ export const MODIFYPRODUCT=createAsyncThunk('MODIFYPRODUCT',async (input)=>{
     return product.data
   })
 
+  export const DELETEPRODUCT=createAsyncThunk('DELETEPRODUCT',async (id)=>{
+    const token=Cookie.get('token')
+    const result=await axios.delete(`${api}/products/${id}`,{
+        headers:{
+            'x-access-token':token
+        }
+    }) 
+    return result.data
+  })
+
 
                         ///////////////////////////////////////   
                         //      ACCIONES PARA USUARIOS      //   

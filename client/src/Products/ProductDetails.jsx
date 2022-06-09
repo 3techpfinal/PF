@@ -9,10 +9,10 @@ import color from '../styles'
 import ProductCard from './CardProduct'
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
-import { useState, useContext } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Swiper, SwiperSlide } from 'swiper/react';
 import  CartContext from '../Cart/CartContext';
-
+import ItemCounter from '../Cart/ItemCounter';
 // Import Swiper styles
 import 'swiper/css';
 import 'swiper/css/navigation';
@@ -31,7 +31,19 @@ const ProductDetails=()=>{
     const recommended=useSelector((state)=>state.rootReducer.recommended)
     const [loaded,setLoaded]=React.useState(false)
     const {id}=useParams()
-    const [tempCartProduct, setTempCartProduct] = useState({})
+    const [tempCartProduct, setTempCartProduct] = useState({
+        _id: product._id,
+        imageProduct: product.imageProduct,
+        price: product.price,
+        name: product.name,
+        category: product.category,
+        quantity: 1,
+        envio: product.envio,
+        rating: product.rating,
+        review: product.review,
+        description: product.description,
+        stock: product.stock
+      })
 
     React.useEffect(()=>{
         window.scrollTo(0, 0)
@@ -51,25 +63,12 @@ const ProductDetails=()=>{
 
     const { addProductToCart,cart} = useContext( CartContext )
 
-    React.useEffect(()=>setTempCartProduct({
-        _id: product._id,
-        imageProduct: product.imageProduct,
-        price: product.price,
-        name: product.name,
-        category: product.category,
-        quantity: 1,
-        //envio: product.envio,
-        //rating: product.rating,
-        //review: product.review,
-        description: product.description,
-        stock: product.stock,
-        priceOriginal: product.priceOriginal||product.price
-      })
-    )
-      const onUpdateQuantity = ( quantity ) => {
+
+    
+      const onUpdateQuantity = ( cantidad ) => {
         setTempCartProduct( currentProduct => ({
           ...currentProduct,
-          quantity
+          quantity: cantidad
         }));
       }
 
@@ -129,20 +128,32 @@ const ProductDetails=()=>{
                                 }
                                 
                             </Box>
-                            <Chip label={`${product.stock} En Stock`} sx={{bgcolor:color.color2}}/>
-                            {product.priceOriginal && product.price!==product.priceOriginal ?
-                                <div>
-                                    <Typography variant='h5' sx={{mt:1,fontWeight:12}}>{'$'+new Intl.NumberFormat().format(product.price)} </Typography>
-                                    <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
-                                </div>
-                                :
-                                <Typography variant='h5' sx={{mt:1,fontWeight:12}}> {'$'+new Intl.NumberFormat().format(product.price)} </Typography>}
-                            
 
+                            <Chip label={`${product.stock} En Stock`} sx={{bgcolor:color.color2}}></Chip>
 
-                                {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:color.color2}}/>:<></>}
+                            <Box display='flex' flexDirection='row'>
+                                <Box>
+                                {product.priceOriginal && product.price!==product.priceOriginal ?
+                                    <div>
+                                        <Typography variant='h5' sx={{mt:1,fontWeight:12}}>{'$'+new Intl.NumberFormat().format(product.price)} </Typography>
+                                        <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
+                                    </div>
+                                    :
+                                    <Typography variant='h5' sx={{mt:1,fontWeight:12}}> {'$'+new Intl.NumberFormat().format(product.price)} </Typography>}                  
+                                </Box>
+                                <Box display='flex' justifyContent="end">
+                                    {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:color.color2}}/>:<></>}
+                                </Box>
+                            </Box>
 
-                            
+                                <Box sx={{my:2,display:'flex',alignItems:'center',justifyContent:'left'}}>
+                                    <Typography variant='subtitle2'>Cantidad </Typography>
+                                    <ItemCounter 
+                                        currentValue={ tempCartProduct.quantity }
+                                        maxValue={ product.stock }
+                                        updatedQuantity={ (value)=>onUpdateQuantity(value)  } 
+                                    />
+                                </Box>
                             
                             <Typography overflow={'auto'} variant='body1' sx={{mt:2,maxHeight:200}}>{product.description}</Typography>
 
