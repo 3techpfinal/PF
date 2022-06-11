@@ -17,7 +17,8 @@ router.post('/login', logIn);
 
 
 router.post('/review',verifyToken, async (req, res,next) => { //modificado por Gabi 09/6
-     try {
+    //  try {
+        console.log('body',req.body)
         const{productId,review,comment,orderId}=req.body //recibo del body datos, product es productId
         const newReview = new Review({review:review,comment:comment,product:productId, order:orderId})
         newReview.user=req.userId //req.userId se guarda en el verify token, viene por token
@@ -25,13 +26,13 @@ router.post('/review',verifyToken, async (req, res,next) => { //modificado por G
         
 
         const totalReviews=await Review.find({product:productId}) //trae reviews de un producto
-        var total=0
+        var total=1
         totalReviews.forEach(e=>total=total+e.review) //e.review es la calificacion de una orden, e es cada orden
         
         const thisProduct= await Product.findByIdAndUpdate(productId,{rating:(total/totalReviews.length).toFixed(1)},{upsert: true, new : true}) //hace el promedio del producto de la BDD
         const thisOrder=await Order.findById(orderId) //traigo la orden de la BDD que tiene  el id Orden que traje en body
         const thisOrderProducts=thisOrder.products.map(product=>{ //busco el producto que estoy calificando y le pongo has review true
-            if(product._id===productId) return ({...product,hasReview:true})
+            if(product._id===productId) return ({...product,hasReview:review})
             else return product // devuelve los productos que no estoy calificando de la orden
         })
         thisOrder.products=thisOrderProducts //reemplazo el array de poductos por este map que tiene lo mismo, solo que hasReview esta cambiada
@@ -39,9 +40,9 @@ router.post('/review',verifyToken, async (req, res,next) => { //modificado por G
         await newReview.save() //se guarda el review
         res.json("se guardo la calificacion")
         
-    } catch (err) {
-        next(err)
-    }
+    // } catch (err) {
+    //     next(err)
+    // }
 });
 
 

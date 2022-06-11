@@ -34,7 +34,7 @@ function getLabelText(value) {
 
 const useAppDispatch = () => useDispatch();
 
-export default function FormDialog({product,orderId}) { //FUNCION PRINCIPAL
+export default function FormDialog({product,orderId,func}) { //FUNCION PRINCIPAL
 
   const dispatch=useAppDispatch()
   const navegar = useNavigate()
@@ -76,28 +76,31 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
       console.log('resBackend',r)
       if(r.payload==="se guardo la calificacion"){
           setOpen(false);
+          func()
           swal({
           title:"Realizado",
           text:"Se guardo la calificacion",
           icon:"success",
           button:"Aceptar"})
-          
         }else{
           setOpen(false);
+          func()
           swal({
             title:"Error",
             text:"No se guardo la calificacion",
             icon:"error",
             button:"Aceptar"})
+          
         }
        
-      })   
+      })  
+      
   };
 
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen}>
-        <Rating name="read-only" value={product.review} readOnly max={5}/>
+      <Button variant="outlined" onClick={handleClickOpen} disabled={product.hasReview?true:false}>
+        <Rating precision={0.5} name="read-only" value={product.hasReview} readOnly max={5}/>
       </Button>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Deja tu Calificación de este producto</DialogTitle>

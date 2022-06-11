@@ -21,14 +21,16 @@ const ProductsUserTable = () => {
     const navigate= useNavigate()
  
 
-    useEffect(()=>{
-        dispatch(GETORDERS())
-      },[dispatch])
+    
 
     const orders=useSelector((State) => State.rootReducer.orders);
     const [rows,setRows]=useState([])
+    const [refreshRows,setRefreshRows]=useState(false)
     
-
+    useEffect(()=>{
+        console.log('refreshhh',refreshRows)
+        dispatch(GETORDERS())
+      },[dispatch,refreshRows])
     //console.log('estas son las orders totales',orders)
     /*  console.log('estas son las orders',orders.map(e=>({
           products:e.products,
@@ -47,7 +49,7 @@ const ProductsUserTable = () => {
                 //review:product.rating? product.rating : "no tiene rating",
                 usuario:order.user,
                 producto:product,
-                hasReview:product.hasReview
+                hasReview:product?.hasReview||0
            // status:product.isActive? 'Activo':'No disponible'
         }))[0]))
         setRows(()=>setRowsVariable)
@@ -96,8 +98,8 @@ const ProductsUserTable = () => {
             width: 250,
             renderCell: ({ row } ) => {
                 return (
-                 
-                  <Comment orderId={row.orderId} product={row.producto}/>//producto es el producto de la orden
+                    
+                  <Comment orderId={row.orderId} product={row.producto} func={()=>setRefreshRows((refresh)=>!refresh)}/>//producto es el producto de la orden
 
                 )
             }
@@ -123,17 +125,28 @@ const ProductsUserTable = () => {
                 action={SEARCHBYNAMEPRODUCTS} //no funciona
         />
 
-        <Grid container className='fadeIn'>
-            <Grid item xs={12} sx={{ height:900, width: 40000 }}>
-                <DataGrid 
-                    rows={ rows }
-                    columns={ columns }
-                    pageSize={ 20 }
-                    rowsPerPageOptions={ [30] }
-                />
 
-            </Grid>
-        </Grid>
+
+
+
+
+    <Grid container className='fadeIn'>
+
+                <Grid item xs={12} sx={{ height:900, width: 40000 }}>
+                 
+                    <DataGrid 
+                        rows={ rows }
+                        columns={ columns }
+                        pageSize={ 20 }
+                        rowsPerPageOptions={ [30] }
+                        
+                    /> 
+                </Grid>
+               
+    </Grid>
+
+
+
 
 
     </Box>

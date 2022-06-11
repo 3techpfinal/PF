@@ -52,7 +52,7 @@ const ProductDetails=()=>{
         review: product.review,
         description: product.description,
         stock: product.stock,
-        hasReview:false
+        hasReview:0
       })),[product])
       
     const typo=(texto)=>{

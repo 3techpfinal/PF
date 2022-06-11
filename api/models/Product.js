@@ -55,10 +55,6 @@ const productSchema = new Schema({
         ref: 'Category'
     },
 
-    inCart: {
-        type: Boolean,
-        default: false
-    },
 
     shipping: {
         type: String,
