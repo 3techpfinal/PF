@@ -31,7 +31,16 @@ const ProductDetails=()=>{
     const recommended=useSelector((state)=>state.rootReducer.recommended)
     const [loaded,setLoaded]=React.useState(false)
     const {id}=useParams()
-    const [tempCartProduct, setTempCartProduct] = useState({
+    const [tempCartProduct, setTempCartProduct] = useState({})
+
+    React.useEffect(()=>{
+        window.scrollTo(0, 0)
+        dispatch(GETDETAIL(id)).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
+
+    },[dispatch,id])
+
+    
+    React.useEffect(()=>setTempCartProduct(()=>({//cuando se llene prodcut (con GETDETAIL) setea el tempcardproduct
         _id: product._id,
         imageProduct: product.imageProduct,
         price: product.price,
@@ -42,14 +51,10 @@ const ProductDetails=()=>{
         rating: product.rating,
         review: product.review,
         description: product.description,
-        stock: product.stock
-      })
-
-    React.useEffect(()=>{
-        window.scrollTo(0, 0)
-        dispatch(GETDETAIL(id)).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
-    },[dispatch,id])
-
+        stock: product.stock,
+        hasReview:false
+      })),[product])
+      
     const typo=(texto)=>{
         return(
             <Typography sx={{m:1,p:1,ml:3}}>{texto}</Typography>

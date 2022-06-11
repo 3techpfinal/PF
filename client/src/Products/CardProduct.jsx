@@ -51,7 +51,8 @@ export default function ProductCard({product}) {
       review: product.review,
       description: product.description,
       stock: product.stock,
-      priceOriginal: product.priceOriginal||product.price
+      priceOriginal: product.priceOriginal||product.price,
+      hasReview:false
     })
 
     const onUpdateQuantity = ( quantity ) => {

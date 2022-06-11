@@ -1,8 +1,11 @@
 import { Router } from 'express';
 import User from '../models/User.js';
+import Product from '../models/Product.js';
+import Order from '../models/Order.js';
 import {encryptPassword} from '../helpers/encrypter.js'
 import {signUp, logIn}from '../middlewares/auth.js'
 import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
+import Review from "../models/Review.js";
 const router = Router();
 
 
@@ -11,6 +14,38 @@ const router = Router();
 router.post('/signup', signUp); 
 
 router.post('/login', logIn);
+
+
+router.post('/review',verifyToken, async (req, res,next) => { //modificado por Gabi 09/6
+     try {
+        const{productId,review,comment,orderId}=req.body //recibo del body datos, product es productId
+        const newReview = new Review({review:review,comment:comment,product:productId, order:orderId})
+        newReview.user=req.userId //req.userId se guarda en el verify token, viene por token
+        //newProduct.setCreationDate();  
+        
+
+        const totalReviews=await Review.find({product:productId}) //trae reviews de un producto
+        var total=0
+        totalReviews.forEach(e=>total=total+e.review) //e.review es la calificacion de una orden, e es cada orden
+        
+        const thisProduct= await Product.findByIdAndUpdate(productId,{rating:(total/totalReviews.length).toFixed(1)},{upsert: true, new : true}) //hace el promedio del producto de la BDD
+        const thisOrder=await Order.findById(orderId) //traigo la orden de la BDD que tiene  el id Orden que traje en body
+        const thisOrderProducts=thisOrder.products.map(product=>{ //busco el producto que estoy calificando y le pongo has review true
+            if(product._id===productId) return ({...product,hasReview:true})
+            else return product // devuelve los productos que no estoy calificando de la orden
+        })
+        thisOrder.products=thisOrderProducts //reemplazo el array de poductos por este map que tiene lo mismo, solo que hasReview esta cambiada
+        thisOrder.save()
+        await newReview.save() //se guarda el review
+        res.json("se guardo la calificacion")
+        
+    } catch (err) {
+        next(err)
+    }
+});
+
+
+
 
 
 router.get("/", [verifyToken, isAdmin], async (req, res, next) => {
@@ -81,7 +116,8 @@ router.put('/:id', verifyToken, async (req, res, next) => {
             await User.findByIdAndUpdate({ _id: id }, req.body);
             // le paso todo el body, el método compara y cambia todo automáticamente
             const updatedUser = await User.findById({ _id: id })
-            res.send(updatedUser)
+            req.userId===id?res.send(updatedUser):res.send('ok')
+            
     } catch (err) {
         next(err)
     }

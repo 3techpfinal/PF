@@ -20,7 +20,7 @@ const currency = "USD";
 
 const OrderPage=()=>{
 
-    const actualUser = JSON.parse(Cookie.get('user'))
+    const actualUser = Cookie.get('user') && JSON.parse(Cookie.get('user'))
     //console.log("usuario",actualUser)
     const dispatch1=useDispatch()
     
@@ -77,6 +77,7 @@ const OrderPage=()=>{
             order.isPaid && setIsPaid(()=>true)
         },[order])
 
+        
         const onOrderCompleted = async( details ) => { //Funcion de verificar la COMPRA
 
         if ( details.status !== 'COMPLETED' ) {
@@ -85,17 +86,15 @@ const OrderPage=()=>{
 
         await dispatch(GETPRODUCTS())
         let arrayVerificacion = verificarSihayStock(order,products)
+        console.log("verificarStockFront",arrayVerificacion)
         if(!arrayVerificacion[0]){                    
             return swal({
                 title:"Error!!",
-                text:`el producto ${arrayVerificacion[1]} no tiene stock`,
+                text:`Uno de los productos no tiene stock`,
                 icon:"error",
                 button:"Aceptar"
             })
         }
-
-   
-
 
         // order.products.forEach(async (product:any)=>{
         //     await producto(product._id)
@@ -167,7 +166,7 @@ const OrderPage=()=>{
             {isPaid===false?
                     <Chip
                         sx={{my:2}}
-                        label="pendiente de pago"
+                        label="Pendiente de pago"
                         variant='outlined'
                         color="error"
                         icon={ <CreditCardOffOutlined/>}
@@ -189,7 +188,7 @@ const OrderPage=()=>{
 
 
                 <Grid item xs={12} sm={7}>
-                    <CartList editable={false} order={order.products}/>
+                    <CartList editable={false} order={order.products} orderIsPaid={isPaid}/>
                 </Grid>
                 <Grid item xs={12} sm={5}>
                     <Card className='summary-card'>
@@ -227,7 +226,7 @@ const OrderPage=()=>{
                                
                             </Box>
 
-                            <OrderSummary order={order}/>
+                            <OrderSummary/>
 
                             <Box sx={{mt:3}}>
                              { console.log("actual",actualUser)}

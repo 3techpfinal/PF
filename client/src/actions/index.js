@@ -90,8 +90,7 @@ export const MODIFYPRODUCT=createAsyncThunk('MODIFYPRODUCT',async (input)=>{
 
                         ///////////////////////////////////////   
                         //      ACCIONES PARA USUARIOS      //   
-                        /////////////////////////////////////     
-
+                        /////////////////////////////////////    
 export const GETUSERS = createAsyncThunk('GETUSERS', async () => { //trae todos los usuarios
     const token=Cookie.get('token')
     const response = await axios(`${api}/users`,{headers:{
@@ -113,12 +112,41 @@ export const MODIFYUSER=createAsyncThunk('MODIFYUSER',async (input)=>{
     return user.data
   })
 
+  export const CREATEREVIEW = createAsyncThunk('CREATEREVIEW', async (input) => { //recibe info por post y crea un producto
+    const token=Cookie.get('token')
+    const response=await axios.post(`${api}/users/review`,input ,{
+        headers:{
+            'x-access-token':token
+        }
+    })
+    return response.data
+})
+
 
                         ///////////////////////////////////////   
                         //   ACCIONES PARA ORDENES Y PAGOS  //   
                         /////////////////////////////////////    
 
 export const GETORDERS = createAsyncThunk('GETORDERS', async () => { // trae todas las ordenes
+    const token=Cookie.get('token')
+    const response = await axios(`${api}/orders`,{
+        headers:{
+            'x-access-token':token
+        }
+    })
+    return response.data
+})
+
+export const MODIFYORDER=createAsyncThunk('MODIFYORDER',async (input)=>{
+    const token=Cookie.get('token')
+    const user=await axios.put(`${api}/orders/${input._id}`,input,{headers:{
+      'x-access-token':`${token}`
+    }})
+    return user.data
+  })
+
+
+export const SEARCHPRODUCTINORER = createAsyncThunk('SEARCHPRODUCTINORER', async (name) => { // trae los productos de una orden
     const token=Cookie.get('token')
     const response = await axios(`${api}/orders`,{
         headers:{
@@ -150,7 +178,11 @@ export const CREATEORDER=createAsyncThunk('CREATEORDER',async (data)=>{
 })
   
   export const PAYORDER=createAsyncThunk('PAYORDER',async (data)=>{
-    const result=await axios.post(`${api}/orders/pay`,data)
+    const token=Cookie.get('token')
+    const result=await axios.post(`${api}/orders/pay`,data,{
+        headers:{
+            'x-access-token':token
+        }})
     return result.data
 })
 

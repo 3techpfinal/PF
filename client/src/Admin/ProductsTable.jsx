@@ -28,7 +28,7 @@ const UsersPage = () => {
     const [rows,setRows]=useState([])
     
 
-    useEffect(()=>{ //una vez que llegan las ordenes se llenana las rows
+    useEffect(()=>{ //una vez que llegan los productos se llenana las rows
         setRows(()=>products.map( (product) => ({
             id: product._id,
             name: product.name,
@@ -48,13 +48,12 @@ const UsersPage = () => {
     ))
     const [productState,setProductState]=useState([])
    
-    useEffect(()=>{ //eto es para actualizar el estado del producto cuando se pone bloqueado 
+    useEffect(()=>{ //eto es para actualizar el estado del producto cuando se selecciona bloqueado 
         setProductState(()=>productosmap)
     },[products])
 
 
     const handleChange=(e,row)=>{ //funcion que maneja el estado del producto
-       
         setProductState((state)=>state.map(e=>{
             if(e.id===row.id){
                 return {

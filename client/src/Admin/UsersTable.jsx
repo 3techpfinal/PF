@@ -26,10 +26,10 @@ const UsersPage = () => {
    // console.log("usuarios:",usuarios)
    // console.log("ordenes:",orders)
 
-//////////////////////////////  modificar el estado del usuario /////////////////////////
+//////////////////////////////  modificar el estado del usuario INICIO /////////////////////////
     const [userState,setUserState]=useState([]) //estado de usuarios para mostrar
     
-    const userStatemap=usuarios.map(user=>( //esto es para cargar el estado productState con los datos de la BDD
+    const userStatemap=usuarios.map(user=>( //cargar  estado productState con datos de la BDD
         {id:user._id,
         cuentaSuspendida:user.suspendedAccount}
     ))
@@ -49,13 +49,13 @@ const UsersPage = () => {
         }))
         dispatch(MODIFYUSER({_id:row.id,suspendedAccount: e.target.value==='online'?true:false}))
  }
-//|||||______________________________  modificar el estado del usuario ____________________////
+//|||||______________________________  modificar el estado del usuario FIN ____________________////
 
 
 //////////////////////////////  modificar el ROL del usuario /////////////////////////
 const [userRol,setUserRol]=useState([]) //estado de usuarios para mostrar
 
-const userRolStatemap=usuarios.map(user=>( //esto es para cargar el estado productState con los datos de la BDD
+const userRolStatemap=usuarios.map(user=>( // cargar estado userRolStatemap con  datos de la BDD
     {id:user._id,
     rolUser:user.role}
 ))
@@ -67,15 +67,15 @@ const userRolStatemap=usuarios.map(user=>( //esto es para cargar el estado produ
 // 2: {id: '62952463148bb70013a80741', rolUser: 'user'}
 // 3: {id: '629536d0ca35de00110052c4', rolUser: 'user'}
 
-useEffect(()=>{
+useEffect(()=>{ //cargo el estado userRol con todos los valores de userRolStateMap
     setUserRol(()=>userRolStatemap)
 },[usuarios])
 
 console.log("estado userRol:", userRol)
 
 const handleChangeRol=(e,row)=>{ //e es el nuevo valor 
-    setUserRol((rol)=>rol.map(e=>{
-        if(e.id===row.id){ //row id es el valor quee se trae de la BDD
+    setUserRol((rol)=>rol.map(e=>{ //cuando hay un cambio cambia el estado
+        if(e.id===row.id){ //
             return {
                 id: e.id,
                 rolUser: e.rolUser==='admin'?'user':'admin'} //a la prop rolUser le paso su valor negado
@@ -113,7 +113,7 @@ const handleChangeRol=(e,row)=>{ //e es el nuevo valor
                             <Typography color="error" value='superadmin'> superadmin </Typography> 
                             :
                             <Select
-                                value={ userRol.filter(e=> e.id===row.id)[0]?.rolUser}
+                                value={ userRol.filter(e=> e.id===row.id)[0]?.rolUser} //value es el valor del estado userRol, toma el valor de rolUser
                                 label="Rol"
                                 onChange={(e)=>handleChangeRol(e,row) }
                                 sx={{ width: '300px' }}

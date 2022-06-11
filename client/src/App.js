@@ -27,6 +27,8 @@ import UserTable from './Admin/UsersTable'
 import Profile from './Pages/Profile'
 import PasswordChange from './Pages/PasswordChange'
 import WishList from './Components/ListComponents'
+import Review from './User/Reviews'
+
 
 /// payment ////
 import Cart from './Cart/CartPage.jsx'
@@ -60,6 +62,7 @@ function App() {
           <Route path='/orderpayment/:id' element={<OrderPayment/>}/>
           <Route path='/wishlist' element={<WishList/>}/>
           <Route path='/prueba' element={<Prueba/>}/>
+          <Route path='/user/reviews' element={<Review/>}/>
         </Routes>
       </CartProvider>
     </PayPalScriptProvider>

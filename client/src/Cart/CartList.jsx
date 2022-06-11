@@ -1,4 +1,4 @@
-import { useContext, useEffect } from 'react';
+import { useContext, useEffect,useState } from 'react';
 //import NextLink from 'next/link';
 import { Box, Button, CardActionArea, CardMedia, Grid, Link, Typography, Chip, Card } from '@mui/material';
 import  ItemCounter  from './ItemCounter.jsx';
@@ -19,7 +19,7 @@ import {GETDETAIL,GETPRODUCTS} from '../actions'
 
 
 
-export const CartList = ({ editable = false,order=false }) => {
+export const CartList = ({ editable = false,order=false,orderIsPaid=false }) => {
 
     const dispatch=useDispatch()
     const {id} = useParams()
@@ -31,15 +31,16 @@ export const CartList = ({ editable = false,order=false }) => {
 
 
     const productsBDD=useSelector((State) => State.rootReducer.products);
+    const [BDD,setBDD]=useState([])
     const { cart, updateCartQuantity, removeCartProduct } = useContext(CartContext);
 
-    const calcularStockDeBDD = (product,productsBDD)=>{
-        productsBDD.map((productBDD)=>{
-            if(productBDD._id===product._id)
-                return productBDD.stock
-        })
-    }
 
+    useEffect(()=>{
+        setBDD(()=>productsBDD.map(e=>({
+            _id:e._id,
+            stock:e.stock
+            })))
+    },[productsBDD])
     
     const array=order || cart
 
@@ -66,7 +67,7 @@ export const CartList = ({ editable = false,order=false }) => {
             {
                 array?.map( product => (//product es un elemento del array cart
                     <Grid container spacing={2} key={ product._id } sx={{ mb:1 }}>
-                        <Grid item xs={2}>
+                        <Grid item xs={3}>
                             
                             <NavLink to={`/product/${ product._id }`} >
                                <Card >
@@ -85,7 +86,7 @@ export const CartList = ({ editable = false,order=false }) => {
 
                         <Grid item xs={7}>
                                 <Box display='flex' flexDirection='column'>
-                                    <Typography variant='body1'>{ product.name }</Typography>
+                                    <Typography variant='body1' sx={{fontWeight:20}}>{ product.name }</Typography>
                                     { editable ? 
                                     ( 
                                         <ItemCounter 
@@ -101,12 +102,11 @@ export const CartList = ({ editable = false,order=false }) => {
                                 }
                                 </Box>
                                 <Box display='flex' flexDirection='column' >
-                                    <Typography variant='h6'>{calcularStockDeBDD(product,productsBDD) } {'Disponibles'}</Typography>
-                                    {console.log("stockEnBDD",calcularStockDeBDD(product,productsBDD))}
-                                    {
-                                 
-                                        
-                                        (product.quantity <= calcularStockDeBDD(product,productsBDD)) ?
+                                    <Typography variant='h6'>{BDD.filter(e=>product._id===e._id)[0]?.stock } {'Disponibles'}</Typography>
+                                   
+                                   
+                                    {!orderIsPaid?
+                                        (product.quantity <= BDD.filter(e=>product._id===e._id)[0]?.stock) ?
                                         <Chip
                                         sx={{my:1, width:200}}
                                         label="En stock"
@@ -121,7 +121,7 @@ export const CartList = ({ editable = false,order=false }) => {
                                         variant='outlined'
                                         color="error"
                                         icon={ <CreditScoreOutlined/>}
-                                        />
+                                        />:<></>
                                     }   
                                 </Box>
                         

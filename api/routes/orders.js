@@ -9,6 +9,19 @@ const router = Router()
  //import * as IPaypal from '../paypalInterface'
 
 router.get("/", verifyToken, async (req, res, next) => {
+    
+    //const {name} = req.query //esto es por si quiero traer todos los productos de una orden
+    /*if(name){
+        try {
+            const productInOrder = await Order.product.find({ name: {$regex: req.query.name, $options:'i'}}).populate(["category"])
+            return productInOrder.length === 0 ? res.send("product not found") : res.json(productInOrder)
+            } catch (error) {
+            next(error)
+        }
+
+    }else{
+    */
+    
     try {
 
         const actualUser = await User.findById(req.userId);
@@ -24,7 +37,10 @@ router.get("/", verifyToken, async (req, res, next) => {
     } catch (error) {
         next(error)
     }
-});
+}
+//}
+)
+;
 
 
 router.get("/:id",verifyToken,  async(req, res, next) => {
@@ -41,12 +57,12 @@ router.get("/:id",verifyToken,  async(req, res, next) => {
 
 
 
-router.post('/', verifyToken, async (req, res, next) => {
+router.post('/', verifyToken, async (req, res, next) => { //crear orden
     try {
 
     const newOrder = new Order(req.body); //adress, paymentId, totalPrice, products : [{},{}]
     newOrder.user = req.userId      
-    
+    newOrder.setCreationDate()
     await newOrder.save()
    
     const updatedUser = await User.findByIdAndUpdate(
@@ -91,19 +107,18 @@ router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
 // `Order : ${found._id} successfully deleted
 
 
-
-router.post('/pay',async(req, res) => {
+router.post('/pay',verifyToken, async(req, res) => {
 
     // Todo: validar sesión del usuario
     // TODO: validar mongoID
-
+    const AllProducts=Product.find()
     const getPaypalBearerToken = async() => {
     
-        const PAYPAL_CLIENT = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
-        const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
-    
-        const base64Token = Buffer.from(`${'AQ0xQs7KJfypFz2RqDQlSnT9qYlzBaGyXFsPaTVDQIbgpvD8n1TXUV5Qh-h6vzVdlzd4QjGDFdqOJrup'}:${'EKxV7dEu_rbAR5eJEaEGZnWxUcLTxy6VHTOUT27sYUI_3FzBzXbOBpMiAqRBq93epypbnlf2JqpbzHuI'}`, 'utf-8').toString('base64');
-        const body = new URLSearchParams('grant_type=client_credentials');
+    const PAYPAL_CLIENT = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
+    const PAYPAL_SECRET = process.env.PAYPAL_SECRET;
+
+    const base64Token = Buffer.from(`${'AQ0xQs7KJfypFz2RqDQlSnT9qYlzBaGyXFsPaTVDQIbgpvD8n1TXUV5Qh-h6vzVdlzd4QjGDFdqOJrup'}:${'EKxV7dEu_rbAR5eJEaEGZnWxUcLTxy6VHTOUT27sYUI_3FzBzXbOBpMiAqRBq93epypbnlf2JqpbzHuI'}`, 'utf-8').toString('base64');
+    const body = new URLSearchParams('grant_type=client_credentials');
     
     
         try {
@@ -131,7 +146,19 @@ router.post('/pay',async(req, res) => {
     
     }
 
-
+   /*  function verificarSiHayStock (order,productsBDD){
+        let verificacion = true
+        order?.products.map((product)=>{
+            productsBDD?.map((productBDD)=>{
+                if(product._id===productBDD._id){
+                    if(product.stock<productBDD.stock){
+                        verificacion=false
+                    }
+                }
+            })
+        })
+        return verificacion
+    }*/
 
 
     const paypalBearerToken = await getPaypalBearerToken();
@@ -156,7 +183,7 @@ router.post('/pay',async(req, res) => {
 
     //-+await db.connect();
     const dbOrder = await Order.findById(orderId);
-
+    const allProducts = await Product.find({}).populate(["category"]);
     if ( !dbOrder ) {
         //await db.disconnect();
         return res.status(400).json({ message: 'Orden no existe en nuestra base de datos' });
@@ -167,12 +194,18 @@ router.post('/pay',async(req, res) => {
         //await db.disconnect();
         return res.status(400).json({ message: 'Los montos de PayPal y nuestra orden no son iguales' });
     }
+   /* if(verificarSiHayStock(dbOrder,allProducts)===false){
+        return res.status(400).json({ message: 'uno de los productos no tiene stock' });
+    }*/
+
 
 
     dbOrder.paymentId = transactionId;
     dbOrder.isPaid = true;
     dbOrder.products.forEach(async (producto)=>{
         await Product.findByIdAndUpdate(producto._id,{stock:(producto.stock-producto.quantity)})
+
+
         
     })
     await dbOrder.save();
