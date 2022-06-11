@@ -146,7 +146,7 @@ router.post('/pay',verifyToken, async(req, res) => {
     
     }
 
-   /*  function verificarSiHayStock (order,productsBDD){
+     function verificarSiHayStock (order,productsBDD){
         let verificacion = true
         order?.products.map((product)=>{
             productsBDD?.map((productBDD)=>{
@@ -158,7 +158,7 @@ router.post('/pay',verifyToken, async(req, res) => {
             })
         })
         return verificacion
-    }*/
+    }
 
 
     const paypalBearerToken = await getPaypalBearerToken();
@@ -198,21 +198,24 @@ router.post('/pay',verifyToken, async(req, res) => {
         return res.status(400).json({ message: 'uno de los productos no tiene stock' });
     }*/
 
-
+    dbOrder.products.forEach(async (product)=>{
+        const thisProduct=await Product.findById(product._id)
+        console.log('thisProduct',thisProduct)
+        console.log('quantity',product.quantity)
+        console.log('if',thisProduct.stock<product.quantity)
+        if(thisProduct.stock<product.quantity){return res.status(400).json({message:'No hay stock suficiente'})}
+        else{
+            await Product.findByIdAndUpdate(product._id,{stock:(thisProduct.stock-product.quantity)})
+        }
+    })
 
     dbOrder.paymentId = transactionId;
     dbOrder.isPaid = true;
-    dbOrder.products.forEach(async (producto)=>{
-        await Product.findByIdAndUpdate(producto._id,{stock:(producto.stock-producto.quantity)})
-
-
-        
-    })
     await dbOrder.save();
    // await db.disconnect();
 
     
-     res.status(200).json({ message: "Orden pagada con éxito" });
+    return res.status(200).json({ message: "Orden pagada con éxito" });
 })
 
 export default router;
