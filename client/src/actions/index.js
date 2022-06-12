@@ -122,6 +122,28 @@ export const MODIFYUSER=createAsyncThunk('MODIFYUSER',async (input)=>{
     return response.data
 })
 
+export const MODIFYREVIEW=createAsyncThunk('MODIFYREVIEW',async (postValue,reviewId)=>{
+    console.log("input accion",reviewId)
+    const token=Cookie.get('token')
+    const response=await axios.put(`${api}/users/review/${reviewId}`,postValue,{headers:{
+      'x-access-token':`${token}`
+    }})
+    return response.data
+  })
+
+  export const GETREVIEW = createAsyncThunk('GETREVIEW', async (id) => { //reciben un id y trae un producto
+    const response = await axios(`${api}/users/review/${id}`)
+    return response.data
+})
+
+
+export const GETREVIEWS = createAsyncThunk('GETREVIEWS', async () => { //trae todos los usuarios
+    const token=Cookie.get('token')
+    const response = await axios(`${api}/users/review`,{headers:{
+        'x-access-token':`${token}`
+      }})
+    return response.data
+})
 
                         ///////////////////////////////////////   
                         //   ACCIONES PARA ORDENES Y PAGOS  //   

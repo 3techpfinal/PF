@@ -10,7 +10,7 @@ import { Rating } from '@mui/material';
 import Stars from './stars'
 import Box from '@mui/material/Box';
 import StarIcon from '@mui/icons-material/Star';
-import { CREATEREVIEW } from '../actions';
+import { CREATEREVIEW,MODIFYREVIEW } from '../actions';
 import swal from 'sweetalert';
 import {   useNavigate } from "react-router-dom"
 import { useDispatch } from 'react-redux';
@@ -34,29 +34,43 @@ function getLabelText(value) {
 
 const useAppDispatch = () => useDispatch();
 
-export default function FormDialog({product,orderId,func}) { //FUNCION PRINCIPAL
+export default function FormDialog({product,order,func,reviews}) { //FUNCION PRINCIPAL
 
   const dispatch=useAppDispatch()
   const navegar = useNavigate()
-  console.log('orderId',orderId)
+  console.log('order',order)
   const [value, setValue] = React.useState(0);
   const [hover, setHover] = React.useState(-1);
  console.log('product',product)
-  const [postValue,SetPostValue]=React.useState({
+ 
+  let [postValue,SetPostValue]=React.useState({
     review: 0,
     productId:'',
     comment:'',
-    orderId: ''
+    order: '',
+    showProduct:'',
+    showUser:''
   })
+
+
+ const idReviewObtain = (product,order, reviews)=>{
+    let id='valorinicialnopuedeservacio'
+    reviews?.map((review)=>(
+      ((review.order?._id===order._id)&&(review.product?._id===product._id))&&(id=review._id)
+    ))
+    return id
+ }
 
 
 React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL) setea el tempcardproduct
    //FORMATO DE ENVIO DE DATOS A LA BDD
   review: value,
   productId: product._id,
-  comment: product.name,
-  orderId:orderId
-})),[product,orderId,value])
+  comment: '',
+  orderId:order._id,
+  showProduct: product.name,
+  showUser: order.user.email
+})),[product,order,value])
 
   const [open, setOpen] = React.useState(false);
 
@@ -97,9 +111,66 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
       
   };
 
+
+
+  const sendModifyReview = () => { //FUNCION QUE ENVIA LOS DATOS A LA BDD
+    //console.log('postValue',postValue)
+
+    let reviewId
+    reviewId=  idReviewObtain(product, order,  reviews)
+    //console.log('idReviewObtain',id)
+    //console.log('postValue',postValue)
+   // postValue={...postValue,reviewId: id}
+    //console.log('postValue2',postValue)
+    
+
+   /* SetPostValue( postValue => ({
+      ...postValue,
+      reviewId:id
+    }))*/
+  //   SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL) setea el tempcardproduct
+  //    review: value,
+  //    productId: product._id,
+  //    comment: '',
+  //    orderId:order._id,
+  //    showProduct: product.name,
+  //    showUser: order.user.email,
+  //    reviewId:id
+  //  }))
+   //console.log('postValue2',postValue)
+
+  // console.log("input accion",postValue)
+   console.log("reviewId",reviewId)
+
+    dispatch(MODIFYREVIEW(postValue,reviewId)).then((r)=>{
+
+      console.log('resBackend',r)
+      if(r.payload==="se actualizo la calificacion"){
+          setOpen(false);
+          func()
+          swal({
+          title:"Realizado",
+          text:"Se guardo la calificacion",
+          icon:"success",
+          button:"Aceptar"})
+        }else{
+          setOpen(false);
+          func()
+          swal({
+            title:"Error",
+            text:"No se guardo la calificacion",
+            icon:"error",
+            button:"Aceptar"})
+          
+        }
+       
+      })  
+      
+  };
+
   return (
     <div>
-      <Button variant="outlined" onClick={handleClickOpen} disabled={product.hasReview?true:false}>
+      <Button variant="outlined" onClick={handleClickOpen} /*disabled={product.hasReview?true:false}*/>
         <Rating precision={0.5} name="read-only" value={product.hasReview} readOnly max={5}/>
       </Button>
       <Dialog open={open} onClose={handleClose}>
@@ -152,7 +223,7 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={sendReview}>Enviar</Button>
+          <Button onClick={product.hasReview?sendModifyReview:sendReview}>Enviar</Button>
         </DialogActions>
       </Dialog>
     </div>

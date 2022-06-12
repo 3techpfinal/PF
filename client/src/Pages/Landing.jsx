@@ -37,7 +37,7 @@ const Landing=()=>{
                 var ref=products[0]?.category.name
                 setNameCatg(ref)
                 products.forEach((e)=>{
-                    if(e.category.name!==ref){  setNameCatg(inicial)}
+                    if(e.category?.name!==ref){  setNameCatg(inicial)}
                 })
             }
     },[products])

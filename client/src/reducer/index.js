@@ -13,7 +13,8 @@ const initialState = {
   recommended:[],
   order:[],
   user:[],
-  reviews:[]
+  reviews:[],
+  review:[]
 }
 
 
@@ -118,6 +119,16 @@ const rootReducer = createReducer(initialState, (builder) => {
         Cookie.set('user',JSON.stringify( action.payload ),{expires:0.08})
       }
     })
+
+    .addCase(actions.GETREVIEW.fulfilled, (state, action) => {
+      state.review=[]
+      state.review=action.payload
+  })
+
+  .addCase(actions.GETREVIEWS.fulfilled, (state, action) => {
+    state.reviews=action.payload
+})
+
 
                           /////////////////////////////////////   
                          //      ACCIONES PARA ORDENES    //   

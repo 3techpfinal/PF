@@ -20,6 +20,12 @@ const reviewSchema = new Schema({
     comment: {
         type: String
     },
+    showProduct: {
+        type: String
+    },
+    showUser: {
+        type: String
+    },
 
     user:{
         type : Schema.Types.ObjectId,

@@ -198,7 +198,7 @@ router.post('/pay',verifyToken, async(req, res) => {
         return res.status(400).json({ message: 'uno de los productos no tiene stock' });
     }*/
 
-    dbOrder.products.forEach(async (product)=>{
+    /*dbOrder.products.forEach(async (product)=>{
         const thisProduct=await Product.findById(product._id)
         console.log('thisProduct',thisProduct)
         console.log('quantity',product.quantity)
@@ -207,7 +207,7 @@ router.post('/pay',verifyToken, async(req, res) => {
         else{
             await Product.findByIdAndUpdate(product._id,{stock:(thisProduct.stock-product.quantity)})
         }
-    })
+    })*/
 
     dbOrder.paymentId = transactionId;
     dbOrder.isPaid = true;

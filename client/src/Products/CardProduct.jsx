@@ -28,7 +28,7 @@ export default function ProductCard({product}) {
   const navigate=useNavigate()
 
     const productImage = useMemo(()=>{
-        return product.imageProduct[1]?
+        return product?.imageProduct[1]?
         isHovered?
           `${product.imageProduct[1]}`
         : `${product.imageProduct[0]}`
@@ -43,7 +43,7 @@ export default function ProductCard({product}) {
       _id: product._id,
       imageProduct: product.imageProduct,
       price: product.price,
-      name: product.name,
+      name: product?.name,
       category: product.category,
       quantity: 1,
       envio: product.envio,
@@ -114,7 +114,7 @@ export default function ProductCard({product}) {
             <Tooltip title={product.name} placement="top">  
                 <Box sx={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',mb:1}}>
                   <Typography gutterBottom variant="h6" sx={{color:'white',fontWeight:'200'}}>
-                  {product.name.slice(0,15)}
+                  {product?.name?.slice(0,15)}
                   </Typography>
                   {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
                 </Box>
