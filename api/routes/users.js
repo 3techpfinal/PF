@@ -31,6 +31,7 @@ router.post('/review',verifyToken, async (req, res,next) => { //modificado por G
         totalReviews.forEach(e=>total=total+e.review) //e.review es la calificacion de una orden, e es cada orden
         
         const thisProduct= await Product.findByIdAndUpdate(productId,{rating:(total/totalReviews.length).toFixed(1)},{upsert: true, new : true}) //hace el promedio del producto de la BDD
+        //hay que cambiar el valor hasreview al producto de la orden
         const thisOrder=await Order.findById(orderId) //traigo la orden de la BDD que tiene  el id Orden que traje en body
         const thisOrderProducts=thisOrder?.products?.map(product=>{ //busco el producto que estoy calificando y le pongo has review true
             if(product._id===productId) return ({...product,hasReview:review})
@@ -46,12 +47,25 @@ router.post('/review',verifyToken, async (req, res,next) => { //modificado por G
     // }
 });
 
-router.put('/review/:reviewId', verifyToken, async (req, res, next) => {
+router.put('/review/:reviewId', verifyToken, async (req, res, next) => { //modifica la calificacion
     try {
+        const{productId,review,comment,orderId}=req.body
         const { reviewId } = req.params;
         console.log("revieId",reviewId)
         await Review.findByIdAndUpdate({ _id: reviewId }, req.body);
-        const updatedReview = await Review.findById({ _id: reviewId })
+        const totalReviews=await Review.find({product:productId}) //trae reviews de un producto
+        var total=1
+        totalReviews.forEach(e=>total=total+e.review) //e.review es la calificacion de una orden, e es cada orden
+        
+        await Product.findByIdAndUpdate(productId,{rating:(total/totalReviews.length).toFixed(1)},{upsert: true, new : true}) //hace el promedio del producto de la BDD
+       //hay que cambiar el valor hasreview al producto de la orden
+        const thisOrder=await Order.findById(orderId) //traigo la orden de la BDD que tiene  el id Orden que traje en body,
+        const thisOrderProducts=thisOrder?.products?.map(product=>{ //busco el producto que estoy calificando y le pongo has review true
+            if(product._id===productId) return ({...product,hasReview:review})
+            else return product // devuelve los productos que no estoy calificando de la orden
+        })
+        thisOrder.products=thisOrderProducts //reemplazo el array de poductos por thisOrderProducts  que tiene lo mismo, solo que hasReview esta cambiada
+        thisOrder.save()
         res.json("se actualizo la calificacion")
     } catch (err) {
         next(err)

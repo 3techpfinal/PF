@@ -122,10 +122,10 @@ export const MODIFYUSER=createAsyncThunk('MODIFYUSER',async (input)=>{
     return response.data
 })
 
-export const MODIFYREVIEW=createAsyncThunk('MODIFYREVIEW',async (postValue,reviewId)=>{
-    console.log("input accion",reviewId)
+export const MODIFYREVIEW=createAsyncThunk('MODIFYREVIEW',async (postValue)=>{
+ 
     const token=Cookie.get('token')
-    const response=await axios.put(`${api}/users/review/${reviewId}`,postValue,{headers:{
+    const response=await axios.put(`${api}/users/review/${postValue.reviewId}`,postValue,{headers:{
       'x-access-token':`${token}`
     }})
     return response.data

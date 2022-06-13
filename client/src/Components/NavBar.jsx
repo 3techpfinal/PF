@@ -147,7 +147,7 @@ export default function PrimarySearchAppBar() {
           <ListItemText primary={'Ordenes'} />
         </ListItem>}
 
-        {(isAuthenticated&&!isAdmin)&&<ListItem 
+        {(isAuthenticated)&&<ListItem 
           button
           onClick={ () => navigate('/user/reviews') }>
           <ListItemIcon>

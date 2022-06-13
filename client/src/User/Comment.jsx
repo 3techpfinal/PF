@@ -49,7 +49,8 @@ export default function FormDialog({product,order,func,reviews}) { //FUNCION PRI
     comment:'',
     order: '',
     showProduct:'',
-    showUser:''
+    showUser:'',
+    reviewId:''
   })
 
 
@@ -64,6 +65,7 @@ export default function FormDialog({product,order,func,reviews}) { //FUNCION PRI
 
 React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL) setea el tempcardproduct
    //FORMATO DE ENVIO DE DATOS A LA BDD
+  reviewId:idReviewObtain(product, order,  reviews),
   review: value,
   productId: product._id,
   comment: '',
@@ -114,35 +116,11 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
 
 
   const sendModifyReview = () => { //FUNCION QUE ENVIA LOS DATOS A LA BDD
-    //console.log('postValue',postValue)
 
-    let reviewId
-    reviewId=  idReviewObtain(product, order,  reviews)
-    //console.log('idReviewObtain',id)
-    //console.log('postValue',postValue)
-   // postValue={...postValue,reviewId: id}
-    //console.log('postValue2',postValue)
-    
+   console.log("postValue",postValue)
+   //console.log("reviewId34",reviewId)
 
-   /* SetPostValue( postValue => ({
-      ...postValue,
-      reviewId:id
-    }))*/
-  //   SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL) setea el tempcardproduct
-  //    review: value,
-  //    productId: product._id,
-  //    comment: '',
-  //    orderId:order._id,
-  //    showProduct: product.name,
-  //    showUser: order.user.email,
-  //    reviewId:id
-  //  }))
-   //console.log('postValue2',postValue)
-
-  // console.log("input accion",postValue)
-   console.log("reviewId",reviewId)
-
-    dispatch(MODIFYREVIEW(postValue,reviewId)).then((r)=>{
+    dispatch(MODIFYREVIEW(postValue)).then((r)=>{
 
       console.log('resBackend',r)
       if(r.payload==="se actualizo la calificacion"){
@@ -150,7 +128,7 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
           func()
           swal({
           title:"Realizado",
-          text:"Se guardo la calificacion",
+          text:"Se actualizó la calificacion",
           icon:"success",
           button:"Aceptar"})
         }else{
@@ -223,7 +201,7 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
         </DialogContent>
         <DialogActions>
           <Button onClick={handleClose}>Cancel</Button>
-          <Button onClick={product.hasReview?sendModifyReview:sendReview}>Enviar</Button>
+          <Button onClick={product?.hasReview===0?sendReview:sendModifyReview}>Enviar</Button>
         </DialogActions>
       </Dialog>
     </div>

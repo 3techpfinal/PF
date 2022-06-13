@@ -194,6 +194,14 @@ router.post('/pay',verifyToken, async(req, res) => {
         //await db.disconnect();
         return res.status(400).json({ message: 'Los montos de PayPal y nuestra orden no son iguales' });
     }
+
+
+    dbOrder.products.map(async(product)=>{
+        const productBDD = await Product.findById({ _id: product._id });
+        Product.findByIdAndUpdate({ _id: product._id }, {amountOfSales: productBDD.amountOfSales+product.quantity });
+    })
+
+
    /* if(verificarSiHayStock(dbOrder,allProducts)===false){
         return res.status(400).json({ message: 'uno de los productos no tiene stock' });
     }*/

@@ -28,6 +28,7 @@ const ProductsUserTable = () => {
     const [rows,setRows]=useState([])
     const [refreshRows,setRefreshRows]=useState(false)
      console.log('reviews',reviews)
+     console.log('orders',orders)
 
     useEffect(()=>{
         console.log('refreshhh',refreshRows)
@@ -54,10 +55,10 @@ const ProductsUserTable = () => {
                 producto:product,
                 hasReview:product?.hasReview||0
            // status:product.isActive? 'Activo':'No disponible'
-        }))[0]))
-        setRows(()=>setRowsVariable)
+        }))))
+        console.log('setRowsVariable',setRowsVariable)
+        setRows(()=>setRowsVariable[0]||[])
     },[orders])
-
     console.log('filas,de  ordenes pagas y sus productos',rows)
 
     const productosReviewArray=orders.products?.map(product=>( //esto es para cargar el estado productState
