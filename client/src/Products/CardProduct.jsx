@@ -132,7 +132,8 @@ export default function ProductCard({product}) {
                       :
                       <Typography>${new Intl.NumberFormat().format(product.price)}</Typography> }
             </Box>
-            <Box sx={{display:'flex',justifyContent:'flex-end'}}>         
+            <Box sx={{display:'flex',justifyContent:'flex-end'}}>   
+                  
                <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>
             </Box> 
               

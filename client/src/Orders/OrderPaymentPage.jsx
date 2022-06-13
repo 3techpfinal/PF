@@ -48,9 +48,9 @@ const OrderPage=()=>{
     const order=useSelector((State) => State.rootReducer.order);
     const products=useSelector((State) => State.rootReducer.products);
     const [isPaid,setIsPaid]=useState(order.isPaid?true:false)
-    const [isPaid2,setIsPaid2]=useState(false)
+    const [isPaid2,setIsPaid2]=useState(false) //muestra o no los relampagos
 
-
+console.log('totalPrice',order.totalPrice)
      //const detalle=useSelector((State) => State.rootReducer.detail);
 
     /* const producto=async(ide)=>{

@@ -5,7 +5,7 @@ import { Divider, Typography,Chip,Rating, IconButton,CardMedia,Avatar } from '@m
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import color from '../styles'
+import colorStyles from '../styles'
 import ProductCard from './CardProduct'
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
@@ -121,7 +121,7 @@ const ProductDetails=()=>{
                             <Box sx={{display:'flex',justifyContent:'space-between'}}>
                                 <Typography sx={{fontSize:{xs:20,sm:30},maxHeight:100}}>{product.name.length>40?product.name.slice(0,35)+'...':product.name}</Typography>
                                 {product.isActive?<IconButton 
-                                sx={{bgcolor:color.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
+                                sx={{bgcolor:colorStyles.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
                                 onClick={ onAddProduct }>
                                     Agregar al carrito 
                                     <AddShoppingCartIcon sx={{ml:1}}/>
@@ -135,7 +135,7 @@ const ProductDetails=()=>{
                                 
                             </Box>
 
-                            <Chip label={`${product.stock} En Stock`} sx={{bgcolor:color.color2}}></Chip>
+                            <Chip label={`${product.stock} En Stock`} sx={{bgcolor:colorStyles.color2}}></Chip>
 
                             <Box display='flex' flexDirection='row'>
                                 <Box>
@@ -148,7 +148,7 @@ const ProductDetails=()=>{
                                     <Typography variant='h5' sx={{mt:1,fontWeight:12}}> {'$'+new Intl.NumberFormat().format(product.price)} </Typography>}                  
                                 </Box>
                                 <Box display='flex' justifyContent="end">
-                                    {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:color.color2}}/>:<></>}
+                                    {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
                                 </Box>
                             </Box>
 
