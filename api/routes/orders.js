@@ -110,7 +110,6 @@ router.post('/pay',verifyToken, async(req, res) => {
 
     // Todo: validar sesión del usuario
     // TODO: validar mongoID
-    const AllProducts=Product.find()
     const getPaypalBearerToken = async() => {
     
     const PAYPAL_CLIENT = process.env.NEXT_PUBLIC_PAYPAL_CLIENT_ID;
@@ -148,7 +147,7 @@ router.post('/pay',verifyToken, async(req, res) => {
     const paypalBearerToken = await getPaypalBearerToken();
 
     if ( !paypalBearerToken ) {
-        return res.status(400).json({ message: 'No se pudo confirmar el token de paypal' })
+        return res.status(200).json({ message: 'No se pudo confirmar el token de paypal' })
     }
 
     const { transactionId = '', orderId = ''  } = req.body;
@@ -161,7 +160,7 @@ router.post('/pay',verifyToken, async(req, res) => {
     });
 
     if ( data.status !== 'COMPLETED' ) {
-        return res.status(401).json({ message: 'Orden no reconocida' });
+        return res.status(200).json({ message: 'Orden no reconocida' });
     }
 
 
@@ -170,13 +169,13 @@ router.post('/pay',verifyToken, async(req, res) => {
     //const allProducts = await Product.find({}).populate(["category"]);
     if ( !dbOrder ) {
         //await db.disconnect();
-        return res.status(400).json({ message: 'Orden no existe en nuestra base de datos' });
+        return res.status(200).json({ message: 'Orden no existe en nuestra base de datos' });
     }
     
 
     if ( dbOrder.totalPrice !== Number(data.purchase_units[0].amount.value) ) {
         //await db.disconnect();
-        return res.status(400).json({ message: 'Los montos de PayPal y nuestra orden no son iguales' });
+        return res.status(200).json({ message: 'Los montos de PayPal y nuestra orden no son iguales' });
     }
 
     dbOrder.products.forEach(async (product,i)=>{
@@ -188,9 +187,9 @@ router.post('/pay',verifyToken, async(req, res) => {
             await Product.findByIdAndUpdate(product._id,{stock:(thisProduct.stock-product.quantity)})
             if(!product[i+1]){
                 dbOrder.paymentId = transactionId;
-                // dbOrder.products.forEach(async(product)=>{
-                //     await Product.findByIdAndUpdate({ _id: product._id }, {amountOfSales: thisProduct.amountOfSales+product.quantity });
-                // })         
+                dbOrder.products.forEach(async(product)=>{
+                    await Product.findByIdAndUpdate(product._id, {amountOfSales: thisProduct.amountOfSales+product.quantity });
+                })         
                 dbOrder.isPaid = true;
                 await dbOrder.save();
                 // await db.disconnect();

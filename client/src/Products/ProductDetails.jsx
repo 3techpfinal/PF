@@ -1,11 +1,11 @@
 import * as React from 'react'
 import { Container,Box } from '@mui/system'
 import NavBar from '../Components/NavBar'
-import { Divider, Typography,Chip,Rating, IconButton,CardMedia,Avatar } from '@mui/material'
+import { Divider, Typography,Chip,Rating, IconButton,CardMedia,Avatar, Tooltip } from '@mui/material'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
-import color from '../styles'
+import colorStyles from '../styles'
 import ProductCard from './CardProduct'
 // import Swiper core and required modules
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper';
@@ -119,9 +119,11 @@ const ProductDetails=()=>{
                     <Box sx={{flexDirection:'column'}}>
                         <Box sx={{m:1,border:'1px solid lightgray',p:3,pt:1,borderRadius:5}}>
                             <Box sx={{display:'flex',justifyContent:'space-between'}}>
-                                <Typography sx={{fontSize:{xs:20,sm:30},maxHeight:100}}>{product.name.length>40?product.name.slice(0,35)+'...':product.name}</Typography>
-                                {product.isActive?<IconButton 
-                                sx={{bgcolor:color.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
+                                <Tooltip title={product.name} placement='left'>
+                                <Typography sx={{fontSize:{xs:20,sm:30},maxHeight:150}}>{product.name.length>35?product.name.slice(0,35)+'...':product.name}</Typography>
+                                </Tooltip>
+                                {product.isActive && product.stock>0?<IconButton 
+                                sx={{bgcolor:colorStyles.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
                                 onClick={ onAddProduct }>
                                     Agregar al carrito 
                                     <AddShoppingCartIcon sx={{ml:1}}/>
@@ -135,7 +137,7 @@ const ProductDetails=()=>{
                                 
                             </Box>
 
-                            <Chip label={`${product.stock} En Stock`} sx={{bgcolor:color.color2}}></Chip>
+                            
 
                             <Box display='flex' flexDirection='row'>
                                 <Box>
@@ -148,7 +150,7 @@ const ProductDetails=()=>{
                                     <Typography variant='h5' sx={{mt:1,fontWeight:12}}> {'$'+new Intl.NumberFormat().format(product.price)} </Typography>}                  
                                 </Box>
                                 <Box display='flex' justifyContent="end">
-                                    {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:color.color2}}/>:<></>}
+                                    {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
                                 </Box>
                             </Box>
 
@@ -177,7 +179,12 @@ const ProductDetails=()=>{
                             {divider()}
                             {typo('Color: Violeta')}
                             {divider()} */}
-                            {typo(`Stock: ${product.stock}`)}
+                            <Box sx={{display:'flex',alignItems:'center'}}> 
+                            {typo(`Stock:`)}
+                            {product.stock>0?
+                            <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>:
+                            <Chip label= {`Sin Stock`} color='error'/>}
+                            </Box>
                             {divider()}
                             <Box sx={{display:'flex',alignItems:'center'}}>
                             {typo('Valoracion: ')}
