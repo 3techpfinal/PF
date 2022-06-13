@@ -13,11 +13,6 @@ const orderSchema = new Schema({
 
     products : [],
     
-    // date : {
-    //     type : Date,
-    //     // default : Date.now()
-    // },
-
     adress : {
         type : String,
         // required : true
