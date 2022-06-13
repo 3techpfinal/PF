@@ -44,8 +44,6 @@ export const CartList = ({ editable = false,order=false,orderIsPaid=false }) => 
     
     const array=order || cart
 
-    console.log("producotsBDD",productsBDD)
-    console.log("Cart",cart)
 
     const onNewCartQuantityValue = (product, newQuantityValue) => {
         product.quantity = newQuantityValue;

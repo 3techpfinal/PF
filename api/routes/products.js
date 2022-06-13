@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Product from '../models/Product.js';
+import Review from '../models/Review.js';
 import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 
 const router = Router();
@@ -109,6 +110,17 @@ router.put('/:id',/* [verifyToken, isAdmin],*/ async (req, res, next) => {
         next(err)
     }
 
+});
+
+router.get("/:id/reviews", async (req, res, next) => {
+    
+    try {
+        const { id } = req.params;
+        const reviews = await Review.find({ product: id }).populate(["user"]); //populate para que cuando llamo a la review.user tenga todos los datos del usuario
+        res.send(reviews)
+    } catch (err) {
+        res.send([])
+    }
 });
 
 export default router;

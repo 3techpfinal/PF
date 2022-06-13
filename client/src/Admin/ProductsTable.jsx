@@ -91,7 +91,6 @@ const UsersPage = () => {
             if (willDelete) {
 
              dispatch (DELETEPRODUCT(row.id)).then((r)=>{
-                 console.log('resBackend',r)
                  if(r.payload.message==='Product successfully deleted'){
                     setRows((state)=>state.filter(e=>
                         e.id!==row.id
@@ -130,7 +129,7 @@ const UsersPage = () => {
             
             renderCell: ({ row } ) => {
                 return (
-                    <a href={ `/admin/editdproduct/${ row.id }` }  rel="noreferrer">
+                    <a href={ `/admin/editproduct/${ row.id }` }  rel="noreferrer">
                         <Typography color='black'>editar</Typography>
                     </a>
                 )

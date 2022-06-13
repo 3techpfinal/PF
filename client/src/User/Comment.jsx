@@ -38,12 +38,9 @@ export default function FormDialog({product,order,func,reviews}) { //FUNCION PRI
 
   const dispatch=useAppDispatch()
   const navegar = useNavigate()
-  console.log('order',order)
   const [value, setValue] = React.useState(0);
   const [hover, setHover] = React.useState(-1);
- console.log('product',product)
- 
-  let [postValue,SetPostValue]=React.useState({
+  const [postValue,SetPostValue]=React.useState({
     review: 0,
     productId:'',
     comment:'',
@@ -88,8 +85,6 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
     //console.log('postValue',postValue)
 
     dispatch(CREATEREVIEW(postValue)).then((r)=>{
-
-      console.log('resBackend',r)
       if(r.payload==="se guardo la calificacion"){
           setOpen(false);
           func()

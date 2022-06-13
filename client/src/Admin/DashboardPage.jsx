@@ -37,7 +37,6 @@ const DashboardPage = () => {
     
       return () => clearInterval(interval)
     }, []);
-    console.log("users",users)
 
     let lowInventory = products?.filter((p)=> p.stock<10)
     let productsWithNoInventory = products?.filter((p)=> p.stock===0)

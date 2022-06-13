@@ -71,7 +71,6 @@ useEffect(()=>{ //cargo el estado userRol con todos los valores de userRolStateM
     setUserRol(()=>userRolStatemap)
 },[usuarios])
 
-console.log("estado userRol:", userRol)
 
 const handleChangeRol=(e,row)=>{ //e es el nuevo valor 
     setUserRol((rol)=>rol.map(e=>{ //cuando hay un cambio cambia el estado

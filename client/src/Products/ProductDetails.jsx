@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Container,Box } from '@mui/system'
 import NavBar from '../Components/NavBar'
-import { Divider, Typography,Chip,Rating, IconButton,CardMedia } from '@mui/material'
+import { Divider, Typography,Chip,Rating, IconButton,CardMedia,Avatar } from '@mui/material'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -21,21 +21,22 @@ import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Loading from '../Components/Loading'
-import { GETDETAIL,GETRECOMMENDED } from '../actions';
+import { GETDETAIL,GETRECOMMENDED,GETPRODUCTREVIEWS } from '../actions';
 
 
 const ProductDetails=()=>{
 
     const dispatch=useDispatch()
     const product=useSelector((state)=>state.rootReducer.detail)
+    const productReviews=useSelector((state)=>state.rootReducer.productReviews)
     const recommended=useSelector((state)=>state.rootReducer.recommended)
     const [loaded,setLoaded]=React.useState(false)
-    const {id}=useParams()
+    const {id}=useParams() //traigo el id del producto
     const [tempCartProduct, setTempCartProduct] = useState({})
 
     React.useEffect(()=>{
         window.scrollTo(0, 0)
-        dispatch(GETDETAIL(id)).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
+        dispatch(GETDETAIL(id)).then(()=>dispatch(GETPRODUCTREVIEWS(id))).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
 
     },[dispatch,id])
 
@@ -170,12 +171,12 @@ const ProductDetails=()=>{
 
                     <Box sx={{flexDirection:'column',p:0}}>
                         <Box sx={{m:1,border:'1px solid lightgray',borderRadius:5}}>
-                            {typo('Marca: Apple')}
+                            {/* {typo('Marca: Apple')}
                             {divider()}
                             {typo('Modelo: 11')}
                             {divider()}
                             {typo('Color: Violeta')}
-                            {divider()}
+                            {divider()} */}
                             {typo(`Stock: ${product.stock}`)}
                             {divider()}
                             <Box sx={{display:'flex',alignItems:'center'}}>
@@ -187,6 +188,40 @@ const ProductDetails=()=>{
                     </Box>
                 </Box>
             </Box>
+
+            <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
+                <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Valoraciones</Typography>
+                {divider()}
+
+                
+                 <Container component="div" sx={{ overflow: 'auto',mb:2,maxHeight:400 }}>{/* VALORACIONES */}
+                    {productReviews?.map((productReview)=>(
+                        <Box display='flex' sx={{flexDirection:'column'}}>
+                            <Box display='flex' flexDirection='column' alignItems='flex-start' justifyContent='center'>
+                                <Box sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                                    <Avatar src={productReview.user.avatar} alt={productReview.user.email}/>
+                                    <Typography ml={1}>{productReview.user.email}</Typography>
+                                </Box>
+                                <Box display='flex' mt={1}>
+                                    <Rating  readOnly defaultValue={productReview.review}/>
+                                </Box>
+                                
+                                
+                            </Box>
+                            <Box mb={1}>
+                                <Typography variant='body1' sx={{mt:2,maxHeight:200}}>"{productReview.comment}"</Typography>    
+                            </Box>
+                        <Divider sx={{marginX:3,marginY:3}}/>
+                        </Box>
+                
+                    ))
+                    }
+               </Container>
+                
+
+            </Box>
+
+
             <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
                 <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Productos Relacionados</Typography>
                 {divider()}

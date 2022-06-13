@@ -16,7 +16,7 @@ import OrderByPrice from '../Components/OrderByPrice'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 
-const categories=['https://res.cloudinary.com/dnlooxokf/image/upload/v1654579315/images/jwupcxolofvkyfzrdvin.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579317/images/qgizpdigf71farfs88ae.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579317/images/wgwbatmjliclmqek0k5r.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/gstne4ffczw3e6zql5mh.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/x35mc8bzxto8bf4mkclm.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/s6wjxqzsxwcrvzua1oun.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579319/images/ho68csnn5muuhecl33kj.png','https://cdn.forbes.pe/2022/05/CELULARES.jpg','https://www.lifeder.com/wp-content/uploads/2016/11/video-juegos-1.jpg']
+const categories=['https://res.cloudinary.com/dnlooxokf/image/upload/v1654579315/images/jwupcxolofvkyfzrdvin.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579317/images/qgizpdigf71farfs88ae.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579317/images/wgwbatmjliclmqek0k5r.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/gstne4ffczw3e6zql5mh.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/x35mc8bzxto8bf4mkclm.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/s6wjxqzsxwcrvzua1oun.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579319/images/ho68csnn5muuhecl33kj.png']
 //const categories=['https://i.pinimg.com/originals/9f/5d/34/9f5d34242941aa388fc3ec559501543c.gif']
 const Landing=()=>{
 
@@ -37,7 +37,7 @@ const Landing=()=>{
                 var ref=products[0]?.category.name
                 setNameCatg(ref)
                 products.forEach((e)=>{
-                    if(e.category?.name!==ref){  setNameCatg(inicial)}
+                    if(e?.category?.name!==ref){  setNameCatg(inicial)}
                 })
             }
     },[products])
@@ -57,15 +57,16 @@ const Landing=()=>{
                         delay: 2500,
                         disableOnInteraction: true,
                       }}
+                    loop
                 >
                     {categories.map(e=>
                         <SwiperSlide key={e._id}>
                             <CardMedia
                             component="img"
-                            height="400"
+                            height="auto"
                             image={e}
                             alt="gf"
-                            sx={{objectFit:'cover'}}
+                            sx={{objectFit:'contain'}}
                             key={e._id}
                             />
                         </SwiperSlide>)

@@ -49,7 +49,7 @@ function App() {
           {/* <Route path='/' element={<><SearchInput /> <FilterByCategory />  <Btn href={"/contact"} text={"Contact Us!"} />  <Btn href={"/login"} text={"Login"} /> </>} /> */}
           <Route path='/' element={<Landing/>} />
           <Route path='/admin/uploadproduct' element={<UploadProduct/>}/>
-          <Route path='/admin/editdproduct/:id' element={<EditProduct/>}/>
+          <Route path='/admin/editproduct/:id' element={<EditProduct/>}/>
           <Route path='/product/:id' element={<ProductDetails/>}/>
           <Route path='/profile' element={<Profile/>}/>
           <Route path='/cart' element={<Cart/>}/>

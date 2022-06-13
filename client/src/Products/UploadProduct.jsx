@@ -91,7 +91,7 @@ export default function CrearPublicacion() {
 
    // else if(ev.target.name==='precio' && ev.target.value>-1 && (/\d/.test(ev.target.value))||( ev.target.name==='precio' && ev.target.value==='.') ){
     else if ((ev.target.name==='precio' )&& ((/\d/.test(ev.target.value)) || (ev.target.value==='')) ) {  
-      console.log("precio:", typeof ev.target.value)
+      
       setInput((input)=>({...input,price:(parseFloat(ev.target.value))}))
     }
 
@@ -128,7 +128,6 @@ export default function CrearPublicacion() {
       
           const newPost={...input,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
           dispatch(CREATEPRODUCT(newPost)).then(async(r)=>{
-            console.log('resBackend',r)
             dispatch(GETPRODUCTS())
             if(r.meta.requestStatus==="fulfilled"){
               await swal({
@@ -210,16 +209,17 @@ export default function CrearPublicacion() {
             <TextField multiline rows={10} id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
             onChange={(e)=>validate(e)}/>
 
+              <Box sx={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
                 <Button
                     color="secondary"
                     fullWidth
                     startIcon={ <UploadOutlined /> }
-                   
-                    
                     onClick={ () => fileInputRef.current?.click() }
                 >
                     Cargar imagen
                 </Button>
+              </Box>
+
 
             
             
@@ -271,11 +271,13 @@ export default function CrearPublicacion() {
                 </Swiper>
               </Container>
               {upLoading && <p>Subiendo Foto...</p> }
-              <Typography display='flex' justifyContent='center'>subiste {images.length} fotos</Typography>
 
-             <div>
-            <Button fullWidth sx={{ mb: 3 }} disabled={input.name===""||input.category==="Select"?true:false||input.description===""||input.priceOriginal===""}  width="100%" type="submit" onClick={(e) => handleSubmit(e)}>Crear Pubicación</Button>
-            </div>   
+              
+
+            <Box sx={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
+              <Typography display='flex' justifyContent='center'>subiste {images.length} fotos</Typography>
+              <Button fullWidth sx={{ mb: 3 }} disabled={input.name===""||input.category==="Select"?true:false||input.description===""||input.priceOriginal===""}  width="100%" type="submit" onClick={(e) => handleSubmit(e)}>Crear Pubicación</Button>
+            </Box>   
 
           </Box>
 

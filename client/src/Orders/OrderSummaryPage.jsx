@@ -22,7 +22,6 @@ export default function SummaryPage(){ // esta es la funcion principal
     const { cart,total,removeAllCartProduct } = useContext(CartContext);
 
     useEffect(()=>{ //si el carrito esta vacio no puede entrar a esta pagina
-        console.log(user)
         setUser(()=>Cookie.get('user')&&JSON.parse(Cookie.get('user')))
         if(!JSON.parse(Cookie.get('cart'))[0])navigate('/') //para refrescar la pagina, si esta vacio navega al home
     },[])

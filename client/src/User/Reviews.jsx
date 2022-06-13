@@ -19,12 +19,10 @@ const ProductsUserTable = () => {
     
     const dispatch=useAppDispatch()
     const navigate= useNavigate()
- 
-
-    
 
     const orders=useSelector((State) => State.rootReducer.orders);
     const reviews=useSelector((State) => State.rootReducer.reviews);
+
     const [rows,setRows]=useState([])
     const [refreshRows,setRefreshRows]=useState(false)
      console.log('reviews',reviews)
@@ -41,10 +39,13 @@ const ProductsUserTable = () => {
           date:e.creationDate||'no hay'
       })))*/
 
-    useEffect(()=>{ //una vez que llegan las ordenes se llenana las rows
-        const setRowsVariable=orders.filter(order=>order.isPaid===true).map((order)=>( //tomo solo ordenes pagas
-            order.products.map((product)=>({
+      useEffect(()=>{ //una vez que llegan las ordenes se llenana las rows
+        const setRowsVariable=[]
+        
+        orders.filter(order=>order.isPaid===true).map((order)=>( //tomo solo ordenes pagas
+            order.products.forEach((product)=>setRowsVariable.push({
                 id: product._id.concat(order._id), //genero un id unico para el grid
+                productId: product._id,
                 order:order,
                 name:product.name,
                 price: `$${product.price}`,
@@ -54,10 +55,15 @@ const ProductsUserTable = () => {
                 usuario:order.user,
                 producto:product,
                 hasReview:product?.hasReview||0
-           // status:product.isActive? 'Activo':'No disponible'
-        }))))
+            // status:product.isActive? 'Activo':'No disponible'
+             }))
+            
+        )
+        )
         console.log('setRowsVariable',setRowsVariable)
-        setRows(()=>setRowsVariable[0]||[])
+        setRows(()=>setRowsVariable||[])
+
+        
     },[orders])
     console.log('filas,de  ordenes pagas y sus productos',rows)
 
@@ -71,7 +77,7 @@ const ProductsUserTable = () => {
         setProductState(()=>productosReviewArray)
     },[orders])
 
-
+   
     const handleChange=(e,row)=>{ //funcion que maneja el estado del producto
     
 
@@ -83,7 +89,7 @@ const ProductsUserTable = () => {
             headerName: 'Foto',
             renderCell: ({ row } ) => {
                 return (
-                    <a href={ `/product/${ row.id }` } target="_blank" rel="noreferrer">
+                    <a href={ `/product/${ row.productId }` }  rel="noreferrer">
                         <CardMedia 
                             component='img'
                             alt=""
@@ -135,18 +141,14 @@ const ProductsUserTable = () => {
 
 
     <Grid container className='fadeIn'>
-
-                <Grid item xs={12} sx={{ height:900, width: 40000 }}>
-                 
-                    <DataGrid 
-                        rows={ rows }
-                        columns={ columns }
-                        pageSize={ 20 }
-                        rowsPerPageOptions={ [30] }
-                        
-                    /> 
-                </Grid>
-               
+        <Grid item xs={12} sx={{ height:900, width: 40000 }}>
+            <DataGrid 
+                rows={ rows }
+                columns={ columns }
+                pageSize={ 20 }
+                rowsPerPageOptions={ [30] }
+            /> 
+        </Grid>          
     </Grid>
 
 

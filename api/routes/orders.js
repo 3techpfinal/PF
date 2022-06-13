@@ -70,7 +70,6 @@ router.post('/', verifyToken, async (req, res, next) => { //crear orden
         {$push: {"orders": newOrder._id}},
         {upsert: true, new : true})
 
-    console.log(updatedUser)
     
     return res.send(newOrder)
         
@@ -146,21 +145,6 @@ router.post('/pay',verifyToken, async(req, res) => {
     
     }
 
-     function verificarSiHayStock (order,productsBDD){
-        let verificacion = true
-        order?.products.map((product)=>{
-            productsBDD?.map((productBDD)=>{
-                if(product._id===productBDD._id){
-                    if(product.stock<productBDD.stock){
-                        verificacion=false
-                    }
-                }
-            })
-        })
-        return verificacion
-    }
-
-
     const paypalBearerToken = await getPaypalBearerToken();
 
     if ( !paypalBearerToken ) {
@@ -183,7 +167,7 @@ router.post('/pay',verifyToken, async(req, res) => {
 
     //-+await db.connect();
     const dbOrder = await Order.findById(orderId);
-    const allProducts = await Product.find({}).populate(["category"]);
+    //const allProducts = await Product.find({}).populate(["category"]);
     if ( !dbOrder ) {
         //await db.disconnect();
         return res.status(400).json({ message: 'Orden no existe en nuestra base de datos' });
@@ -195,37 +179,29 @@ router.post('/pay',verifyToken, async(req, res) => {
         return res.status(400).json({ message: 'Los montos de PayPal y nuestra orden no son iguales' });
     }
 
-
-    dbOrder.products.map(async(product)=>{
-        const productBDD = await Product.findById({ _id: product._id });
-        Product.findByIdAndUpdate({ _id: product._id }, {amountOfSales: productBDD.amountOfSales+product.quantity });
-    })
-
-
-
-
-    /* if(verificarSiHayStock(dbOrder,allProducts)===false){
-        return res.status(400).json({ message: 'uno de los productos no tiene stock' });
-    }*/
-
-    /*dbOrder.products.forEach(async (product)=>{
+    dbOrder.products.forEach(async (product,i)=>{
         const thisProduct=await Product.findById(product._id)
-        console.log('thisProduct',thisProduct)
-        console.log('quantity',product.quantity)
-        console.log('if',thisProduct.stock<product.quantity)
-        if(thisProduct.stock<product.quantity){return res.status(400).json({message:'No hay stock suficiente'})}
+        if(thisProduct.stock<product.quantity){ 
+            return res.status(200).json({ message: `No hay stock suficiente de ${product.name.length>25?product.name.slice(0,25)+'...':product.name}` });
+        }
         else{
             await Product.findByIdAndUpdate(product._id,{stock:(thisProduct.stock-product.quantity)})
-        }
-    })*/
+            if(!product[i+1]){
+                dbOrder.paymentId = transactionId;
+                // dbOrder.products.forEach(async(product)=>{
+                //     await Product.findByIdAndUpdate({ _id: product._id }, {amountOfSales: thisProduct.amountOfSales+product.quantity });
+                // })         
+                dbOrder.isPaid = true;
+                await dbOrder.save();
+                // await db.disconnect();
 
-    dbOrder.paymentId = transactionId;
-    dbOrder.isPaid = true;
-    await dbOrder.save();
-   // await db.disconnect();
+                
+                return res.status(200).json({ message: "Orden pagada con éxito" });
+            }
+        }
+    })
 
     
-    return res.status(200).json({ message: "Orden pagada con éxito" });
 })
 
 export default router;

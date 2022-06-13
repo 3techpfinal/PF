@@ -44,7 +44,7 @@ useEffect(()=>{
 
 
   const fileInputRef=useRef(null) //para esconder el boton feo de input
-  const fileInputRef2=useRef(null) //para esconder el boton feo de input
+  //const fileInputRef2=useRef(null) //para esconder el boton feo de input
 
 
   const categories=useSelector((state)=>state.rootReducer.categories)
@@ -52,9 +52,6 @@ useEffect(()=>{
   const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
-
-  console.log('productos',product)
-  console.log('input',input)
 
 
   useEffect(()=>(setInput({
@@ -90,7 +87,7 @@ useEffect(()=>{
       })
         .then((res)=>res.json())
         .then((res)=> {
-          setInput({imageProduct:[...input.imageProduct,res.url]});
+          setInput((prev=>({...prev,imageProduct:prev.imageProduct.concat(res.url)})));
           setUpLoading(false);
         })
         .catch(error=>console.log(error));
@@ -108,7 +105,7 @@ useEffect(()=>{
   //     }
   // });
   
-  setInput(input.imageProduct.filter(element=>element!==image))//deja afuera el elemento que tenga la url a eliminar
+  setInput((prevInp)=>({...prevInp,imageProduct:prevInp.imageProduct.filter(e=>e!==image)}))//deja afuera el elemento que tenga la url a eliminar
 
   }
 
@@ -121,7 +118,7 @@ useEffect(()=>{
 
    // else if(ev.target.name==='precio' && ev.target.value>-1 && (/\d/.test(ev.target.value))||( ev.target.name==='precio' && ev.target.value==='.') ){
     else if ((ev.target.name==='precio' )&& ((/\d/.test(ev.target.value)) || (ev.target.value==='')) ) {  
-      console.log("precio:", typeof ev.target.value)
+      
       setInput((input)=>({...input,price:(ev.target.value)}))
     }
 
@@ -158,7 +155,6 @@ useEffect(()=>{
       
           const newPost={...input,imageProduct:input.imageProduct[0]?input.imageProduct:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
           dispatch(MODIFYPRODUCT(newPost)).then(async(r)=>{
-            console.log('resBackend',r)
             dispatch(GETPRODUCTS())
             if(r.meta.requestStatus==="fulfilled"){
               await swal({
@@ -256,7 +252,7 @@ useEffect(()=>{
 
               <Box display='flex' flexDirection='row' justifyContent='center' width={10}  >
               
-              
+              <Container>
               <Swiper
                       modules={[Navigation, Pagination, A11y]}
                       spaceBetween={20}
@@ -266,52 +262,51 @@ useEffect(()=>{
                      // pagination={{ clickable: true }}
                     >
                   {input.imageProduct?.map(image=>( 
-              <>
-                    <SwiperSlide>
-                      <Link target="_blank" href={image}>
-                      <CardMedia
-                        Autoplay='false' 
-                        component="img"
-                        height="250"
-                        image={image}
-                        alt="gf"
-                        sx={{objectFit:'contain'}}
-                      />
-                      </Link>
-                    
-                      <Box display='flex' ref={ fileInputRef2 } justifyContent='center' sx={{ zIndex: 'tooltip', display:'none' }} onClick={(e)=>{handleDelete(e,image)}}  >
-                        <Button  color = 'error' >Borrar</Button>
-                      </Box>
+                  <Container>
 
-                      <Box display='flex'   justifyContent='center' sx={{ zIndex: 'tooltip' }} onClick={ () => fileInputRef2.current?.click()} >
-                       <Button  color = 'error' >Borrar</Button>
-                      </Box>
+                  <SwiperSlide>
+                    <Link target="_blank" href={image}>
+                    <CardMedia
+                      Autoplay='false' 
+                      component="img"
+                      height="250"
+                      image={image}
+                      alt="gf"
+                      sx={{objectFit:'contain' }}
 
-                    </SwiperSlide>
+                    />
+                    </Link>
+                  
+                    <Box display='flex' justifyContent='center' onClick={(e)=>handleDelete(e,image)}>
+                      <Button  color = 'error' >Borrar</Button>
+                    </Box>
 
-                               </>
+                  </SwiperSlide>
+                 
+                 </Container>
+                              
                    ))}
               
                 </Swiper>
-                  
+                </Container>
               </Box>
               {upLoading && <p>Subiendo Foto...</p> }
 
-              <Box dispay='flex' justifyContent='center'>
+              <Box display='flex' justifyContent='center'>
                 <Typography display='flex' justifyContent='center'>subiste {input?.imageProduct?.length} fotos</Typography>
               </Box>
 
-             <Box  dispay='flex' justifyContent='right' flexDirection='row'>
-              <Button   disabled={(input.name===product.name &&
-                input.category===product.category &&
-                input.description===product.description && 
-                input.imageProduct===product.imageProduct&& 
-                (input.priceOriginal==product.priceOriginal))&&
-                (input.price==product.price)&&
-                (input.stock==product.stock)
+             <Box  display='flex' flexDirection='row' justifyContent='center'>
+              <Button   disabled={input.name===product.name &&
+                 input.category===product.category &&
+                 input.description===product.description && 
+                 input.imageProduct===product.imageProduct&& 
+                 parseFloat(input.priceOriginal)===(product.priceOriginal)&&
+                 parseFloat(input.price)===product.price&&
+                 parseInt(input.stock)===product.stock
               }  
-                type="submit" onClick={(e) => handleSubmit(e)}>Guardar</Button>
-              <Button >Cancelar</Button>
+                type="submit" onClick={(e) =>{handleSubmit(e)}}>Guardar</Button>
+              <Button onClick={()=>navegar("/")}>Cancelar</Button>
              </Box>   
 
       </Box>

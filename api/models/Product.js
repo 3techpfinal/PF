@@ -68,7 +68,9 @@ const productSchema = new Schema({
 
     creationDate: {
         type: String
-    }
+    },
+
+
 
 })
 

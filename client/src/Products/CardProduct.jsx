@@ -82,7 +82,7 @@ export default function ProductCard({product}) {
 
 
   return (
-    <Card sx={{ width: 250,mt:5 }}
+    <Card sx={{ width: {xs:200,sm:250},mt:5 }}
     onMouseEnter={()=> setIsHovered(true)}
     onMouseLeave={()=> setIsHovered(false)}
     >
