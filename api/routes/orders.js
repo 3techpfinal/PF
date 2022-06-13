@@ -1,8 +1,9 @@
 import { Router } from "express";
 import Order from "../models/Order.js";
 import Product from "../models/Product.js";
-import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 import User from "../models/User.js";
+import  { orderReceipt } from '../controllers/sendMailer.js';
+import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 import axios from 'axios';
 const router = Router()
 
@@ -56,6 +57,7 @@ router.post('/', verifyToken, async (req, res, next) => {
 
     console.log(updatedUser)
     
+    // aca enviar mail de que se creó la orden - hace falta?
     return res.send(newOrder)
         
     } catch (err) {
@@ -92,7 +94,7 @@ router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
 
 
 
-router.post('/pay',async(req, res) => {
+router.post('/pay', verifyToken, async(req, res) => {
 
     // Todo: validar sesión del usuario
     // TODO: validar mongoID
@@ -178,8 +180,12 @@ router.post('/pay',async(req, res) => {
     await dbOrder.save();
    // await db.disconnect();
 
+    //mail de la orden pagada 
+    const buyer = await User.findById(req.userId)
+    orderReceipt(dbOrder, buyer);
     
-     res.status(200).json({ message: "Orden pagada con éxito" });
-})
+    res.status(200).json({ message: "Orden pagada con éxito" });
+});
+
 
 export default router;
