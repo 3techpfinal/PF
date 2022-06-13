@@ -170,12 +170,12 @@ const ProductDetails=()=>{
 
                     <Box sx={{flexDirection:'column',p:0}}>
                         <Box sx={{m:1,border:'1px solid lightgray',borderRadius:5}}>
-                            {typo('Marca: Apple')}
+                            {/* {typo('Marca: Apple')}
                             {divider()}
                             {typo('Modelo: 11')}
                             {divider()}
                             {typo('Color: Violeta')}
-                            {divider()}
+                            {divider()} */}
                             {typo(`Stock: ${product.stock}`)}
                             {divider()}
                             <Box sx={{display:'flex',alignItems:'center'}}>

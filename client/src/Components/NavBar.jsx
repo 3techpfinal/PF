@@ -1,23 +1,17 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import {Button} from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-
-import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
-import { NavLink,Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import { NavLink,Link, useNavigate } from 'react-router-dom';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import color from '../styles'
 import SearchBar from './SearchBar'
@@ -26,21 +20,17 @@ import { Container } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import { GETPRODUCTS,SEARCHBYCATEGORY,VERIFYADMIN } from '../actions';
 import CartContext from '../Cart/CartContext'
-import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
-import {StarTwoToneIcon} from '@mui/icons-material/StarTwoTone';
-import {StarBorderPurple500TwoToneIcon} from '@mui/icons-material/StarBorderPurple500TwoTone';
+import { AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
 import StarIcon from '@mui/icons-material/Star';
 import axios from 'axios'
-import { Box, Divider, Drawer, IconButton,CardMedia, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
+import { Box, Divider, IconButton, ListItem, ListItemIcon, ListItemText,CardMedia } from "@mui/material"
 import { useAuth0 } from "@auth0/auth0-react";
-import { SEARCHBYNAMEPRODUCTS,LOGIN } from '../actions';
+import { SEARCHBYNAMEPRODUCTS } from '../actions';
 import {CartList} from '../Cart/CartList'
 import Cookie from 'js-cookie'
 import {api} from '../actions'
-import { cartReducer } from '../Cart/cartReducer';
-import { Dropdown } from 'rsuite';
 
-
+const logo=require('./3TECH.png')
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
@@ -253,17 +243,14 @@ export default function PrimarySearchAppBar() {
               <StyledToolbar sx={{justifyContent:'space-between',alignItems:'center',height:30,mt:1}}>
                 
                 <Box>
-                  <Typography
-                    variant="h6"
-                    noWrap
-                    component="div"
-                    sx={{ display: { xs:'block',textDecoration:'none' } }}
-                    onClick={()=>dispatch(GETPRODUCTS())}
-                  >
                     <Link to='/'>
-                    3TECH
+                      <CardMedia 
+                        image={logo}
+                        component='img'
+                        sx={{width: 100, height: 80, objectFit:'contain'}}
+                        onClick={()=>dispatch(GETPRODUCTS())}
+                        />                          
                     </Link>
-                  </Typography>
                 </Box>
 
                 <Box display='flex' flexDirection='row'>

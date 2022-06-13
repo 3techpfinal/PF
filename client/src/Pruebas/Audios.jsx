@@ -14,7 +14,6 @@ export default function Sound( {reproducir}) {
           :
           audio.loop = false
 }
-{console.log("reproducir",reproducir) }
       
       {/* <button
         onClick={() => {

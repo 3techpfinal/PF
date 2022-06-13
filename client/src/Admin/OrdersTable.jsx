@@ -64,7 +64,6 @@ const UsersPage = () => {
             if (willDelete) {
 
              dispatch (DELETEORDER(row.id)).then((r)=>{
-                 console.log('resBackend',r)
                  if(r.payload.message==='Order successfully deleted'){
                     setRows((state)=>state.filter(e=>
                         e.id!==row.id
@@ -82,7 +81,6 @@ const UsersPage = () => {
 
 
 
-    console.log("orders",orders)
     const columns = [
         { field: 'name', headerName: 'Usuario', width: 250 },
         { field: 'email', headerName: 'email', width: 250 },

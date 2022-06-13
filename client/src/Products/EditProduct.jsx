@@ -53,9 +53,6 @@ useEffect(()=>{
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
 
-  console.log('productos',product)
-  console.log('input',input)
-
 
   useEffect(()=>(setInput({
     _id: product._id,
@@ -121,7 +118,7 @@ useEffect(()=>{
 
    // else if(ev.target.name==='precio' && ev.target.value>-1 && (/\d/.test(ev.target.value))||( ev.target.name==='precio' && ev.target.value==='.') ){
     else if ((ev.target.name==='precio' )&& ((/\d/.test(ev.target.value)) || (ev.target.value==='')) ) {  
-      console.log("precio:", typeof ev.target.value)
+      
       setInput((input)=>({...input,price:(ev.target.value)}))
     }
 
@@ -158,7 +155,6 @@ useEffect(()=>{
       
           const newPost={...input,imageProduct:input.imageProduct[0]?input.imageProduct:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
           dispatch(MODIFYPRODUCT(newPost)).then(async(r)=>{
-            console.log('resBackend',r)
             dispatch(GETPRODUCTS())
             if(r.meta.requestStatus==="fulfilled"){
               await swal({

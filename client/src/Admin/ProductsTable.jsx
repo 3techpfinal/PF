@@ -90,7 +90,6 @@ const UsersPage = () => {
             if (willDelete) {
 
              dispatch (DELETEPRODUCT(row.id)).then((r)=>{
-                 console.log('resBackend',r)
                  if(r.payload.message==='Product successfully deleted'){
                     setRows((state)=>state.filter(e=>
                         e.id!==row.id

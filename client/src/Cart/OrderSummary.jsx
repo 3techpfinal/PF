@@ -24,7 +24,6 @@ export const OrderSummary = () => {
             setArray(()=>cart)
         }
     },[order])
-    console.log(order)
     // const items=order?order.products.length:numberOfItems
     // const amount=order?order.totalPrice:total
   return (
@@ -49,7 +48,7 @@ export const OrderSummary = () => {
 
 
           
-            <Typography  variant="subtitle1">{ `$ ${array[0]?.totalPrice||total}` }</Typography>
+            <Typography  variant="subtitle1">{ `$ ${new Intl.NumberFormat().format(array[0]?.totalPrice||total)}` }</Typography>
           
         </Grid>
 

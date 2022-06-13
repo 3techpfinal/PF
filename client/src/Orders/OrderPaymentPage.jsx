@@ -47,7 +47,6 @@ const OrderPage=()=>{
 
     const order=useSelector((State) => State.rootReducer.order);
     const products=useSelector((State) => State.rootReducer.products);
-    console.log("order",order)
     const [isPaid,setIsPaid]=useState(order.isPaid?true:false)
     const [isPaid2,setIsPaid2]=useState(false)
 
@@ -73,9 +72,9 @@ const OrderPage=()=>{
     }
 
 
-        useEffect(()=>{
+    useEffect(()=>{
             order.isPaid && setIsPaid(()=>true)
-        },[order])
+    },[order])
 
         
         const onOrderCompleted = async( details ) => { //Funcion de verificar la COMPRA
@@ -84,17 +83,17 @@ const OrderPage=()=>{
             return alert('No hay pago en Paypal');
         }
 
-        await dispatch(GETPRODUCTS())
-        let arrayVerificacion = verificarSihayStock(order,products)
-        console.log("verificarStockFront",arrayVerificacion)
-        if(!arrayVerificacion[0]){                    
-            return swal({
-                title:"Error!!",
-                text:`Uno de los productos no tiene stock`,
-                icon:"error",
-                button:"Aceptar"
-            })
-        }
+        // await dispatch(GETPRODUCTS())
+        // let arrayVerificacion = verificarSihayStock(order,products)
+        // console.log("verificarStockFront",arrayVerificacion)
+        // if(!arrayVerificacion[0]){                    
+        //     return swal({
+        //         title:"Error!!",
+        //         text:`Uno de los productos no tiene stock`,
+        //         icon:"error",
+        //         button:"Aceptar"
+        //     })
+        // }
 
         // order.products.forEach(async (product:any)=>{
         //     await producto(product._id)
@@ -106,11 +105,9 @@ const OrderPage=()=>{
         //setIsPaying(true);
     
         try { //realizo el pago
-            console.log("verifico idOrden:", order._id)
         
             dispatch1(PAYORDER({transactionId: details.id, orderId: order._id})).then((r)=>{
-                console.log('resBackend',r)
-                if(r.payload.message==='Orden pagada con éxito'){
+                if(r.payload?.message==='Orden pagada con éxito'){
                     setIsPaid(()=>true)
                     setIsPaid2(()=>true)
                     
@@ -121,12 +118,19 @@ const OrderPage=()=>{
                         button:"Aceptar"
                     }).then(() =>  setIsPaid2(()=>false))
                 }
+                else{
+                    swal({
+                        title:`${r.payload?.message}`,
+                        text:"Pago no realizado",
+                        icon:"error",
+                        button:"Aceptar"
+                    })
+                }
                
             })
     
         } catch (error) {
             //setIsPaying(false);
-            console.log(error);
             swal({
                 title:"Hubo un problema con el pago!!",
                 text:"pago no realizado",
@@ -229,8 +233,6 @@ const OrderPage=()=>{
                             <OrderSummary/>
 
                             <Box sx={{mt:3}}>
-                             { console.log("actual",actualUser)}
-                                { console.log("user",order)}
 
 
 {

@@ -91,7 +91,7 @@ export default function CrearPublicacion() {
 
    // else if(ev.target.name==='precio' && ev.target.value>-1 && (/\d/.test(ev.target.value))||( ev.target.name==='precio' && ev.target.value==='.') ){
     else if ((ev.target.name==='precio' )&& ((/\d/.test(ev.target.value)) || (ev.target.value==='')) ) {  
-      console.log("precio:", typeof ev.target.value)
+      
       setInput((input)=>({...input,price:(parseFloat(ev.target.value))}))
     }
 
@@ -128,7 +128,6 @@ export default function CrearPublicacion() {
       
           const newPost={...input,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
           dispatch(CREATEPRODUCT(newPost)).then(async(r)=>{
-            console.log('resBackend',r)
             dispatch(GETPRODUCTS())
             if(r.meta.requestStatus==="fulfilled"){
               await swal({

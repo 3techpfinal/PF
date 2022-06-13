@@ -23,7 +23,6 @@ const Profile=()=>{
     const dispatch=useDispatch()
     const [field,setField]=useState({})
     const user=Cookie.get('user') && JSON.parse(Cookie.get('user'))
-    console.log(user)
     React.useEffect(()=>{
         setField({
              _id:user?._id,

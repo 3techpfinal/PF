@@ -55,7 +55,6 @@ const ProductsUserTable = () => {
         setRows(()=>setRowsVariable)
     },[orders])
 
-    console.log('filas,de  ordenes pagas y sus productos',rows)
 
     const productosReviewArray=orders.products?.map(product=>( //esto es para cargar el estado productState
         {//id:product._id,

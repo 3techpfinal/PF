@@ -69,7 +69,6 @@ export const GETRECOMMENDED=createAsyncThunk('GETRECOMMENDED',async (id)=>{
 })
 
 export const MODIFYPRODUCT=createAsyncThunk('MODIFYPRODUCT',async (input)=>{
-    console.log("inpu",input)
     const token=Cookie.get('token')
     const product=await axios.put(`${api}/products/${input._id}`,input,{headers:{
       'x-access-token':`${token}`
@@ -179,7 +178,7 @@ export const CREATEORDER=createAsyncThunk('CREATEORDER',async (data)=>{
   
   export const PAYORDER=createAsyncThunk('PAYORDER',async (data)=>{
     const token=Cookie.get('token')
-    const result=await axios.post(`${api}/orders/pay`,data,{
+    var result=await axios.post(`${api}/orders/pay`,data,{
         headers:{
             'x-access-token':token
         }})
