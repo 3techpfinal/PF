@@ -20,13 +20,15 @@ import { useNavigate } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import  CartContext from '../Cart/CartContext';
+import { ADDTOWISHLIST,DELETEFROMWISHLIST,GETWISHLIST } from '../actions';
+import { useDispatch, useSelector } from 'react-redux';
 
 
-export default function ProductCard({product}) {
+export default function ProductCard({product,wishlist,setWishList}) {
   const [isHovered, setIsHovered] = useState (false);
   const [colorHeart, setColorHeart] = useState ("black");
   const navigate=useNavigate()
-
+  const dispatch=useDispatch()
     const productImage = useMemo(()=>{
         return product?.imageProduct[1]?
         isHovered?
@@ -36,7 +38,14 @@ export default function ProductCard({product}) {
          
     },[isHovered,product.imageProduct])
 
-
+    React.useEffect(()=>{
+      console.log('hola',wishlist)
+      if(wishlist?.includes(product))setColorHeart(()=>'red')
+          else{
+            setColorHeart(()=>'black')
+          }
+        
+    },[wishlist])
     const { addProductToCart,cart} = useContext( CartContext )
 
     const [tempCartProduct, setTempCartProduct] = useState({
@@ -63,7 +72,17 @@ export default function ProductCard({product}) {
     }
 
     const addToWishList = () => { 
-      colorHeart==="black"?setColorHeart("red"):setColorHeart("black")
+      if(colorHeart==="black"){
+        setColorHeart("red")
+        setWishList((old)=>[...old,product])
+        dispatch(ADDTOWISHLIST({productId:product._id}))
+      }
+      else{
+        setColorHeart("black")
+        setWishList((old)=>old.filter(e=>e!==product))
+        dispatch(DELETEFROMWISHLIST({productId:product._id}))
+      }
+      
     }
 
 

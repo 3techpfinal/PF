@@ -26,15 +26,15 @@ import UserTable from './Admin/UsersTable'
 /// user ////
 import Profile from './Pages/Profile'
 import PasswordChange from './Pages/PasswordChange'
-import WishList from './Components/ListComponents'
 import Review from './User/Reviews'
 
 
-/// payment ////
+/// payment & orders ////
 import Cart from './Cart/CartPage.jsx'
 import OrdersTable from './Admin/OrdersTable'
 import OrderSummary from './Orders/OrderSummaryPage'
 import OrderPayment from './Orders/OrderPaymentPage'
+import EditOrder from './Orders/EditOrder'
 
 //////////////////////////////// RUTAS FIN ///////////////////////////////////////
 
@@ -60,7 +60,7 @@ function App() {
           <Route path='/passwordchange' element={<PasswordChange/>}/>
           <Route path='/ordersummary' element={<OrderSummary/>}/>
           <Route path='/orderpayment/:id' element={<OrderPayment/>}/>
-          <Route path='/wishlist' element={<WishList/>}/>
+          <Route path='/orderedit/:id' element={<EditOrder/>}/>
           <Route path='/prueba' element={<Prueba/>}/>
           <Route path='/user/reviews' element={<Review/>}/>
         </Routes>

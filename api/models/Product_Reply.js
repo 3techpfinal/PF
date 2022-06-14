@@ -3,7 +3,7 @@ const { Schema, model } = pkg;
 import { format } from 'date-fns';
 
 const productReplySchema = new Schema({
-    body: {
+    comment: {
         type: String,
     },
 
@@ -12,9 +12,17 @@ const productReplySchema = new Schema({
         ref: 'Product'
     },
 
+    productName: {
+        type: String,
+    },
+
     user: {
         type: Schema.Types.ObjectId,
         ref: 'User'
+    },
+
+    userEmail: {
+        type: String,
     },
 
     creationDate: {

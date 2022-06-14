@@ -39,7 +39,8 @@ const UsersPage = () => {
             estado: product.isActive,
             date:product.date||"sin fecha en BDD",
             rating:product.rating? product.rating : "no tiene rating",
-            salesQuantity: calcularCantidadDeVentasDeUnProducto(orders,product)
+            salesQuantity: calcularCantidadDeVentasDeUnProducto(orders,product),
+            salesQuantity2: product.amountOfSales
         })))
     },[products])
 
@@ -141,7 +142,8 @@ const UsersPage = () => {
         { field: 'rating', headerName: 'calificacion de usuarios', width: 250 },
         { field: 'price', headerName: 'Precio ($)', width: 250 },
         { field: 'stock', headerName: 'En stock', width: 250 },
-        { field: 'salesQuantity', headerName: 'Cantidad de ventas totales', width: 250 },
+        { field: 'salesQuantity', headerName: 'Cantidad de ventas M1', width: 250 },
+        { field: 'salesQuantity2', headerName: 'Cantidad de ventas M2', width: 250 },
         { field: 'status', 
             headerName: 'Estado', 
             width: 300,

@@ -15,7 +15,10 @@ const initialState = {
   user:[],
   reviews:[],
   review:[],
-  productReviews:[]
+  productReviews:[],
+  wishList:[],
+  questions:[],
+  answers:[]
 }
 
 
@@ -87,9 +90,7 @@ const rootReducer = createReducer(initialState, (builder) => {
       state.products=[]
       state.products=sortedProductsByPrice
     })
-    .addCase(actions.VERIFYADMIN.fulfilled, (state, action) => {
-      state.isAdmin=action.payload
-    })
+
     .addCase(actions.GETRECOMMENDED.fulfilled, (state, action) => {
       state.recommended=action.payload
     })
@@ -112,7 +113,9 @@ const rootReducer = createReducer(initialState, (builder) => {
       state.users=[]
       state.users=action.payload
     })
-
+    .addCase(actions.VERIFYADMIN.fulfilled, (state, action) => {
+      state.isAdmin=action.payload
+    })
 
     .addCase(actions.MODIFYUSER.fulfilled,(state,action)=>{
       if(action.payload!=='ok'){//si el usuario que tengo en cookies actualmente es igual al que modifique, modifica las cookies
@@ -121,18 +124,33 @@ const rootReducer = createReducer(initialState, (builder) => {
       }
     })
 
-    .addCase(actions.GETREVIEW.fulfilled, (state, action) => {
+    .addCase(actions.GETREVIEW.fulfilled, (state, action) => { //obtiene una sola review
       state.review=[]
       state.review=action.payload
-  })
+    })
 
-  .addCase(actions.GETREVIEWS.fulfilled, (state, action) => {
-    state.reviews=action.payload
-})
+    .addCase(actions.GETREVIEWS.fulfilled, (state, action) => { //obtiene todas la reviews de la bdd
+      state.reviews=action.payload
+    })
 
-.addCase(actions.GETPRODUCTREVIEWS.fulfilled, (state, action) => {
-  state.productReviews=action.payload
-})
+    .addCase(actions.GETPRODUCTREVIEWS.fulfilled, (state, action) => { // todas las reviews de un producto en especifico
+      state.productReviews=action.payload
+    })
+
+    .addCase(actions.GETWISHLIST.fulfilled, (state, action) => {
+      state.wishList=action.payload
+    })
+
+    .addCase(actions.GETCOMMENTS.fulfilled, (state, action) => {
+      state.questions=[]
+      state.questions=action.payload
+    })
+
+    .addCase(actions.MAKEQUESTION.fulfilled, (state, action) => {
+    })
+
+    .addCase(actions.MAKEANSWER.fulfilled, (state, action) => {
+    })
 
 
                           /////////////////////////////////////   

@@ -36,31 +36,35 @@ router.get('/:productId/questions/:id', async (req, res, next) => {
 
 
 
-// pregunta del user sobre el producto
+// PREGUNTAS del user al admin
 
 router.post('/:productId/questions', verifyToken, async(req, res, next)=> {
     try{
-
+        
         const { productId } = req.params;
-        const { body } = req.body;
+        
+        const { comment, userEmail, productName } = req.body;
 
         const newQuestion = new Product_Question({
-            body : body,
-            user : req.userId,
-            product : productId
+            comment : comment,
+            user : req.userId, //viene por headers
+            userEmail: userEmail,
+            product : productId,
+            productName:productName,
+
         });        
         
         newQuestion.setCreationDate();
         await newQuestion.save();   
            
-        const updatedProduct = await Product.findByIdAndUpdate(
+        const updatedProduct = await Product.findByIdAndUpdate( //agrega esa pregunta al producto, es un array de Ids
         productId,
         {$push: {"questions": newQuestion._id}},
         {upsert: true, new : true});
 
-        console.log(updatedProduct);       
+        //console.log(updatedProduct);       
         
-        res.send(newQuestion);
+        res.json("Se envio la pregunta");
 
     }catch(err) {
         next(err)
@@ -75,14 +79,17 @@ router.post('/:productId/questions/:questionId', [verifyToken,isAdmin], async(re
     try{
 
         const { productId, questionId } = req.params;
-        const { body } = req.body;
+        const { comment , productName, userEmail} = req.body;
 
         const repliedQuestion = await Product_Question.findById({_id:questionId})
 
         const newResponse = new Product_Reply({
-            body : body,
-            user : repliedQuestion.user,
-            product : productId
+            comment : comment,
+            user : repliedQuestion.user, //usuario al que le responde la pregunta, enlace con id
+            userEmail:userEmail,
+            product : productId,
+            productName:productName,
+
         });        
         
         newResponse.setCreationDate();
@@ -95,7 +102,7 @@ router.post('/:productId/questions/:questionId', [verifyToken,isAdmin], async(re
 
         console.log(updatedQuestion);       
         
-        res.send(newResponse);
+        res.json("Se envio la respuesta");
 
     }catch(err) {
         next(err)
