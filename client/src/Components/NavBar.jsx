@@ -269,23 +269,7 @@ export default function PrimarySearchAppBar() {
                   />
                 </Box>
 
-      {/* 
-                <div style={{ width: 700}}>
-                        <Dropdown title="Favoritos">
-                          {cart.map(producto=>(
-                            <Dropdown.Item  sx={{paddingTop: 250}}>
-                                                  <CardMedia 
-                                                    image={producto.imageProduct[0]}
-                                                    component='img'
-                                                    sx={{ borderRadius: '5px',width: 50, height: 50, objectFit:'contain',paddingTop: 10}}
-                                                    height="250"
-                                                />{producto.name}
-                            
-                            </Dropdown.Item>
-                          ))}
-                          
-                        </Dropdown>
-                      </div> */}
+
               
                 <Box sx={{display:'flex',alignItems:'center', justifyContent:'flex-end'}}>
 

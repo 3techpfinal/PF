@@ -25,9 +25,9 @@ export const CartList = ({ editable = false,order=false,orderIsPaid=false }) => 
     const {id} = useParams()
 
     useEffect(()=>{
-        dispatch(GETDETAIL(id))
+        //dispatch(GETDETAIL(id))
         dispatch(GETPRODUCTS())
-      },[dispatch,id])
+      },[dispatch])
 
 
     const productsBDD=useSelector((State) => State.rootReducer.products);

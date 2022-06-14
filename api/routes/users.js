@@ -174,5 +174,41 @@ router.put('/:id', verifyToken, async (req, res, next) => {
 
 });
 
+router.post('/wishlist', verifyToken, async (req, res, next) => {
+    try {
+        const {productId}=req.body
+        const product=await Product.findById(productId)
+        const updatedUser=await User.findByIdAndUpdate(
+            req.userId,
+            {$addToSet: {"wishList": product._id}},//addtoSet no agrega otro elemento si ya existe en el array
+            {upsert: true, new : true});
+        
+        res.status(200).json(updatedUser)
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.put('/wishlist/:id', verifyToken, async (req, res, next) => {
+    try {
+        res.send("hola")
+            
+    } catch (err) {
+        next(err)
+    }
+
+});
+
+router.get("/wishlist/:id", verifyToken, async (req, res, next) => {
+    try {
+        const updatedUser=await User.findById(req.userId)
+        
+        res.status(200).json(updatedUser)
+    } catch (error) {
+        next(error)
+    }
+});
+
+
 
 export default router;
