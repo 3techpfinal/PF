@@ -149,6 +149,34 @@ export const GETPRODUCTREVIEWS = createAsyncThunk('GETPRODUCTREVIEWS', async (id
     return response.data
 })
 
+export const GETWISHLIST = createAsyncThunk('GETWISHLIST', async (productId) => { //recibe info por post y crea un producto
+    const token=Cookie.get('token')
+    const response=await axios(`${api}/users/wishlist/12345` ,{
+        headers:{
+            'x-access-token':token
+        }
+    })
+    return response.data
+}) 
+
+export const ADDTOWISHLIST = createAsyncThunk('ADDTOWISHLIST', async (productId) => { //recibe info por post y crea un producto
+    const token=Cookie.get('token')
+    const response=await axios.post(`${api}/users/wishlist`,productId ,{
+        headers:{
+            'x-access-token':token
+        }
+    })
+    return response.data
+})
+
+export const DELETEFROMWISHLIST=createAsyncThunk('DELETEFROMWISHLIST',async (productId)=>{
+    const token=Cookie.get('token')
+    const wishlist=await axios.put(`${api}/users/wishlist/${productId}`,productId,{headers:{
+      'x-access-token':`${token}`
+    }})
+    return wishlist.data
+  })
+
 
                         ///////////////////////////////////////   
                         //   ACCIONES PARA ORDENES Y PAGOS  //   

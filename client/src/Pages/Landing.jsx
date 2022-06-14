@@ -10,11 +10,12 @@ import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux'
-import { GETPRODUCTS } from '../actions'
+import { GETPRODUCTS, GETWISHLIST } from '../actions'
 import Loading from '../Components/Loading'
 import OrderByPrice from '../Components/OrderByPrice'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
+import { useState } from 'react'
 
 const categories=['https://res.cloudinary.com/dnlooxokf/image/upload/v1654579315/images/jwupcxolofvkyfzrdvin.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579317/images/qgizpdigf71farfs88ae.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579317/images/wgwbatmjliclmqek0k5r.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/gstne4ffczw3e6zql5mh.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/x35mc8bzxto8bf4mkclm.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/s6wjxqzsxwcrvzua1oun.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579319/images/ho68csnn5muuhecl33kj.png']
 //const categories=['https://i.pinimg.com/originals/9f/5d/34/9f5d34242941aa388fc3ec559501543c.gif']
@@ -25,8 +26,10 @@ const Landing=()=>{
     const dispatch=useDispatch()
 
     let products=useSelector((state)=>state.rootReducer.products)
+    let [wishlist,setWishList]=useState([])
     React.useEffect(()=>{
         if(!products[0])dispatch(GETPRODUCTS())
+        dispatch(GETWISHLIST()).then((r)=>setWishList(r.payload||[]))
     },[dispatch, products])
     
     React.useEffect(()=> // Esto es para Que se muestre El titulo de la categoria que se  muestra
@@ -45,7 +48,7 @@ const Landing=()=>{
     return(
         products[0]?
             <Container sx={{mt:12,width:{xs:'100%'},minWidth:'100%',p:{xs:0}}}>
-                <NavBar/>
+                <NavBar wishlist={wishlist} setWishList={setWishList}/>
 
                 <Box mt={15}>
                 <Swiper 
@@ -89,7 +92,7 @@ const Landing=()=>{
                 <Grid container spacing={1} sx={{justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>
                     {products.filter((e)=>e.isActive===true).map(e=>// para no mostrar cuando el producto esta bloqueado
                         <Grid key={e._id} item xs={5} md={3}  sx={{display:'flex',justifyContent:'center',m:'auto',marginX:0}}>
-                            <ProductCard key={e._id} product={e}/>
+                            <ProductCard key={e._id} product={e} wishlist={wishlist} setWishList={setWishList}/>
                         </Grid>)}
                 </Grid>}
 

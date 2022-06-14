@@ -174,5 +174,48 @@ router.put('/:id', verifyToken, async (req, res, next) => {
 
 });
 
+router.get("/wishlist/:id", verifyToken, async (req, res, next) => {
+    try {
+        const updatedUser=await User.findById(req.userId).populate('wishList')
+        
+        res.status(200).json(updatedUser.wishList)
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.post('/wishlist', verifyToken, async (req, res, next) => {
+    try {
+        const {productId}=req.body
+        const product=await Product.findById(productId)
+        const updatedUser=await User.findByIdAndUpdate(
+            req.userId,
+            {$addToSet: {"wishList": product._id}},//addtoSet no agrega otro elemento si ya existe en el array
+            {upsert: true, new : true}).populate('wishList');
+        
+        res.status(200).json(updatedUser.wishList)
+    } catch (error) {
+        next(error)
+    }
+});
+
+router.put('/wishlist/:id', verifyToken, async (req, res, next) => {
+        
+    try {
+        const {productId}=req.body
+        const product=await Product.findById(productId)
+        const updatedUser=await User.findByIdAndUpdate(
+            req.userId,
+            {$pull: {"wishList": product._id}},//pull elimina un objeto que matchee
+            {upsert: true, new : true}).populate('wishList');
+        
+        res.status(200).json(updatedUser.wishList)
+    } catch (error) {
+        next(error)
+    }
+            
+
+});
+
 
 export default router;

@@ -29,6 +29,7 @@ import { SEARCHBYNAMEPRODUCTS } from '../actions';
 import {CartList} from '../Cart/CartList'
 import Cookie from 'js-cookie'
 import {api} from '../actions'
+import WishList from './WishList'
 
 const logo=require('./3TECH.png')
 
@@ -43,7 +44,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar({wishlist,setWishList}) {
 
   const [isHovered, setIsHovered] = React.useState (false);
 
@@ -58,7 +59,7 @@ export default function PrimarySearchAppBar() {
 
   const categories=useSelector((state)=>state.rootReducer.categories)
   const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
-  const { numberOfItems,total } = React.useContext( CartContext );
+  const { numberOfItems,total,cart } = React.useContext( CartContext );
   const { user, isAuthenticated,getIdTokenClaims,logout,loginWithPopup } = useAuth0();
   const dispatch=useDispatch()
   const navigate=useNavigate()
@@ -95,10 +96,6 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
-
-  const showWishList = () => { 
-  }
 
   const menuId = 'primary-search-account-menu';
 
@@ -269,32 +266,17 @@ export default function PrimarySearchAppBar() {
                   />
                 </Box>
 
-      {/* 
-                <div style={{ width: 700}}>
-                        <Dropdown title="Favoritos">
-                          {cart.map(producto=>(
-                            <Dropdown.Item  sx={{paddingTop: 250}}>
-                                                  <CardMedia 
-                                                    image={producto.imageProduct[0]}
-                                                    component='img'
-                                                    sx={{ borderRadius: '5px',width: 50, height: 50, objectFit:'contain',paddingTop: 10}}
-                                                    height="250"
-                                                />{producto.name}
-                            
-                            </Dropdown.Item>
-                          ))}
-                          
-                        </Dropdown>
-                      </div> */}
+      
               
                 <Box sx={{display:'flex',alignItems:'center', justifyContent:'flex-end'}}>
 
 
-                    <IconButton onClick={ showWishList } style={{color: 'white'}}>
+                    {/* <IconButton style={{color: 'white'}}>
                       <FavoriteIcon>
                         
                       </FavoriteIcon>
-                    </IconButton>
+                    </IconButton> */}
+                    <WishList wishlist={wishlist} setWishList={setWishList}/>
                     
 
                     <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>

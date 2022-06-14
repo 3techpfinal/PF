@@ -196,7 +196,7 @@ const ProductDetails=()=>{
                 </Box>
             </Box>
 
-            <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
+            {productReviews.length>0&&<Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
                 <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Valoraciones</Typography>
                 {divider()}
 
@@ -226,7 +226,7 @@ const ProductDetails=()=>{
                </Container>
                 
 
-            </Box>
+            </Box>}
 
 
             <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>

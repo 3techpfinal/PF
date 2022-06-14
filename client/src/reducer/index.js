@@ -15,7 +15,8 @@ const initialState = {
   user:[],
   reviews:[],
   review:[],
-  productReviews:[]
+  productReviews:[],
+  wishList:[],
 }
 
 
@@ -132,6 +133,10 @@ const rootReducer = createReducer(initialState, (builder) => {
 
 .addCase(actions.GETPRODUCTREVIEWS.fulfilled, (state, action) => {
   state.productReviews=action.payload
+})
+
+.addCase(actions.GETWISHLIST.fulfilled, (state, action) => {
+  state.wishList=action.payload
 })
 
 
