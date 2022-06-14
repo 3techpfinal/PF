@@ -12,7 +12,7 @@ export default function BasicPopover({wishlist,setWishList}) {
 
 
   const deleteElement=(productId)=>{
-    setWishList((x)=>x.filter((e)=>e._id!==productId))
+    setWishList((old)=>old.filter((e)=>e._id!==productId))
     dispatch(DELETEFROMWISHLIST({productId:productId}))
   }
   const handleClick = (event) => {

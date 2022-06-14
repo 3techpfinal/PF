@@ -16,6 +16,7 @@ import OrderByPrice from '../Components/OrderByPrice'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import { useState } from 'react'
+import Cookie from 'js-cookie'
 
 const categories=['https://res.cloudinary.com/dnlooxokf/image/upload/v1654579315/images/jwupcxolofvkyfzrdvin.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579317/images/qgizpdigf71farfs88ae.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579317/images/wgwbatmjliclmqek0k5r.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/gstne4ffczw3e6zql5mh.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/x35mc8bzxto8bf4mkclm.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579318/images/s6wjxqzsxwcrvzua1oun.png','https://res.cloudinary.com/dnlooxokf/image/upload/v1654579319/images/ho68csnn5muuhecl33kj.png']
 //const categories=['https://i.pinimg.com/originals/9f/5d/34/9f5d34242941aa388fc3ec559501543c.gif']
@@ -29,8 +30,11 @@ const Landing=()=>{
     let [wishlist,setWishList]=useState([])
     React.useEffect(()=>{
         if(!products[0])dispatch(GETPRODUCTS())
-        dispatch(GETWISHLIST()).then((r)=>setWishList(r.payload||[]))
     },[dispatch, products])
+
+    React.useEffect(()=>{
+        Cookie.get('token')?dispatch(GETWISHLIST()).then((r)=>setWishList(()=>r.payload)):setWishList(()=>[])
+    },[])
     
     React.useEffect(()=> // Esto es para Que se muestre El titulo de la categoria que se  muestra
     {      

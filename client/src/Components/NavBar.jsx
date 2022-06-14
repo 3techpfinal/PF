@@ -276,7 +276,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                         
                       </FavoriteIcon>
                     </IconButton> */}
-                    <WishList wishlist={wishlist} setWishList={setWishList}/>
+                    {isAuthenticated&&<WishList wishlist={wishlist} setWishList={setWishList}/>}
                     
 
                     <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
@@ -298,7 +298,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                       onClick={handleProfileMenuOpen}
                       color="inherit"
                     >
-                      <Avatar alt="Remy Sharp" src={user?.picture} />
+                      <Avatar alt={user?.name} src={user?.avatar||user?.picture} />
                     </IconButton>
                     :
                     <Button sx={{bgcolor:color.color2,color:'black',ml:2}}
