@@ -20,7 +20,8 @@ import { Container } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import { GETPRODUCTS,SEARCHBYCATEGORY,VERIFYADMIN } from '../actions';
 import CartContext from '../Cart/CartContext'
-import { AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
+import { AdminPanelSettings, ConfirmationNumberOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
+import UploadIcon from '@mui/icons-material/Upload';
 import StarIcon from '@mui/icons-material/Star';
 import axios from 'axios'
 import { Box, Divider, IconButton, ListItem, ListItemIcon, ListItemText,CardMedia } from "@mui/material"
@@ -149,7 +150,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
           button
           onClick={ () => navigate('/admin/uploadproduct') }>
           <ListItemIcon>
-              <CategoryOutlined/> 
+              <UploadIcon/> 
           </ListItemIcon>
           <ListItemText primary={'Publicar producto'} />
         </ListItem>}
