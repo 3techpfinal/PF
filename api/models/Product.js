@@ -17,7 +17,7 @@ const productSchema = new Schema({
         default: 0
     },
 
-    discount: {
+    priceOriginal: {
         type: Number,
         required: true,
         default: 0
@@ -55,10 +55,12 @@ const productSchema = new Schema({
         ref: 'Category'
     },
 
-    inCart: {
-        type: Boolean,
-        default: false
-    },
+    questions : [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Product_Question'
+        }
+    ],
 
     shipping: {
         type: String,
@@ -72,7 +74,9 @@ const productSchema = new Schema({
 
     creationDate: {
         type: String
-    }
+    },
+
+
 
 })
 

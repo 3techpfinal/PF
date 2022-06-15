@@ -5,7 +5,8 @@ import resetPassword from './resetPassword.js';
 import product from "./products.js";
 import category from "./categories.js";
 import order from './orders.js';
-import cart from './carts.js'
+import cart from './carts.js';
+import product_question from './product_questions.js';
 
 
 const router = Router();
@@ -15,10 +16,11 @@ router.use('/verified/tokenConfirmed', verifyAccount) //GET http://localhost:300
 router.use('/resetPassword', resetPassword)
 
 router.use("/products", product) //CRUD - User y Admin
+router.use("/products", product_question) //CRUD - User y Admin
 router.use("/categories",category) // CRUD - Admin
 
-// route.use("/products-cart", productCart) // CRUD - User y Admin
-// route.use("/orders", order) 
+// router.use("/products-cart", productCart) // CRUD - User y Admin
+// router.use("/questions", question) 
 
 router.use("/cart", cart) // CRUD - User y Admin
 router.use("/orders", order) 

@@ -1,24 +1,17 @@
 import * as React from 'react';
-import { styled, alpha } from '@mui/material/styles';
+import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
-
 import {Button} from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-
-import InputBase from '@mui/material/InputBase';
 import Badge from '@mui/material/Badge';
 import MenuItem from '@mui/material/MenuItem';
 import Menu from '@mui/material/Menu';
-import MenuIcon from '@mui/icons-material/Menu';
-import SearchIcon from '@mui/icons-material/Search';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircle from '@mui/icons-material/AccountCircle';
-import MailIcon from '@mui/icons-material/Mail';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-import MoreIcon from '@mui/icons-material/MoreVert';
 import Avatar from '@mui/material/Avatar';
-import { NavLink,Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
+import { NavLink,Link, useNavigate } from 'react-router-dom';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import color from '../styles'
 import SearchBar from './SearchBar'
@@ -27,19 +20,18 @@ import { Container } from '@mui/system';
 import { useDispatch, useSelector } from 'react-redux';
 import { GETPRODUCTS,SEARCHBYCATEGORY,VERIFYADMIN } from '../actions';
 import CartContext from '../Cart/CartContext'
-import { AccountCircleOutlined, AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, EscalatorWarningOutlined, FemaleOutlined, LoginOutlined, MaleOutlined, SearchOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
+import { AdminPanelSettings, CategoryOutlined, ConfirmationNumberOutlined, VpnKeyOutlined, DashboardOutlined } from '@mui/icons-material';
+import StarIcon from '@mui/icons-material/Star';
 import axios from 'axios'
-import { Box, Divider, Drawer, IconButton,CardMedia, Input, InputAdornment, List, ListItem, ListItemIcon, ListItemText, ListSubheader } from "@mui/material"
+import { Box, Divider, IconButton, ListItem, ListItemIcon, ListItemText,CardMedia } from "@mui/material"
 import { useAuth0 } from "@auth0/auth0-react";
 import { SEARCHBYNAMEPRODUCTS } from '../actions';
 import {CartList} from '../Cart/CartList'
 import Cookie from 'js-cookie'
 import {api} from '../actions'
-import { cartReducer } from '../Cart/cartReducer';
-import { Dropdown } from 'rsuite';
+import WishList from './WishList'
 
-
-
+const logo=require('./3TECH.png')
 
 const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   alignItems: 'flex-start',
@@ -52,7 +44,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 
-export default function PrimarySearchAppBar() {
+export default function PrimarySearchAppBar({wishlist,setWishList}) {
 
   const [isHovered, setIsHovered] = React.useState (false);
 
@@ -67,7 +59,7 @@ export default function PrimarySearchAppBar() {
 
   const categories=useSelector((state)=>state.rootReducer.categories)
   const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
-  const { numberOfItems,total } = React.useContext( CartContext );
+  const { numberOfItems,total,cart } = React.useContext( CartContext );
   const { user, isAuthenticated,getIdTokenClaims,logout,loginWithPopup } = useAuth0();
   const dispatch=useDispatch()
   const navigate=useNavigate()
@@ -104,10 +96,6 @@ export default function PrimarySearchAppBar() {
   const handleMobileMenuOpen = (event) => {
     setMobileMoreAnchorEl(event.currentTarget);
   };
-
-
-  const showWishList = () => { 
-  }
 
   const menuId = 'primary-search-account-menu';
 
@@ -146,8 +134,17 @@ export default function PrimarySearchAppBar() {
           <ListItemText primary={'Ordenes'} />
         </ListItem>}
 
+        {((isAuthenticated)&&(!isAdmin))&&<ListItem 
+          button
+          onClick={ () => navigate('/user/reviews') }>
+          <ListItemIcon>
+           <StarIcon/> 
+          </ListItemIcon>
+          <ListItemText primary={'Calificación de compras'} />
+        </ListItem>}
 
-      {isAdmin&&<ListItem 
+
+      {isAdmin&&<ListItem //SUBIR PRODUCTO
           button
           onClick={ () => navigate('/admin/uploadproduct') }>
           <ListItemIcon>
@@ -158,7 +155,7 @@ export default function PrimarySearchAppBar() {
 
       
 
-      {isAdmin&&<ListItem 
+      {isAdmin&&<ListItem   //DASHBOARD
           button
           onClick={ () => navigate('/admin/dashboard') }>
           <ListItemIcon>
@@ -167,10 +164,10 @@ export default function PrimarySearchAppBar() {
           <ListItemText primary={'Dashboard'} />
         </ListItem>}
 
-        {isAuthenticated&&<ListItem 
+        {isAuthenticated&&<ListItem //BOTON SALIR LOGOUT
           button
           onClick={ () => {
-            Cookie.set('user',JSON.stringify([]))
+            Cookie.set('user',JSON.stringify([]))//pone en blanco al usuario n cookies
             Cookie.remove('cart')
             Cookie.remove('token')
             logout({ returnTo: window.location.origin })
@@ -236,160 +233,148 @@ export default function PrimarySearchAppBar() {
   );
 
   return (
-<>
-   
-    <Container sx={{ flexGrow: 1, zIndex: 'tooltip'}} position="fixed" top='0px'>
-      <AppBar sx={{bgcolor:color.color1}} >
-        <StyledToolbar sx={{justifyContent:'space-between',alignItems:'center',height:30,mt:1}}>
-          
-          <Box>
-            <Typography
-              variant="h6"
-              noWrap
-              component="div"
-              sx={{ display: { xs:'block',textDecoration:'none' } }}
-              onClick={()=>dispatch(GETPRODUCTS())}
-            >
-              <Link to='/'>
-              3TECH
-              </Link>
-            </Typography>
-          </Box>
-
-
-
-          <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-            <SearchBar 
-            placeholder="buscar por producto o categoria"
-            url='/'
-            dinamic={false}
-            action={SEARCHBYNAMEPRODUCTS}
-            />
-          </Box>
-
-{/* 
-          <div style={{ width: 700}}>
-                  <Dropdown title="Favoritos">
-                    {cart.map(producto=>(
-                      <Dropdown.Item  sx={{paddingTop: 250}}>
-                                            <CardMedia 
-                                              image={producto.imageProduct[0]}
-                                              component='img'
-                                              sx={{ borderRadius: '5px',width: 50, height: 50, objectFit:'contain',paddingTop: 10}}
-                                              height="250"
-                                          />{producto.name}
-                      
-                      </Dropdown.Item>
-                    ))}
-                    
-                  </Dropdown>
-                </div> */}
+  <>
         
-          <Box sx={{display:'flex',alignItems:'center', justifyContent:'flex-end'}}>
+          <Container sx={{ flexGrow: 1, zIndex: 'tooltip'}} position="fixed" top='0px'>
+            <AppBar sx={{bgcolor:color.color1}} >
+              <StyledToolbar sx={{justifyContent:'space-between',alignItems:'center',height:30,mt:1}}>
+                
+                <Box>
+                    <Link to='/'>
+                      <CardMedia 
+                        image={logo}
+                        component='img'
+                        sx={{width: 100, height: 80, objectFit:'contain'}}
+                        onClick={()=>dispatch(GETPRODUCTS())}
+                        />                          
+                    </Link>
+                </Box>
+
+                <Box display='flex' flexDirection='row'>
+                  <img width='50' src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="MDN Logo"></img>
+                  <Typography variant='h5'>($)</Typography>   
+                </Box>
 
 
-              <IconButton onClick={ showWishList } style={{color: 'white'}}>
-                <FavoriteIcon 
-                >
-                  
-                </FavoriteIcon>
-              </IconButton>
+
+                <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+                  <SearchBar 
+                  placeholder="Buscar por producto o categoria"
+                  url='/'
+                  dinamic={false}
+                  action={SEARCHBYNAMEPRODUCTS}
+                  />
+                </Box>
+
+      
               
-
-              <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
-                  <IconButton size="large" aria-label="show 4 new mails" color="inherit">
-                      <Badge badgeContent={numberOfItems} color="error">
-                          <ShoppingCart />
-                      </Badge>
-                  </IconButton>
-              </NavLink>
-
-            <Box sx={{ display: { md: 'flex' } }}>
-              {isAuthenticated?<IconButton
-                size="large"
-                edge="end"
-                aria-label="account of current user"
-                aria-controls={menuId}
-                aria-haspopup="true"
-                onClick={handleProfileMenuOpen}
-                color="inherit"
-              >
-                <Avatar alt="Remy Sharp" src={user?.picture} />
-              </IconButton>
-              :<Button sx={{bgcolor:color.color2,color:'black',ml:2}}
-              onClick={()=>loginWithPopup().then(()=>getIdTokenClaims()).then(r=>axios.post(`${api}/users/login`,{token:r.__raw})).then(r=>{
-                Cookie.set('token',r.data.token)
-                Cookie.set('user',JSON.stringify(r.data.user))
-                axios.post(`${api}/cart`,{
-                  cart:JSON.parse( Cookie.get('cart') ),
-                  totalPrice:total
-                },{
-                  headers:{
-                    'x-access-token':r.data.token
-                  }
-                })
-     
-              }).then(()=>{
-
-                const token= Cookie.get('token')
-                axios(`${api}/cart`,
-                {
-                    headers:{
-                         'x-access-token':token
-                    }
-                }).then((r)=>{
-                    Cookie.set('cart',JSON.stringify(r.data.cart))            
-                })
-
-              }).then(()=>{
-                dispatch(VERIFYADMIN())
-                window.location.reload()
-                })}>
-                Login
-                </Button>}
-            </Box>
-
-            {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-              <IconButton
-                size="large"
-                aria-label="show more"
-                aria-controls={mobileMenuId}
-                aria-haspopup="true"
-                onClick={handleMobileMenuOpen}
-                color="inherit"
-              >
-                <MoreIcon />
-              </IconButton>
-            </Box> */}
-
-          </Box>
+                <Box sx={{display:'flex',alignItems:'center', justifyContent:'flex-end'}}>
 
 
+                    {/* <IconButton style={{color: 'white'}}>
+                      <FavoriteIcon>
+                        
+                      </FavoriteIcon>
+                    </IconButton> */}
+                    {isAuthenticated&&<WishList wishlist={wishlist} setWishList={setWishList}/>}
+                    
+
+                    <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
+                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                            <Badge badgeContent={numberOfItems} color="error">
+                                <ShoppingCart />
+                            </Badge>
+                        </IconButton>
+                    </NavLink>
+
+                  <Box sx={{ display: { md: 'flex' } }}>
+                    {isAuthenticated?
+                    <IconButton
+                      size="large"
+                      edge="end"
+                      aria-label="account of current user"
+                      aria-controls={menuId}
+                      aria-haspopup="true"
+                      onClick={handleProfileMenuOpen}
+                      color="inherit"
+                    >
+                      <Avatar alt={user?.name} src={user?.avatar||user?.picture} />
+                    </IconButton>
+                    :
+                    <Button sx={{bgcolor:color.color2,color:'black',ml:2}}
+                    onClick={()=>loginWithPopup().then(()=>getIdTokenClaims()).then(r=>axios.post(`${api}/users/login`,{token:r.__raw})).then(r=>{
+                      Cookie.set('token',r.data.token)
+                      Cookie.set('user',JSON.stringify(r.data.user))
+                      axios.post(`${api}/cart`,{
+                        cart:JSON.parse( Cookie.get('cart') ),
+                        totalPrice:total
+                      },{
+                        headers:{
+                          'x-access-token':r.data.token
+                        }
+                      })
           
-        </StyledToolbar>
+                    }).then(()=>{
 
-        <Divider sx={{bgcolor:color.color3,m:1}}/>
+                      const token= Cookie.get('token')
+                      axios(`${api}/cart`,
+                      {
+                          headers:{
+                              'x-access-token':token
+                          }
+                      }).then((r)=>{
+                          Cookie.set('cart',JSON.stringify(r.data.cart))            
+                      })
 
-        <Box sx={{display:'flex',justifyContent:'center',mb:1,alignItems:'center'}}>
-          <Typography variant='body2' sx={{mr:2}}>Categorias: </Typography>
-          <FilterCategory/>
-          <Divider orientation="vertical" flexItem sx={{display:{xs:'none',md:'flex'},bgcolor:'white',marginX:1}}/>
-              <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
-                {categories.map((e)=>(
-                <>
-                    <Button onClick={()=>{dispatch(SEARCHBYCATEGORY(e._id)); navigate('/') }}>
-                      <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>
-                    </Button>
-                  <Divider orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
-                </>               
-              ))}
+                    }).then(()=>{
+                      dispatch(VERIFYADMIN())
+                      window.location.reload()
+                      })}>
+                      Login
+                    </Button>}
+                  </Box>
+
+                  {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
+                    <IconButton
+                      size="large"
+                      aria-label="show more"
+                      aria-controls={mobileMenuId}
+                      aria-haspopup="true"
+                      onClick={handleMobileMenuOpen}
+                      color="inherit"
+                    >
+                      <MoreIcon />
+                    </IconButton>
+                  </Box> */}
+
+                </Box>
+
+
+                
+              </StyledToolbar>
+
+              <Divider sx={{bgcolor:color.color3,m:1}}/>
+
+              <Box sx={{display:'flex',justifyContent:'center',mb:1,alignItems:'center'}}>
+                <Typography variant='body2' sx={{mr:2}}>Categorias: </Typography>
+                <FilterCategory/>
+                <Divider orientation="vertical" flexItem sx={{display:{xs:'none',md:'flex'},bgcolor:'white',marginX:1}}/>
+                    <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
+                      {categories.map((e)=>(
+                      <>
+                          <Button onClick={()=>{dispatch(SEARCHBYCATEGORY(e._id)); navigate('/') }}>
+                            <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>
+                          </Button>
+                        <Divider orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
+                      </>               
+                    ))}
+                    </Box>
               </Box>
-        </Box>
 
-      </AppBar>
-      {/* {renderMobileMenu} */}
-      {renderMenu}
-    </Container>
+            </AppBar>
+            {/* {renderMobileMenu} */}
+            {renderMenu}
+          </Container>
     </>
   );
 }

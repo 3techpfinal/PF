@@ -14,35 +14,29 @@ import '@fontsource/roboto/500.css';
 import color from '../styles'
 import { useAuth0 } from "@auth0/auth0-react";
 import Loading from '../Components/Loading'
+import { MODIFYUSER } from '../actions';
+import swal from 'sweetalert'
+import Cookie from 'js-cookie'
 
 
 const Profile=()=>{
-    //const dispatch=useDispatch()
-    const {user}=useAuth0()
-    // const user={
-    //     _id:231213213,
-    //     avatar:'',
-    //     name:'Nico A',
-    //     email:'nico@mail.com',
-    //     adress:'avprueba',
-    //     city:'tucu',
-    //     country:'arg',
-    //     phone:'4324',
-    //     cuil:'324324'}
+    const dispatch=useDispatch()
     const [field,setField]=useState({})
+    const user=Cookie.get('user') && JSON.parse(Cookie.get('user'))
+
     React.useEffect(()=>{
-        setField({
-            // _id:user._id,
-             avatar:user?.picture,
-             name:user?.name,
-             email: user?.email,
-             adress:user?.adress,
-             city:user?.city,
-             country:user?.country,
-             phone:user?.phone,
-             cuil:user?.cuil
-         })
-    },[user])
+        setField(()=>({
+             _id:user?._id||'',
+             avatar:user?.avatar||'',
+             name:user?.name||'',
+             email: user?.email||'',
+             adress:user?.adress||'',
+             city:user?.city||'',
+             country:user?.country||'',
+             phone:user?.phone||''
+         }))
+    },[])
+
     const [editable,setEditable]=useState({
         avatar:false,
         name:false,
@@ -51,10 +45,8 @@ const Profile=()=>{
         adress:false,
         city:false,
         country:false,
-        phone:false,
-        cuil:false
+        phone:false
     })
-
     const handleChange=(campo)=>{
         setEditable((old)=>({...old,[campo]:true}))
     }
@@ -64,7 +56,13 @@ const Profile=()=>{
     const Edit=(e)=>{
         setField((old)=>({...old,[e.target.name]:e.target.value}))
     }
-
+    const UploadChanges=()=>{
+        dispatch(MODIFYUSER(field)).then(r=>{
+            if(r.payload._id)swal("Perfecto!", "Cambios guardados", "success");
+        }).catch(e=>{
+            swal("Oh oh!", "Algo salió mal", "error");
+        })
+    }
     return(
         user?<Box>
             <NavBar/>
@@ -78,8 +76,8 @@ const Profile=()=>{
                     <Typography variant='body2' sx={{fontWeight:20,mt:0,ml:1,color:'black'}}>Mis Compras</Typography>
                 </IconButton>
             </Box>
-            <Avatar sx={{height:200,width:200}} alt={user.name} src={user.picture}/>
-            <Typography variant='h5' sx={{fontWeight:20,m:2}}>{user.given_name}</Typography>
+            <Avatar sx={{height:200,width:200}} alt={user.name} src={user.avatar||user.picture}/>
+            <Typography variant='h5' sx={{fontWeight:20,m:2}}>{user.given_name||user.name}</Typography>
 
             <Divider flexItem/>
 
@@ -157,18 +155,8 @@ const Profile=()=>{
 
                 <Divider flexItem/>
 
-                <Box sx={{display:'flex',alignItems:'center',justifyContent:'space-between',width:'100%'}}>
-                    <Typography sx={{fontSize:'3vh',m:2,fontWeight:20}}>CUIL: {editable.cuil?
-                    <TextField name='cuil' variant='standard' size='small' placeholder={field.cuil} onChange={(e)=>Edit(e)}/>
-                    :field.cuil}
-                    </Typography>
-                    <IconButton sx={{bgcolor:color.color2}} onClick={(e)=>{editable.cuil?handleSave('cuil'):handleChange('cuil')}}>
-                        {editable.cuil?<CheckIcon/>:<EditIcon/>}
-                    </IconButton>
-                </Box>
-
                 <Box sx={{display:'flex',width:'100%',justifyContent:'center',mt:5}}>
-                <IconButton sx={{display:'flex',borderRadius:1,bgcolor:color.color2}}>
+                <IconButton sx={{display:'flex',borderRadius:1,bgcolor:color.color2}} onClick={()=>UploadChanges()}>
                     <Typography variant='body2' sx={{fontWeight:20,mt:0,mr:1,color:'black'}}>Guardar</Typography>
                     <SaveIcon/>
                 </IconButton>

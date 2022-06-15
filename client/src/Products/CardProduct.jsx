@@ -20,15 +20,20 @@ import { useNavigate } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import  CartContext from '../Cart/CartContext';
+import { ADDTOWISHLIST,DELETEFROMWISHLIST,GETWISHLIST } from '../actions';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAuth0 } from '@auth0/auth0-react';
 
 
-export default function ProductCard({product}) {
+export default function ProductCard({product,wishlist,setWishList}) {
   const [isHovered, setIsHovered] = useState (false);
-  const [colorHeart, setColorHeart] = useState ("black");
+  const [colorHeart, setColorHeart] = useState ('black');
+  const {isAuthenticated}=useAuth0()
+  const wishlistBDD=useSelector((state)=>state.rootReducer.wishList)
   const navigate=useNavigate()
-
+  const dispatch=useDispatch()
     const productImage = useMemo(()=>{
-        return product.imageProduct[1]?
+        return product?.imageProduct[1]?
         isHovered?
           `${product.imageProduct[1]}`
         : `${product.imageProduct[0]}`
@@ -36,14 +41,19 @@ export default function ProductCard({product}) {
          
     },[isHovered,product.imageProduct])
 
-
+    React.useEffect(()=>{
+        setColorHeart(()=>'black')
+        wishlist?.forEach((e)=>{
+          if(e._id===product._id)setColorHeart(()=>'red')
+        })
+    },[wishlist])
     const { addProductToCart,cart} = useContext( CartContext )
 
     const [tempCartProduct, setTempCartProduct] = useState({
       _id: product._id,
       imageProduct: product.imageProduct,
       price: product.price,
-      name: product.name,
+      name: product?.name,
       category: product.category,
       quantity: 1,
       envio: product.envio,
@@ -51,7 +61,8 @@ export default function ProductCard({product}) {
       review: product.review,
       description: product.description,
       stock: product.stock,
-      discount:product.discount
+      priceOriginal: product.priceOriginal||product.price,
+      hasReview:0
     })
 
     const onUpdateQuantity = ( quantity ) => {
@@ -62,7 +73,17 @@ export default function ProductCard({product}) {
     }
 
     const addToWishList = () => { 
-      colorHeart==="black"?setColorHeart("red"):setColorHeart("black")
+      if(colorHeart==="black"){
+        setColorHeart("red")
+        setWishList((old)=>[...old,product])
+        dispatch(ADDTOWISHLIST({productId:product._id}))
+      }
+      else{
+        setColorHeart("black")
+        setWishList((old)=>old.filter(e=>e!==product))
+        dispatch(DELETEFROMWISHLIST({productId:product._id}))
+      }
+      
     }
 
 
@@ -81,15 +102,15 @@ export default function ProductCard({product}) {
 
 
   return (
-    <Card sx={{ width: 250,mt:5 }}
+    <Card sx={{ width: {xs:200,sm:250},mt:5 }}
     onMouseEnter={()=> setIsHovered(true)}
     onMouseLeave={()=> setIsHovered(false)}
     >
-        <Tooltip title="Agregar a favoritos" placement="top">
+        {isAuthenticated&&<Tooltip title="Agregar a favoritos" placement="top">
           <IconButton onClick={ addToWishList } style={{color: colorHeart}}>
             <FavoriteIcon />
           </IconButton>
-        </Tooltip> 
+        </Tooltip> }
 
         <Tooltip title="Agregar al carrito" placement="top">
           <IconButton  onClick={ onAddProduct } style={{color: "black"}}>
@@ -111,20 +132,34 @@ export default function ProductCard({product}) {
         <CardContent sx={{bgcolor:colorStyles.color1,height:100}}>
 
             <Tooltip title={product.name} placement="top">  
-                <Box sx={{display:'flex',alignItems:'flex-start',justifyContent:'space-between'}}>
+                <Box sx={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',mb:1}}>
                   <Typography gutterBottom variant="h6" sx={{color:'white',fontWeight:'200'}}>
-                  {product.name.slice(0,15)}
+                  {product?.name?.slice(0,15)}
                   </Typography>
-                  {product.discount?<Chip label={`-${product.discount}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
+                  {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
                 </Box>
             </Tooltip>
 
-            <Typography gutterBottom variant="h6" sx={{color:'white',fontWeight:'500'}}>
-                    $ {product.discount?new Intl.NumberFormat().format(product.price*product.discount/100):new Intl.NumberFormat().format(product.price)}
-            </Typography> 
-
-            <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>
             
+
+            <Box sx={{color:'white',fontWeight:'500',display:'flex', flexDirection:'row',justifyContent:'space-between'}}>
+              <Box>
+                     {product.priceOriginal && product.price!==product.priceOriginal ?
+                       <div>
+                         <Typography>{'$'+new Intl.NumberFormat().format(product.price)}</Typography>
+                         <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
+                        </div>
+                      :
+                      <Typography>${new Intl.NumberFormat().format(product.price)}</Typography> }
+            </Box>
+            <Box sx={{display:'flex',justifyContent:'flex-end'}}>         
+               {product.stock>0?
+               <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>:
+               <Chip label= {`Sin Stock`} color='error'/>}
+            </Box> 
+              
+            </Box> 
+
 
         </CardContent>
       </CardActionArea>

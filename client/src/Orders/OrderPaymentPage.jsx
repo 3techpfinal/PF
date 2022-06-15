@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link, Chip,Container } from '@mui/material';
+import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link, Chip,Container, CardMedia } from '@mui/material';
 import { CartList, OrderSummary } from '../Cart';
 import CartContext from '../Cart/CartContext'
 import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
@@ -6,18 +6,24 @@ import { PayPalButtons,usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
-import { GETORDER, PAYORDER,GETDETAIL } from '../actions';
+import { GETORDER, PAYORDER,GETDETAIL,GETPRODUCTS } from '../actions';
 import NavBar from '../Components/NavBar'
+import Swal from 'sweetalert2/src/sweetalert2.js'
+import swal from 'sweetalert';
+import Cookie from 'js-cookie'
+import { display } from '@mui/system';
+import Sound from '../Pruebas/Audios'
 
-
-const amount = "2";
 const currency = "USD";
-const style = {"layout":"vertical"};
+
+
+
 const OrderPage=()=>{
 
+    const actualUser = Cookie.get('user') && JSON.parse(Cookie.get('user'))
     const dispatch1=useDispatch()
     
-    const [{ options, isPending }, dispatch] = usePayPalScriptReducer();
+    const [{ options }, dispatch] = usePayPalScriptReducer();
     useEffect(() => {
         dispatch({
             type: "resetOptions",
@@ -28,69 +34,120 @@ const OrderPage=()=>{
         });
     }, [currency]);
 
-    
-    
-    const { cart,total } = useContext(CartContext);
+
+
+
     const {id} = useParams()
 
     useEffect(()=>{
         dispatch1(GETORDER(id))
+        dispatch1(GETPRODUCTS())
     },[])
 
     const order=useSelector((State) => State.rootReducer.order);
+    const products=useSelector((State) => State.rootReducer.products);
     const [isPaid,setIsPaid]=useState(order.isPaid?true:false)
+    const [isPaid2,setIsPaid2]=useState(false) //muestra o no los relampagos
+
      //const detalle=useSelector((State) => State.rootReducer.detail);
 
     /* const producto=async(ide)=>{
          await dispatch(GETDETAIL(ide))
     }
 */
-        useEffect(()=>{
-            order.isPaid && setIsPaid(()=>true)
-        },[order])
 
-    const onOrderCompleted = async( details ) => {
+    const verificarSihayStock=(orden,productsBDD)=>{
+    let verificacion=[true,'']
+    orden.products.map((productOrder)=>(
+        productsBDD.map((productBDD)=>(
+            (productOrder._id===productBDD._id)&&
+                (productOrder.stock>productBDD.stock)&&
+                    (verificacion[0] = false),
+                    (verificacion[1]=productBDD.name)
+        ))
+    ))
+    return verificacion
+    }
+
+
+    useEffect(()=>{
+            order.isPaid && setIsPaid(()=>true)
+    },[order])
 
         
+        const onOrderCompleted = async( details ) => { //Funcion de verificar la COMPRA
+
         if ( details.status !== 'COMPLETED' ) {
             return alert('No hay pago en Paypal');
         }
-
-        // order.products.forEach(async (product:any)=>{
-        //     await producto(product._id)
-        //     if(detalle.stock<product.quantity){
-        //         return alert(`No hay stock suficiente de ${product.name}`);
-        //     }
-        // })
     
-        //setIsPaying(true);
-    
-        try {
-            console.log("verifico idOrden:", order._id)
+        try { //realizo el pago
         
-            dispatch1(PAYORDER({transactionId: details.id, orderId: order._id}))
-
-            setIsPaid(()=>true)
+            dispatch1(PAYORDER({transactionId: details.id, orderId: order._id})).then((r)=>{
+                if(r.payload?.message==='Orden pagada con éxito'){
+                    setIsPaid(()=>true)
+                    setIsPaid2(()=>true)
+                    
+                    swal({
+                        title:"Felicitaciones!!",
+                        text:"Haz realizado el pago exitosamente",
+                        icon:"success",
+                        button:"Aceptar"
+                    }).then(() =>  setIsPaid2(()=>false))
+                }
+                else{
+                    swal({
+                        title:`${r.payload?.message}`,
+                        text:"Pago no realizado",
+                        icon:"error",
+                        button:"Aceptar"
+                    })
+                }
+               
+            })
     
         } catch (error) {
             //setIsPaying(false);
-            console.log(error);
-            alert('Error');
+            swal({
+                title:"Hubo un problema con el pago!!",
+                text:"pago no realizado",
+                icon:"error",
+                button:"Aceptar"
+            })
         }
-    
+      
        //window.location.reload();
      
     }
   
     return(
+        
+        isPaid2?    
+        <div style={{ 
+            backgroundImage: `url("https://tuderechoasaber.com.do/wp-content/uploads/2020/07/fuego.gif")`, 
+            height:'100vh',
+            marginTop:'-70px',
+            fontSize:'50px',
+            backgroundSize: 'cover',
+            backgroundRepeat: 'no-repeat',
+            
+            }}>
+                <Sound reproducir={false} />
+                <h1>halo</h1>
+        </div>
+        :
         <>  
             <NavBar/>
+            <Sound reproducir={false} />
+
+
             <Box sx={{display:'flex',mt:15,alignItems:'center',justifyContent:'space-between',marginX:3}}>
+              
             <Typography variant='h4'  sx={{fontWeight:20}}> Orden: {order._id}</Typography>
             {isPaid===false?
                     <Chip
                         sx={{my:2}}
-                        label="pendiente de pago"
+                        label="Pendiente de pago"
                         variant='outlined'
                         color="error"
                         icon={ <CreditCardOffOutlined/>}
@@ -112,7 +169,7 @@ const OrderPage=()=>{
 
 
                 <Grid item xs={12} sm={7}>
-                    <CartList editable={false} order={order.products}/>
+                    <CartList editable={false} order={order.products} orderIsPaid={isPaid}/>
                 </Grid>
                 <Grid item xs={12} sm={5}>
                     <Card className='summary-card'>
@@ -123,39 +180,34 @@ const OrderPage=()=>{
                             <Box display='flex' justifyContent='space-between'>
                                 <Typography variant='subtitle1'> Dirección de entrega</Typography>
                                
-                                    <Link underline='always'>
+                                    {/* <Link underline='always'>
                                         Editar
-                                    </Link>
+                                    </Link> */}
        
                             </Box>
 
                             
-                            {/*<Typography>{order.user.name}</Typography>
-                            <Typography>{order.adress}</Typography>
-                            <Typography>{order.user.country}</Typography>
-                            <Typography>{order.user.phone}</Typography>*/}
-                            {/* <Typography>{usuario.name}</Typography>
-                            <Typography>{usuario.adress}</Typography>
-                            <Typography>{usuario.city}</Typography>
-                            <Typography>{usuario.phone}</Typography> */}
+                            {order?.name&&<Typography>Nombre: {order?.name}</Typography>}
+                            <Typography>Direccion: {order?.adress}</Typography>
+                            <Typography>Ciudad: {order?.city}</Typography>
 
                             <Divider sx={{my:1}}/>
 
                             <Box display='flex' justifyContent='end'>
                                 
-                                    <Link underline='always'>
+                                    {/* <Link underline='always'>
                                         Editar
-                                    </Link>
+                                    </Link> */}
 
                                
                             </Box>
 
-                            <OrderSummary order={order}/>
+                            <OrderSummary/>
 
                             <Box sx={{mt:3}}>
-                                
 
-                            {
+
+{
                                 isPaid?
                                 <Chip
                                     sx={{my:2}}
@@ -165,6 +217,11 @@ const OrderPage=()=>{
                                     icon={ <CreditScoreOutlined/>}
                                 />
                                 :
+
+                                (
+                                 (actualUser?._id||0)!==order?.user?._id||0?
+                                 <></>
+                                 :
                                 <PayPalButtons
                                 disabled={false}
                                 fundingSource={undefined}
@@ -191,7 +248,7 @@ const OrderPage=()=>{
                                         onOrderCompleted( details );
                                     });
                                 }}
-                            />
+                            />)
                                 }
                                        
 
@@ -200,8 +257,10 @@ const OrderPage=()=>{
                     </Card>
                 </Grid> 
             </Grid>
+        
             </>
 
+        
     )
 }
 

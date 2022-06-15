@@ -4,7 +4,7 @@ import { useState,useRef } from 'react';
 import {   useNavigate } from "react-router-dom"
 //import { Link } from "react-router-dom";
 import { TextField,Select,Container, CardMedia,Link, Box, UploadOulined,InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import {CREATEPRODUCT,GETCATEGORIES} from '../actions'
+import {CREATEPRODUCT,GETCATEGORIES,GETPRODUCTS} from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -17,6 +17,7 @@ import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
 
 import swal from 'sweetalert';
+
 //var cloudinary = require('cloudinary').v2;
 //import { v2 as cloudinary } from 'cloudinary';
 //cloudinary.config( process.env.CLOUDINARY_URL || '' );
@@ -34,7 +35,7 @@ export default function CrearPublicacion() {
       dispatch(GETCATEGORIES())
   },[dispatch])
   const categories=useSelector((state)=>state.rootReducer.categories)
-  const[input,setInput]=useState({name:'',price:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
+  const[input,setInput]=useState({name:'',price:'',priceOriginal:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
   const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
@@ -64,14 +65,14 @@ export default function CrearPublicacion() {
 
   const handleDelete=(e,image)=>{
     e.preventDefault()
-    images.forEach( async(image) => {
-      if ( images.includes(image) ){
-          // Borrar de cloudinary
-          const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
-          console.log({ image, fileId, extension });
-          //await cloudinary.uploader.destroy( fileId );
-      }
-  });
+  //   images.forEach( async(image) => {
+  //     if ( images.includes(image) ){
+  //         // Borrar de cloudinary
+  //         const [ fileId, extension ] = image.substring( image.lastIndexOf('/') + 1 ).split('.')
+  //         console.log({ image, fileId, extension });
+  //         //await cloudinary.uploader.destroy( fileId );
+  //     }
+  // });
 
   setImages(images.filter(element=>//deja afuera el elemento que tenga la url a eliminar
     element!==image
@@ -89,9 +90,13 @@ export default function CrearPublicacion() {
     }
 
    // else if(ev.target.name==='precio' && ev.target.value>-1 && (/\d/.test(ev.target.value))||( ev.target.name==='precio' && ev.target.value==='.') ){
-    else if (ev.target.name==='precio' && ev.target.value>-1 && (/\d/.test(ev.target.value))){  
-      console.log("precio:", ev.target.value)
-       setInput((input)=>({...input,price:(ev.target.value)}))
+    else if ((ev.target.name==='precio' )&& ((/\d/.test(ev.target.value)) || (ev.target.value==='')) ) {  
+      
+      setInput((input)=>({...input,price:(parseFloat(ev.target.value))}))
+    }
+
+    else if ((ev.target.name==='precioOriginal' )&& ((/\d/.test(ev.target.value)) || (ev.target.value==='')) ) {  
+      setInput((input)=>({...input,priceOriginal:(parseFloat(ev.target.value))}))
     }
 
     else if(ev.target.name==='stock' && ev.target.value>-1 && (/\d/.test(ev.target.value)) ){
@@ -108,22 +113,35 @@ export default function CrearPublicacion() {
 
     }
   
-    function handleSubmit(e){
+    async function handleSubmit(e){
       e.preventDefault()
+      if(input.price>input.priceOriginal){
+        return swal({
+        title:"Error",
+        text:"El precio con descuento no puede ser mayor al original!",
+        icon:"error",
+        button:"Aceptar"
+      })}
+
+      if(!input.price){input.price=input.priceOriginal}
+
+      
           const newPost={...input,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
-          dispatch(CREATEPRODUCT(newPost))
-          //alert("Se creo el Producto exitosamente!")
-
-          swal({
-            title:"Realizado",
-            text:"Se creo el Producto exitosamente!",
-            icon:"success",
-            button:"Aceptar"
+          dispatch(CREATEPRODUCT(newPost)).then(async(r)=>{
+            dispatch(GETPRODUCTS())
+            if(r.meta.requestStatus==="fulfilled"){
+              await swal({
+                title:"Realizado",
+                text:"Se creo el Producto exitosamente!",
+                icon:"success",
+                button:"Aceptar"}).then(()=> {navegar("/")})
+                 
+                  //window.location.reload()
+              
+            }
           })
-
-
-          navegar("/")//se accede al home
-         // window.location.reload();//se refresca para activar el dispatch de GETPRODUCTS()       
+         //se accede al home
+         // window.location.reload();      
   }
 
 
@@ -150,10 +168,16 @@ export default function CrearPublicacion() {
             <TextField id="formtitle" label="Nombre" variant="outlined" name='title' value={input.name}
             onChange={(e)=>validate(e)}/>
 
-            <TextField id="formprecio" label="Precio" variant="outlined"  name='precio' value={(input.price)} type='number'
+            <Box sx={{display:'flex'}}>
+            <TextField id="formprecio" label="Precio Original" variant="outlined"  name='precioOriginal' value={parseFloat(input.priceOriginal)} type='number'
                 InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}
-                onChange={(e)=>validate(e)}
-            />                      
+                onChange={(e)=>validate(e)} fullWidth
+            /> 
+            <TextField id="formprecioOrginial" label="Precio con descuento (opcional) " variant="outlined"  name='precio' value={parseFloat(input.price)} type='number'
+                InputProps={{startAdornment: <InputAdornment position="start">$</InputAdornment>}}
+                onChange={(e)=>validate(e)} fullWidth
+            /> 
+            </Box>                     
 {/*          
             <label>Cantidad:</label>
             <input id="productStock" name='stock' value={input.stock}
@@ -164,7 +188,7 @@ export default function CrearPublicacion() {
             onChange={(ev)=>validate(ev)}>
             </TextField>
 
-
+            <Box>
             <Select
               id="formcats"
               select
@@ -179,22 +203,23 @@ export default function CrearPublicacion() {
                 <MenuItem key={category._id} value={category._id}>{category.name}</MenuItem>
               ))}
             </Select>
-
+            </Box>         
    
 
             <TextField multiline rows={10} id="formdesc" label="Descripcion" variant="outlined" name='description' value={input.description}
             onChange={(e)=>validate(e)}/>
 
+              <Box sx={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
                 <Button
                     color="secondary"
                     fullWidth
                     startIcon={ <UploadOutlined /> }
-                   
-                    
                     onClick={ () => fileInputRef.current?.click() }
                 >
                     Cargar imagen
                 </Button>
+              </Box>
+
 
             
             
@@ -246,11 +271,13 @@ export default function CrearPublicacion() {
                 </Swiper>
               </Container>
               {upLoading && <p>Subiendo Foto...</p> }
-              <Typography display='flex' justifyContent='center'>subiste {images.length} fotos</Typography>
 
-             <div>
-            <Button fullWidth sx={{ mb: 3 }} disabled={input.name===""||input.category==="Select"?true:false||input.description===""||input.price===""}  width="100%" type="submit" onClick={(e) => handleSubmit(e)}>Crear Pubicación</Button>
-            </div>   
+              
+
+            <Box sx={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
+              <Typography display='flex' justifyContent='center'>subiste {images.length} fotos</Typography>
+              <Button fullWidth sx={{ mb: 3 }} disabled={input.name===""||input.category==="Select"?true:false||input.description===""||input.priceOriginal===""}  width="100%" type="submit" onClick={(e) => handleSubmit(e)}>Crear Pubicación</Button>
+            </Box>   
 
           </Box>
 

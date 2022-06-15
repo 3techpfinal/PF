@@ -1,42 +1,59 @@
-import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Divider, Grid, TextField, Typography } from '@mui/material';
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { CartList, OrderSummary } from '../Cart';
 import NavBar from '../Components/NavBar'
-import {useContext} from 'react'
+import {useContext,useEffect,useState} from 'react'
 import CartContext from '../Cart/CartContext'
 import Cookie from 'js-cookie';
 import axios from 'axios';
 import {api} from '../actions'
-
-//import { PayPalButtons } from "@paypal/react-paypal-js";
-//import { useRouter } from 'next/router';
-
-import { AppDispatch,RootState } from '../store/index';
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
+import '@fontsource/roboto/300.css';
+import '@fontsource/roboto/500.css';
+import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
+import swal from 'sweetalert'
 
 import {CREATEORDER, GETORDER} from '../actions'
 
-import { CartState } from '../Cart';
-import { cartReducer } from '../Cart';
-import { createDraftSafeSelector } from '@reduxjs/toolkit';
-
-
 export default function SummaryPage(){ // esta es la funcion principal
-
-    const usuario=useSelector((State)=>State.rootReducer.user)
-
-    const navegar = useNavigate()    
+    const [user,setUser]=useState([])
+    const navigate = useNavigate()    
     const dispatch= useDispatch();
     const { cart,total,removeAllCartProduct } = useContext(CartContext);
+    const [userInfo,setUserInfo]=useState({})
 
-    const order = {products:cart, adress: "gandhi", isPaid: false, totalPrice: total }
-    console.log('orden creada', order)
+    useEffect(()=>{ //si el carrito esta vacio no puede entrar a esta pagina
+        setUser(()=>Cookie.get('user')&&JSON.parse(Cookie.get('user')))
+        if(!JSON.parse(Cookie.get('cart'))[0])navigate('/') //para refrescar la pagina, si esta vacio navega al home
+    },[])
+
+    let order = {products:cart, adress: user?.adress,city:user?.city, isPaid: false, totalPrice: total }
+    
 
     const crearOrden = async ()=> {
-     let ordenNueva = await dispatch(CREATEORDER(order))
-     await dispatch(GETORDER(ordenNueva.payload))
-     removeAllCartProduct()
-     navegar(`/orderpayment/${ordenNueva.payload}`)
+        if(!user?.adress){
+            if(userInfo.adress&&userInfo.name&&userInfo.city){
+            order = {products:cart,city:userInfo.city, adress: userInfo.adress, isPaid: false, totalPrice: total }
+            let ordenNueva = await dispatch(CREATEORDER(order))
+            dispatch(GETORDER(ordenNueva.payload)).then(()=>
+            navigate(`/orderpayment/${ordenNueva.payload}`))
+            removeAllCartProduct()
+            }
+            else{
+                swal({
+                    title:"Por favor complete sus datos",
+                    text:"nop",
+                    icon:"warning",
+                    button:"Aceptar"
+                })
+            }
+        }else{
+            let ordenNueva = await dispatch(CREATEORDER(order))
+            dispatch(GETORDER(ordenNueva.payload)).then(()=>
+            navigate(`/orderpayment/${ordenNueva.payload}`))
+            removeAllCartProduct()
+        }
+            
     }
 
     return(
@@ -47,27 +64,42 @@ export default function SummaryPage(){ // esta es la funcion principal
             <Grid container sx={{mt:3}}>
                 <Grid item xs={12} sm={7}>
 
-                    <CartList editable={false}/>
+                     <CartList editable={false}/>  {/*COMPONENTE LISTA DEL CARRITO */}
 
                 </Grid>
 
                 <Grid item xs={12} sm={5}>
                     <Card className='summary-card'>
                         <CardContent>
-                            <Typography variant='h2'>Resumen</Typography>
+                            <Typography variant='h4' sx={{fontWeigth:20}}>Resumen</Typography>
                             <Divider sx={{my:1}}/>
                             <Box display='flex' justifyContent='space-between'>
-                                <Typography variant='subtitle1'> Dirección de entrega</Typography>
-                                    <Link to="/modifyuser">
+                                <Typography variant='subtitle1'> Datos para la entrega:</Typography>
+                                    <Button onClick={()=>navigate('/profile')}>
                                         Editar
-                                    </Link>
+                                    </Button>
                             </Box>
 
                             
-                            {/* <Typography>{usuario?.name}</Typography>
-                            <Typography>{usuario?.adress}</Typography>
-                            <Typography>{usuario?.city}</Typography>
-                            <Typography>{usuario?.phone}</Typography> */}
+                            {user?.adress?
+                            <Box>
+                                <Typography>Nombre: {user?.name}</Typography>
+                                <Typography>Direccion: {user?.adress}</Typography>
+                                <Typography>Ciudad: {user?.city}</Typography>
+                                <Typography>Telefono: {user?.phone}</Typography>
+                            </Box>
+                            :
+                            <Box sx={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
+                                <Box sx={{display:'flex',justifyContent:'center'}}>
+                                <InfoOutlinedIcon color='error'/>
+                                <Typography>Por favor completar sus datos para poder realizar la compra</Typography>
+                                </Box>
+                                <Box sx={{display:'flex',flexDirection:'column',justifyContent:'center'}}>
+                                    <TextField placeholder='Nombre del destinatario' variant='outlined' size='small' onChange={(e)=>setUserInfo((old)=>({...old,name:e.target.value}))}/>
+                                    <TextField placeholder='Dirección de entrega' variant='outlined' size='small' onChange={(e)=>setUserInfo((old)=>({...old,adress:e.target.value}))}/>
+                                    <TextField placeholder='Ciudad' variant='outlined' size='small' onChange={(e)=>setUserInfo((old)=>({...old,city:e.target.value}))}/>
+                                </Box>
+                            </Box>}
 
                             <Divider sx={{my:1}}/>
 

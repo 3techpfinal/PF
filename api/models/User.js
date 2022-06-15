@@ -24,7 +24,26 @@ const userSchema = new Schema({
         type: String
         // required : true
     },
-
+    adress: {
+        type: String,
+        default:''
+        // required : true
+    },
+    city: {
+        type: String,
+        default:''
+        // required : true
+    },
+    phone: {
+        type: String,
+        default:''
+        // required : true
+    },
+    country: {
+        type: String,
+        default:''
+        // required : true
+    },
     avatar: {
         type: String
         // required : true
@@ -53,6 +72,13 @@ const userSchema = new Schema({
         }
     ],
 
+    orders: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Order'
+        }
+    ],
+    
     verifiedAccount: {
         type: Boolean,
         default: false,
