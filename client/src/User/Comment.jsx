@@ -82,7 +82,6 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
   };
 
   const sendReview = async() => { //FUNCION QUE ENVIA LOS DATOS A LA BDD
-    //console.log('postValue',postValue)
 
     dispatch(CREATEREVIEW(postValue)).then((r)=>{
       if(r.payload==="se guardo la calificacion"){
@@ -112,12 +111,9 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
 
   const sendModifyReview = () => { //FUNCION QUE ENVIA LOS DATOS A LA BDD
 
-   console.log("postValue",postValue)
-   //console.log("reviewId34",reviewId)
 
     dispatch(MODIFYREVIEW(postValue)).then((r)=>{
 
-      console.log('resBackend',r)
       if(r.payload==="se actualizo la calificacion"){
           setOpen(false);
           func()

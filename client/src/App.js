@@ -29,11 +29,12 @@ import PasswordChange from './Pages/PasswordChange'
 import Review from './User/Reviews'
 
 
-/// payment ////
+/// payment & orders ////
 import Cart from './Cart/CartPage.jsx'
 import OrdersTable from './Admin/OrdersTable'
 import OrderSummary from './Orders/OrderSummaryPage'
 import OrderPayment from './Orders/OrderPaymentPage'
+import EditOrder from './Orders/EditOrder'
 
 //////////////////////////////// RUTAS FIN ///////////////////////////////////////
 
@@ -45,7 +46,6 @@ function App() {
     <PayPalScriptProvider options={{ "client-id": 'AQ0xQs7KJfypFz2RqDQlSnT9qYlzBaGyXFsPaTVDQIbgpvD8n1TXUV5Qh-h6vzVdlzd4QjGDFdqOJrup' }}>
       <CartProvider>
         <Routes>
-          {/* <Route path='/' element={<><SearchInput /> <FilterByCategory />  <Btn href={"/contact"} text={"Contact Us!"} />  <Btn href={"/login"} text={"Login"} /> </>} /> */}
           <Route path='/' element={<Landing/>} />
           <Route path='/admin/uploadproduct' element={<UploadProduct/>}/>
           <Route path='/admin/editproduct/:id' element={<EditProduct/>}/>
@@ -59,6 +59,7 @@ function App() {
           <Route path='/passwordchange' element={<PasswordChange/>}/>
           <Route path='/ordersummary' element={<OrderSummary/>}/>
           <Route path='/orderpayment/:id' element={<OrderPayment/>}/>
+          <Route path='/orderedit/:id' element={<EditOrder/>}/>
           <Route path='/prueba' element={<Prueba/>}/>
           <Route path='/user/reviews' element={<Review/>}/>
         </Routes>

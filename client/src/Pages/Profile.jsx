@@ -23,18 +23,20 @@ const Profile=()=>{
     const dispatch=useDispatch()
     const [field,setField]=useState({})
     const user=Cookie.get('user') && JSON.parse(Cookie.get('user'))
+
     React.useEffect(()=>{
-        setField({
-             _id:user?._id,
-             avatar:user?.avatar,
-             name:user?.name,
-             email: user?.email,
-             adress:user?.adress,
-             city:user?.city,
-             country:user?.country,
-             phone:user?.phone
-         })
-    },[user])
+        setField(()=>({
+             _id:user?._id||'',
+             avatar:user?.avatar||'',
+             name:user?.name||'',
+             email: user?.email||'',
+             adress:user?.adress||'',
+             city:user?.city||'',
+             country:user?.country||'',
+             phone:user?.phone||''
+         }))
+    },[])
+
     const [editable,setEditable]=useState({
         avatar:false,
         name:false,
@@ -45,7 +47,6 @@ const Profile=()=>{
         country:false,
         phone:false
     })
-
     const handleChange=(campo)=>{
         setEditable((old)=>({...old,[campo]:true}))
     }
@@ -75,8 +76,8 @@ const Profile=()=>{
                     <Typography variant='body2' sx={{fontWeight:20,mt:0,ml:1,color:'black'}}>Mis Compras</Typography>
                 </IconButton>
             </Box>
-            <Avatar sx={{height:200,width:200}} alt={user.name} src={user.avatar}/>
-            <Typography variant='h5' sx={{fontWeight:20,m:2}}>{user.given_name}</Typography>
+            <Avatar sx={{height:200,width:200}} alt={user.name} src={user.avatar||user.picture}/>
+            <Typography variant='h5' sx={{fontWeight:20,m:2}}>{user.given_name||user.name}</Typography>
 
             <Divider flexItem/>
 

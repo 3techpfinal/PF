@@ -144,7 +144,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
         </ListItem>}
 
 
-      {isAdmin&&<ListItem 
+      {isAdmin&&<ListItem //SUBIR PRODUCTO
           button
           onClick={ () => navigate('/admin/uploadproduct') }>
           <ListItemIcon>
@@ -155,7 +155,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
 
       
 
-      {isAdmin&&<ListItem 
+      {isAdmin&&<ListItem   //DASHBOARD
           button
           onClick={ () => navigate('/admin/dashboard') }>
           <ListItemIcon>
@@ -164,7 +164,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
           <ListItemText primary={'Dashboard'} />
         </ListItem>}
 
-        {isAuthenticated&&<ListItem 
+        {isAuthenticated&&<ListItem //BOTON SALIR LOGOUT
           button
           onClick={ () => {
             Cookie.set('user',JSON.stringify([]))//pone en blanco al usuario n cookies

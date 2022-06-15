@@ -23,8 +23,6 @@ const UsersPage = () => {
 
     const usuarios=useSelector((State) => State.rootReducer.users);
     const orders=useSelector((State) => State.rootReducer.orders);
-   // console.log("usuarios:",usuarios)
-   // console.log("ordenes:",orders)
 
 //////////////////////////////  modificar el estado del usuario INICIO /////////////////////////
     const [userState,setUserState]=useState([]) //estado de usuarios para mostrar

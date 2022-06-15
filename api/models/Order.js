@@ -18,6 +18,10 @@ const orderSchema = new Schema({
         // required : true
     },
 
+    city : {
+        type : String
+    },
+
     isPaid : {
         type : Boolean,
         default : false

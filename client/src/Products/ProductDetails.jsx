@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Container,Box } from '@mui/system'
 import NavBar from '../Components/NavBar'
-import { Divider, Typography,Chip,Rating, IconButton,CardMedia,Avatar, Tooltip } from '@mui/material'
+import { Divider, Typography,Chip,Rating, IconButton,CardMedia,Avatar, Tooltip,Button } from '@mui/material'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -21,14 +21,20 @@ import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Loading from '../Components/Loading'
-import { GETDETAIL,GETRECOMMENDED,GETPRODUCTREVIEWS } from '../actions';
+import { GETDETAIL,GETRECOMMENDED,GETPRODUCTREVIEWS,GETCOMMENTS} from '../actions';
+import Comment from '../Components/Comment'
+import Cookie from 'js-cookie'
 
 
 const ProductDetails=()=>{
 
+
+    const actualUser = Cookie.get('user') && JSON.parse(Cookie.get('user'))
     const dispatch=useDispatch()
     const product=useSelector((state)=>state.rootReducer.detail)
+    const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
     const productReviews=useSelector((state)=>state.rootReducer.productReviews)
+    const [comments,setComments]=useState([])
     const recommended=useSelector((state)=>state.rootReducer.recommended)
     const [loaded,setLoaded]=React.useState(false)
     const {id}=useParams() //traigo el id del producto
@@ -36,11 +42,12 @@ const ProductDetails=()=>{
 
     React.useEffect(()=>{
         window.scrollTo(0, 0)
-        dispatch(GETDETAIL(id)).then(()=>dispatch(GETPRODUCTREVIEWS(id))).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
+        dispatch(GETDETAIL(id)).then(()=>dispatch(GETCOMMENTS(id))).then((r)=>setComments(()=>r.payload)).then(()=>dispatch(GETPRODUCTREVIEWS(id))).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
 
     },[dispatch,id])
 
     
+
     React.useEffect(()=>setTempCartProduct(()=>({//cuando se llene prodcut (con GETDETAIL) setea el tempcardproduct
         _id: product._id,
         imageProduct: product.imageProduct,
@@ -90,6 +97,9 @@ const ProductDetails=()=>{
         onUpdateQuantity(cant) //solamente dejo que hayan pedidos la cantidad de productos en stock, aca seteo el
    }
 
+   const makeQuestion=()=>{
+
+   }
 
     return (
         loaded?<Container sx={{mt:15}}>
@@ -196,7 +206,8 @@ const ProductDetails=()=>{
                 </Box>
             </Box>
 
-            {productReviews.length>0&&<Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
+            {productReviews.length>0&&
+            <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
                 <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Valoraciones</Typography>
                 {divider()}
 
@@ -227,6 +238,35 @@ const ProductDetails=()=>{
                 
 
             </Box>}
+
+            <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
+                <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Preguntas al vendedor</Typography>
+                {divider()}
+
+                
+                <Container component="div" sx={{ overflow: 'auto',mb:2,maxHeight:400 }}>{/* PREGUNTAS Y RESPUESTAS */}
+                    {comments?.map((comment)=>(
+                        <Box display='flex' sx={{flexDirection:'column'}}>
+                            <Box mb={1}>
+                                <Typography variant='body1' sx={{mt:2,maxHeight:200}}>"{comment.comment}"</Typography> 
+                                
+                                {isAdmin&&!comment?.replies[0]?<Comment product={product} question={comment} isAdmin={isAdmin} user={actualUser} setComments={setComments}/>:<></>}
+
+                                <Typography variant='body1' sx={{mt:2,maxHeight:200}}>{comment?.replies[0]?.comment||comment?.replies[0]?.body}</Typography> 
+                            </Box>
+                        <Divider sx={{marginX:3,marginY:3}}/>
+                        </Box>
+                
+                    ))
+                    }
+
+                    
+                </Container>
+               <Box>{isAdmin?  //Boton pop up Cartel de pregunta, solo para usuarios
+                    <></>:<Comment product={product} textButton='Hacer una pregunta' user={actualUser} setComments={setComments}/>}
+               </Box>
+                
+            </Box>
 
 
             <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>

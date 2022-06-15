@@ -22,50 +22,50 @@ const ProductsUserTable = () => {
 
     const orders=useSelector((State) => State.rootReducer.orders);
     const reviews=useSelector((State) => State.rootReducer.reviews);
+    const productsBDD=useSelector((State) => State.rootReducer.products); // para ver el estado del producto activo o bloqueado
 
     const [rows,setRows]=useState([])
     const [refreshRows,setRefreshRows]=useState(false)
-     console.log('reviews',reviews)
-     console.log('orders',orders)
 
     useEffect(()=>{
-        console.log('refreshhh',refreshRows)
         dispatch(GETORDERS())
         dispatch(GETREVIEWS())
+        dispatch(GETPRODUCTS()) //solo para saber el estado de los productos de la BDD
       },[dispatch,refreshRows])
-    //console.log('estas son las orders totales',orders)
-    /*  console.log('estas son las orders',orders.map(e=>({
-          products:e.products,
-          date:e.creationDate||'no hay'
-      })))*/
+
+      const productoIsActive = (productsBdd, product)=>{ //Estado de los productos
+        let estado=true;
+        productsBdd?.map((productBdd)=>(
+            (productBdd._id===product._id)&&(estado=productBdd.isActive)
+        ))
+        return estado
+    }
 
       useEffect(()=>{ //una vez que llegan las ordenes se llenana las rows
         const setRowsVariable=[]
-        
         orders.filter(order=>order.isPaid===true).map((order)=>( //tomo solo ordenes pagas
             order.products.forEach((product)=>setRowsVariable.push({
-                id: product._id.concat(order._id), //genero un id unico para el grid
-                productId: product._id,
-                order:order,
-                name:product.name,
-                price: `$${product.price}`,
-                image: product.imageProduct[0],
-                date:order.creationDate||"sin fecha en BDD", //fecha de compra
-                //review:product.rating? product.rating : "no tiene rating",
-                usuario:order.user,
-                producto:product,
-                hasReview:product?.hasReview||0
-            // status:product.isActive? 'Activo':'No disponible'
-             }))
-            
+                    id: product._id.concat(order._id), //genero un id unico para el grid
+                    productId: product._id,
+                    order:order,
+                    orderId:order._id,
+                    name:product.name,
+                    price: `$${product.price}`,
+                    image: product.imageProduct[0],
+                    date:order.creationDate||"sin fecha en BDD", //fecha de compra
+                    //review:product.rating? product.rating : "no tiene rating",
+                    usuario:order.user,
+                    producto:product,
+                    hasReview:product?.hasReview||0,
+                    status: productoIsActive(productsBDD,product)
+             }))   
         )
         )
-        console.log('setRowsVariable',setRowsVariable)
         setRows(()=>setRowsVariable||[])
-
-        
     },[orders])
-    console.log('filas,de  ordenes pagas y sus productos',rows)
+
+
+
 
     const productosReviewArray=orders.products?.map(product=>( //esto es para cargar el estado productState
         {//id:product._id,
@@ -80,6 +80,9 @@ const ProductsUserTable = () => {
    
     const handleChange=(e,row)=>{ //funcion que maneja el estado del producto
     
+    
+
+
 
  }
     

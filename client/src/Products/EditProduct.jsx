@@ -140,7 +140,7 @@ useEffect(()=>{
 
     }
   
-    async function handleSubmit(e){
+    async function handleSubmit(e){ //FUNCION QUE HACE EL DISPATCH PARA EDITAR
       e.preventDefault()
       if(input.price>input.priceOriginal){
         return swal({
@@ -151,7 +151,6 @@ useEffect(()=>{
       })}
 
       if(!input.price){input.price=input.priceOriginal}
-
       
           const newPost={...input,imageProduct:input.imageProduct[0]?input.imageProduct:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
           dispatch(MODIFYPRODUCT(newPost)).then(async(r)=>{

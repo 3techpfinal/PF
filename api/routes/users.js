@@ -37,10 +37,10 @@ router.post('/review',verifyToken, async (req, res,next) => { //modificado por G
             if(product._id===productId) return ({...product,hasReview:review})
             else return product // devuelve los productos que no estoy calificando de la orden
         })
-        thisOrder.products=thisOrderProducts //reemplazo el array de poductos por este map que tiene lo mismo, solo que hasReview esta cambiada
-        thisOrder.save()
-        await newReview.save() //se guarda el review
-        res.json("se guardo la calificacion")
+        thisOrder.products=thisOrderProducts; //reemplazo el array de poductos por este map que tiene lo mismo, solo que hasReview esta cambiada
+        thisOrder.save();
+        await newReview.save(); //se guarda el review
+        res.json("se guardo la calificacion");
         
     // } catch (err) {
     //     next(err)

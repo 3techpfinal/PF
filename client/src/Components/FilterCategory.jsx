@@ -13,9 +13,10 @@ export default function FilterByCategory() {
     const navigate=useNavigate()
 
     const dispatch=useDispatch()
+
     React.useEffect(()=>{
         dispatch(GETCATEGORIES())
-    },[dispatch])
+    },[])
     const categories=useSelector((state)=>state.rootReducer.categories)
 
     async function handleFilterCategory(e) {      
@@ -45,7 +46,10 @@ export default function FilterByCategory() {
             name='category'
             sx={{ height:24,bgcolor:color.color3 }}
           >
-              <MenuItem key='select' value='Todos' onClick={(e)=>{dispatch(GETPRODUCTS()); if(location!=='/')navigate('/')}}>
+              <MenuItem key='select' value='Todos' onClick={()=>{
+                dispatch(GETPRODUCTS()) 
+                if(location!=='/')navigate('/')
+                }}>
                   Todos
               </MenuItem>
                   {categories.map((category) => (

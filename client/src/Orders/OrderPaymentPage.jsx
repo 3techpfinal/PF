@@ -21,7 +21,6 @@ const currency = "USD";
 const OrderPage=()=>{
 
     const actualUser = Cookie.get('user') && JSON.parse(Cookie.get('user'))
-    //console.log("usuario",actualUser)
     const dispatch1=useDispatch()
     
     const [{ options }, dispatch] = usePayPalScriptReducer();
@@ -48,8 +47,7 @@ const OrderPage=()=>{
     const order=useSelector((State) => State.rootReducer.order);
     const products=useSelector((State) => State.rootReducer.products);
     const [isPaid,setIsPaid]=useState(order.isPaid?true:false)
-    const [isPaid2,setIsPaid2]=useState(false)
-
+    const [isPaid2,setIsPaid2]=useState(false) //muestra o no los relampagos
 
      //const detalle=useSelector((State) => State.rootReducer.detail);
 
@@ -182,29 +180,24 @@ const OrderPage=()=>{
                             <Box display='flex' justifyContent='space-between'>
                                 <Typography variant='subtitle1'> Dirección de entrega</Typography>
                                
-                                    <Link underline='always'>
+                                    {/* <Link underline='always'>
                                         Editar
-                                    </Link>
+                                    </Link> */}
        
                             </Box>
 
                             
-                            {/*<Typography>{order.user.name}</Typography>
-                            <Typography>{order.adress}</Typography>
-                            <Typography>{order.user.country}</Typography>
-                            <Typography>{order.user.phone}</Typography>*/}
-                            {/* <Typography>{usuario.name}</Typography>
-                            <Typography>{usuario.adress}</Typography>
-                            <Typography>{usuario.city}</Typography>
-                            <Typography>{usuario.phone}</Typography> */}
+                            {order?.name&&<Typography>Nombre: {order?.name}</Typography>}
+                            <Typography>Direccion: {order?.adress}</Typography>
+                            <Typography>Ciudad: {order?.city}</Typography>
 
                             <Divider sx={{my:1}}/>
 
                             <Box display='flex' justifyContent='end'>
                                 
-                                    <Link underline='always'>
+                                    {/* <Link underline='always'>
                                         Editar
-                                    </Link>
+                                    </Link> */}
 
                                
                             </Box>
