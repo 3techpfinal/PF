@@ -125,9 +125,11 @@ const UsersPage = () => {
             width: 200,
             sortable: false,
             renderCell: (params)=>{
-                return (           
-                        <Button onClick={(e)=> deleteOrder(params.row) }>
-                                   eliminar
+                return (
+                        params.row?.isPaid?
+                        <Button fullWidth sx={{color:'gray', backgroundColor:'gray'}}></Button> :
+                        <Button  onClick={(e)=> deleteOrder(params.row) }>
+                            eliminar
                         </Button>
                         )
                 
