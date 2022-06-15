@@ -43,7 +43,7 @@ import EditOrder from './Orders/EditOrder'
 import Prueba from './Pruebas/LineChart'
 
 function App() {
-  const isLogged=Cookie.get('user')&&JSON.parse(Cookie.get('user')).name?true:false
+  const isLogged=Cookie.get('user')&&JSON.parse(Cookie.get('user')).email?true:false
   const isAdmin=Cookie.get('user')&&JSON.parse(Cookie.get('user')).role==='admin'?true:false
   const dispatch=useDispatch()
   const [wishlist,setWishList]=useState([])
