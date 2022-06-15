@@ -93,17 +93,17 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
        {isAdmin? 'Responder pregunta' : 'Hacer pregunta' }
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Realiza una pregunta</DialogTitle>
+        <DialogTitle>{isAdmin?'Responder':'Realiza una pregunta'}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {`Que duda tenes sobre ${product.name}?`}
+            {isAdmin?`Responder esta pregunta sobre ${product.name}`:`Que duda tenes sobre ${product.name}?`}
           </DialogContentText>
 
           <TextField
             
             margin="dense"
             id="name"
-            label="Deja tu consulta!"
+            label={isAdmin?"Deja tu respuesta!":"Deja tu consulta!"}
             fullWidth
             variant="standard"
             height={300}
