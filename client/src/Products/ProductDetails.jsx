@@ -126,7 +126,7 @@ const ProductDetails=({wishlist,setWishList})=>{
                 </Swiper>
                 </Container>
 
-                <Box sx={{flexDirection:'column'}}>
+                <Box sx={{flexDirection:'column',width:{xs:'100%',md:'50%'}}}>
                     <Box sx={{flexDirection:'column'}}>
                         <Box sx={{m:1,border:'1px solid lightgray',p:3,pt:1,borderRadius:5}}>
                             <Box sx={{display:'flex',justifyContent:'space-between'}}>
@@ -193,7 +193,7 @@ const ProductDetails=({wishlist,setWishList})=>{
                             {divider()}
                             <Box sx={{display:'flex',alignItems:'center'}}>
                             {typo('Valoracion: ')}
-                            <Rating readOnly defaultValue={product.rating}/>
+                            <Rating readOnly defaultValue={product.rating} precision={0.1}/>
                             </Box>
 
                         </Box>
@@ -216,7 +216,7 @@ const ProductDetails=({wishlist,setWishList})=>{
                                     <Typography ml={1}>{productReview.user.email}</Typography>
                                 </Box>
                                 <Box display='flex' mt={1}>
-                                    <Rating  readOnly defaultValue={productReview.review}/>
+                                    <Rating  readOnly defaultValue={productReview.review} precision={0.1}/>
                                 </Box>
                                 
                                 

@@ -26,7 +26,6 @@ router.get("/", verifyToken, async (req, res, next) => {
 
         const actualUser = await User.findById(req.userId);
         const allOrders = await Order.find().populate(['products', 'user']);
-        console.log(allOrders) 
         if(actualUser.role.includes('admin')){
             return res.send(allOrders)
         } else {

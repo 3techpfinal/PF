@@ -24,7 +24,7 @@ router.get("/:tokenId", async(req, res, next)=>{
     if(!user) return res.send("No user found - Invalid token")
     
     const verifiedUser = await User.findByIdAndUpdate(user.id, {verifiedAccount: true},  {upsert: true, new : true})
-    console.log(verifiedUser)
+    
     token.remove();
     return res.send('Account successfully verified')
     

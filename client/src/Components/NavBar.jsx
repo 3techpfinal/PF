@@ -30,6 +30,7 @@ import {CartList} from '../Cart/CartList'
 import Cookie from 'js-cookie'
 import {api} from '../actions'
 import WishList from './WishList'
+import swal from 'sweetalert';
 
 const logo=require('./3TECH.png')
 
@@ -332,7 +333,16 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
 
                     }).then(()=>{
                       dispatch(VERIFYADMIN())
-                      window.location.reload()
+                      let user=Cookie.get('user')&&JSON.parse(Cookie.get('user'))
+                      if(user.suspendedAccount===true){
+                        return swal({title:"Usuario Bloqueado",text:"Por favor contactarse con admin@mail.com",icon:"error",button:"Aceptar"})
+                        .then(()=>{
+                          Cookie.set('user',JSON.stringify([]))//pone en blanco al usuario n cookies
+                          Cookie.remove('cart')
+                          Cookie.remove('token')
+                          logout({returnTo:window.location.origin})})
+                      }
+                     else window.location.reload()
                       })}>
                       Login
                     </Button>}
