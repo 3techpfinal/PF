@@ -33,7 +33,9 @@ export default function BasicPopover({wishlist,setWishList}) {
   return (
     <div>
       <IconButton aria-describedby={id} variant="contained" onClick={handleClick} style={{color: 'white'}}>
+        <Badge badgeContent={wishlist.length} color="error">
         <FavoriteIcon/>
+        </Badge>
       </IconButton>
       <Popover
         id={id}
