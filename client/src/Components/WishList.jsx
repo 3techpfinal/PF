@@ -8,6 +8,7 @@ import { GETWISHLIST,DELETEFROMWISHLIST } from '../actions';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import { NavLink, useNavigate } from 'react-router-dom';
+import Badge from '@mui/material/Badge';
 
 export default function BasicPopover({wishlist,setWishList}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
