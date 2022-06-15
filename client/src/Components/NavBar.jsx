@@ -11,6 +11,7 @@ import FavoriteIcon from '@mui/icons-material/Favorite';
 import AccountCircle from '@mui/icons-material/AccountCircle';
 import NotificationsIcon from '@mui/icons-material/Notifications';
 import Avatar from '@mui/material/Avatar';
+import UploadIcon from '@mui/icons-material/Upload';
 import { NavLink,Link, useNavigate } from 'react-router-dom';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import color from '../styles'
@@ -149,7 +150,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
           button
           onClick={ () => navigate('/admin/uploadproduct') }>
           <ListItemIcon>
-              <CategoryOutlined/> 
+              <UploadIcon/> 
           </ListItemIcon>
           <ListItemText primary={'Publicar producto'} />
         </ListItem>}
