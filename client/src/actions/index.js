@@ -244,9 +244,9 @@ export const EDITORDER=createAsyncThunk('EDITYORDER',async (input)=>{
   })
 
 
-export const SEARCHPRODUCTINORER = createAsyncThunk('SEARCHPRODUCTINORER', async (name) => { // trae los productos de una orden
+export const SEARCHORDERS = createAsyncThunk('SEARCHORDERS', async (name) => { // trae los productos de una orden
     const token=Cookie.get('token')
-    const response = await axios(`${api}/orders`,{
+    const response = await axios(`${api}/orders?name=${name}`,{
         headers:{
             'x-access-token':token
         }

@@ -172,6 +172,11 @@ const rootReducer = createReducer(initialState, (builder) => {
     .addCase(actions.PAYORDER.fulfilled, (state, action) => {
     })
 
+    .addCase(actions.SEARCHORDERS.fulfilled, (state, action) => {
+      state.orders=[]
+      state.orders=action.payload
+    })
+
 
 
 })
