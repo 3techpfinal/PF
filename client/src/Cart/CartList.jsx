@@ -42,7 +42,7 @@ export const CartList = ({ editable = false,order=false,orderIsPaid=false }) => 
             })))
     },[productsBDD])
     
-    const array=order || cart
+    const array=order.products || cart
 
 
     const onNewCartQuantityValue = (product, newQuantityValue) => {
