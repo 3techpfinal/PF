@@ -144,7 +144,7 @@ const ProductDetails=({wishlist,setWishList})=>{
 
                             
 
-                            <Box display='flex' flexDirection='row'>
+                            <Box display='flex' flexDirection='row' alignItems='center'>
                                 <Box>
                                 {product.priceOriginal && product.price!==product.priceOriginal ?
                                     <div>
@@ -155,7 +155,7 @@ const ProductDetails=({wishlist,setWishList})=>{
                                     <Typography variant='h5' sx={{mt:1,fontWeight:12}}> {'$'+new Intl.NumberFormat().format(product.price)} </Typography>}                  
                                 </Box>
                                 <Box display='flex' justifyContent="end">
-                                    {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
+                                    {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2,ml:1}}/>:<></>}
                                 </Box>
                             </Box>
 
