@@ -82,7 +82,7 @@ const UsersPage = () => {
 
       const deleteOrder=async(row)=>{
         swal({
-            title: "Estas seguro que deseas eliminar la orden?",
+            title: "Estas seguro que deseas eliminar el producto?",
             text: "",
             icon: "warning",
             buttons: true,

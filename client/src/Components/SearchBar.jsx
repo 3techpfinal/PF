@@ -21,7 +21,8 @@ export default function SearchInput({placeholder,url,dinamic,action}) {
   }
 
    React.useEffect(()=>
-   {dinamic && dispatch(action(input))},[input])
+   {dinamic && dispatch(action(input))}
+   ,[input])
 
 
   return (

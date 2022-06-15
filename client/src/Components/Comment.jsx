@@ -16,7 +16,7 @@ import { useDispatch } from 'react-redux';
 
 const useAppDispatch = () => useDispatch();
 
-export default function FormDialog({product,func,user,textButton,question, isAdmin}) { //FUNCION PRINCIPAL
+export default function FormDialog({product,user,textButton,question, isAdmin,setComments}) { //FUNCION PRINCIPAL
 
   const dispatch=useAppDispatch()
   const navegar = useNavigate()
@@ -37,9 +37,9 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
   productId: product._id,
   productName:product.name,
   comment: '', //setea en "" a comment como default
-  questionId:question._id,
+  questionId:question?._id,
   answerId:'',
-  userEmail: question.userEmail,
+  userEmail: question?.userEmail,
 })),[product,user])
 
   const [open, setOpen] = React.useState(false);
@@ -53,13 +53,12 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
   };
 
   const sendQuestion = async() => { //FUNCION QUE ENVIA LOS DATOS A LA BDD
+    
     if(postValue.comment===""){return swal({title:"Error",text:"Tiene que haber una pregunta",icon:"error",button:"Aceptar"})}
     dispatch(MAKEQUESTION(postValue)).then((r)=>{
-      console.log("postValue",postValue)
-      console.log("resBack",r)
       if(r.payload==="Se envio la pregunta"){
+          setComments((old)=>[...old,{...postValue,replies:[]}])//se le agrega replies con un array vacio para que no rompa en ProductDetails linea 257
           setOpen(false);
-          //func()
           swal({title:"Realizado",text:"Se realizo la pregunta", icon:"success",button:"Aceptar"})
         }else{
           setOpen(false);
@@ -72,11 +71,12 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
   const sendAnswer = async() => { //FUNCION QUE ENVIA LOS DATOS A LA BDD
     if(postValue.comment===""){return swal({title:"Error",text:"Tiene que haber una respuesta",icon:"error",button:"Aceptar"})}
     dispatch(MAKEANSWER(postValue)).then((r)=>{
-      console.log("postValue",postValue)
-      console.log("resBack",r)
       if(r.payload==="Se envio la respuesta"){
+          setComments((old)=>old.map((comment)=>{
+            if(comment._id===question._id)return {...comment,replies:[{comment:postValue.comment}]}
+            else return comment
+          }))
           setOpen(false);
-          //func()
           swal({title:"Realizado",text:"Se respondio la pregunta", icon:"success",button:"Aceptar"})
         }else{
           setOpen(false);
@@ -93,17 +93,17 @@ React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL)
        {isAdmin? 'Responder pregunta' : 'Hacer pregunta' }
       </Button>
       <Dialog open={open} onClose={handleClose}>
-        <DialogTitle>Realiza una pregunta</DialogTitle>
+        <DialogTitle>{isAdmin?'Responder':'Realiza una pregunta'}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            {`Que duda tenes sobre ${product.name}?`}
+            {isAdmin?`Responder esta pregunta sobre ${product.name}`:`Que duda tenes sobre ${product.name}?`}
           </DialogContentText>
 
           <TextField
             
             margin="dense"
             id="name"
-            label="Deja tu consulta!"
+            label={isAdmin?"Deja tu respuesta!":"Deja tu consulta!"}
             fullWidth
             variant="standard"
             height={300}

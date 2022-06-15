@@ -324,7 +324,3 @@ export default function CrearPublicacion() {
     </div>
     );
   }
-
-
-  // <button onClick={(e)=>{handleDelete(e,image)}}>X</button>
-

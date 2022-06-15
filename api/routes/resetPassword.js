@@ -59,7 +59,7 @@ router.post('/:userId/:token', async (req, res, next) => {
         
         const encryptedPassword = await encryptPassword(password)
         const updatedUser = await User.findByIdAndUpdate({_id:userId}, { $set:{password : encryptedPassword}},  {upsert: true, new : true})
-        console.log(updatedUser)
+        
         
         tokenFound.remove()
         

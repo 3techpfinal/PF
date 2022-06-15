@@ -2,6 +2,7 @@ import axios from "axios"
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import Cookie from 'js-cookie'
 
+//export const api='https://t3ch22.herokuapp.com'
 export const api='http://localhost:3000'
 
                         /////////////////////////////////////   
@@ -44,6 +45,7 @@ export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => 
     })
     return response.data
 })
+
 
 export const SEARCHBYNAMEPRODUCTS=createAsyncThunk('SEARCHBYNAMEPRODUCTS',async (name)=>{// recibe un string por query y busca un producto
     const result=await axios(`${api}/products?name=${name}`) 
@@ -182,6 +184,7 @@ export const ADDTOWISHLIST = createAsyncThunk('ADDTOWISHLIST', async (productId)
     return response.data
 })
 
+
 export const DELETEFROMWISHLIST=createAsyncThunk('DELETEFROMWISHLIST',async (productId)=>{
     const token=Cookie.get('token')
     const wishlist=await axios.put(`${api}/users/wishlist/${productId}`,productId,{headers:{
@@ -242,9 +245,9 @@ export const EDITORDER=createAsyncThunk('EDITYORDER',async (input)=>{
   })
 
 
-export const SEARCHPRODUCTINORER = createAsyncThunk('SEARCHPRODUCTINORER', async (name) => { // trae los productos de una orden
+export const SEARCHORDERS = createAsyncThunk('SEARCHORDERS', async (name) => { // trae los productos de una orden
     const token=Cookie.get('token')
-    const response = await axios(`${api}/orders`,{
+    const response = await axios(`${api}/orders?name=${name}`,{
         headers:{
             'x-access-token':token
         }

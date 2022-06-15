@@ -23,18 +23,20 @@ const Profile=()=>{
     const dispatch=useDispatch()
     const [field,setField]=useState({})
     const user=Cookie.get('user') && JSON.parse(Cookie.get('user'))
+
     React.useEffect(()=>{
-        setField({
-             _id:user?._id,
-             avatar:user?.avatar,
-             name:user?.name,
-             email: user?.email,
-             adress:user?.adress,
-             city:user?.city,
-             country:user?.country,
-             phone:user?.phone
-         })
-    },[user])
+        setField(()=>({
+             _id:user?._id||'',
+             avatar:user?.avatar||'',
+             name:user?.name||'',
+             email: user?.email||'',
+             adress:user?.adress||'',
+             city:user?.city||'',
+             country:user?.country||'',
+             phone:user?.phone||''
+         }))
+    },[])
+
     const [editable,setEditable]=useState({
         avatar:false,
         name:false,
@@ -45,7 +47,6 @@ const Profile=()=>{
         country:false,
         phone:false
     })
-
     const handleChange=(campo)=>{
         setEditable((old)=>({...old,[campo]:true}))
     }
@@ -69,14 +70,14 @@ const Profile=()=>{
             display:'flex',flexDirection:'column',justifyContent:'space-around'}}>
 
             <Box sx={{display:'flex',flexDirection:'column',justifyContent:'center',alignItems:'center'}}>
-            <Box sx={{display:'flex',width:'100%',justifyContent:'flex-end',mb:2}}>
+            {/* <Box sx={{display:'flex',width:'100%',justifyContent:'flex-end',mb:2}}>
                 <IconButton sx={{display:'flex',borderRadius:1,bgcolor:color.color2}}>
                     <LocalMallIcon/>
                     <Typography variant='body2' sx={{fontWeight:20,mt:0,ml:1,color:'black'}}>Mis Compras</Typography>
                 </IconButton>
-            </Box>
-            <Avatar sx={{height:200,width:200}} alt={user.name} src={user.avatar}/>
-            <Typography variant='h5' sx={{fontWeight:20,m:2}}>{user.given_name}</Typography>
+            </Box> */}
+            <Avatar sx={{height:200,width:200}} alt={user.name} src={user.avatar||user.picture}/>
+            <Typography variant='h5' sx={{fontWeight:20,m:2}}>{user.given_name||user.name}</Typography>
 
             <Divider flexItem/>
 

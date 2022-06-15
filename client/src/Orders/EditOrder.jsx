@@ -31,15 +31,15 @@ export default function SummaryPage(){ // esta es la funcion principal
         dispatch(GETORDER(id))
     },[dispatch])
 
-    useEffect(()=>{setInputOrder({
-        /*order.products.map((product)=>{(
-            _id:order._id,
-            price:order.totalPrice
-            products:                                                               
-        })*/
+    // useEffect(()=>{setInputOrder({
+    //     /*order.products.map((product)=>{(
+    //         _id:order._id,
+    //         price:order.totalPrice
+    //         products:                                                               
+    //     })*/
 
-    })},[order]
-    )
+    // })},[order]
+    // )
 
 
 

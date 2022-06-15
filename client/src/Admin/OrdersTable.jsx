@@ -3,7 +3,7 @@ import { useEffect, useState} from 'react';
 import { DataGrid,} from '@mui/x-data-grid';
 import { Grid, Box, Button, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {GETORDERS,SEARCHBYNAMEPRODUCTS,GETORDER,DELETEORDER} from '../actions'
+import {GETORDERS,SEARCHORDERS,GETORDER,DELETEORDER} from '../actions'
 import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
 import { Chip } from '@mui/material'
@@ -155,10 +155,10 @@ const UsersPage = () => {
     <Typography variant='h2'>Ordenes</Typography>
 
     <SearchBar 
-                placeholder="buscar por nombre de producto"
+                placeholder="Buscar por nombre de producto o usuario"
                 url='/orderstable'
                 dinamic={true}
-                action={SEARCHBYNAMEPRODUCTS}
+                action={SEARCHORDERS}
         />
 
         

@@ -99,8 +99,7 @@ router.post('/:productId/questions/:questionId', [verifyToken,isAdmin], async(re
         questionId,
         {$push: {"replies": newResponse._id}},
         {upsert: true, new : true});
-
-        console.log(updatedQuestion);       
+  
         
         res.json("Se envio la respuesta");
 

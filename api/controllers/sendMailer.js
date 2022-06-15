@@ -6,7 +6,6 @@ import crypto from "crypto"
 export const verifyAccount = function (userId,userEmail){
     const token = new Token({user: userId, token: crypto.randomBytes(16).toString('hex')});
     token.save()
-    console.log('Token: ', token.token)
 
     const emailOptions = {
             from: '3techpfinal@gmail.com',
@@ -28,7 +27,6 @@ export const verifyAccount = function (userId,userEmail){
 export const resetPassword = function (userId,userEmail){
     const token = new Token({user: userId, token: crypto.randomBytes(16).toString('hex')});
     token.save()
-    console.log('Token: ', token.token)
 
     const emailOptions = {
             from: '3techpfinal@gmail.com',

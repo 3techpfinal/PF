@@ -30,6 +30,7 @@ import {CartList} from '../Cart/CartList'
 import Cookie from 'js-cookie'
 import {api} from '../actions'
 import WishList from './WishList'
+import swal from 'sweetalert';
 
 const logo=require('./3TECH.png')
 
@@ -55,7 +56,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
 
      
 },[isHovered])
-
+  
 
   const categories=useSelector((state)=>state.rootReducer.categories)
   const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
@@ -250,9 +251,13 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                     </Link>
                 </Box>
 
-                <Box display='flex' flexDirection='row'>
-                  <img width='50' src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="MDN Logo"></img>
-                  <Typography variant='h5'>($)</Typography>   
+                <Box display={{xs:'none', sm:'flex'}} sx={{position:'absolute',top:10,left:'20vw',zIndex:1100}} flexDirection='row' alignItems='center'>
+                  <CardMedia
+                    image={"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png"}
+                    component='img'
+                    sx={{width:40}}
+                  />
+                  <Typography variant='body2'>(USD)</Typography>   
                 </Box>
 
 
@@ -276,7 +281,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                         
                       </FavoriteIcon>
                     </IconButton> */}
-                    <WishList wishlist={wishlist} setWishList={setWishList}/>
+                    {isAuthenticated&&<WishList wishlist={wishlist} setWishList={setWishList}/>}
                     
 
                     <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
@@ -298,7 +303,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                       onClick={handleProfileMenuOpen}
                       color="inherit"
                     >
-                      <Avatar alt="Remy Sharp" src={user?.picture} />
+                      <Avatar alt={user?.name} src={user?.avatar||user?.picture} />
                     </IconButton>
                     :
                     <Button sx={{bgcolor:color.color2,color:'black',ml:2}}
@@ -328,7 +333,16 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
 
                     }).then(()=>{
                       dispatch(VERIFYADMIN())
-                      window.location.reload()
+                      let user=Cookie.get('user')&&JSON.parse(Cookie.get('user'))
+                      if(user.suspendedAccount===true){
+                        return swal({title:"Usuario Bloqueado",text:"Por favor contactarse con admin@mail.com",icon:"error",button:"Aceptar"})
+                        .then(()=>{
+                          Cookie.set('user',JSON.stringify([]))//pone en blanco al usuario n cookies
+                          Cookie.remove('cart')
+                          Cookie.remove('token')
+                          logout({returnTo:window.location.origin})})
+                      }
+                     else window.location.reload()
                       })}>
                       Login
                     </Button>}
@@ -360,7 +374,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                 <FilterCategory/>
                 <Divider orientation="vertical" flexItem sx={{display:{xs:'none',md:'flex'},bgcolor:'white',marginX:1}}/>
                     <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
-                      {categories.map((e)=>(
+                      {categories.slice(0,4).map((e)=>(
                       <>
                           <Button onClick={()=>{dispatch(SEARCHBYCATEGORY(e._id)); navigate('/') }}>
                             <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>

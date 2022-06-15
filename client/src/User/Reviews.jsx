@@ -26,20 +26,12 @@ const ProductsUserTable = () => {
 
     const [rows,setRows]=useState([])
     const [refreshRows,setRefreshRows]=useState(false)
-     console.log('reviews',reviews)
-     console.log('orders',orders)
 
     useEffect(()=>{
-        console.log('refreshhh',refreshRows)
         dispatch(GETORDERS())
         dispatch(GETREVIEWS())
         dispatch(GETPRODUCTS()) //solo para saber el estado de los productos de la BDD
       },[dispatch,refreshRows])
-    //console.log('estas son las orders totales',orders)
-    /*  console.log('estas son las orders',orders.map(e=>({
-          products:e.products,
-          date:e.creationDate||'no hay'
-      })))*/
 
       const productoIsActive = (productsBdd, product)=>{ //Estado de los productos
         let estado=true;
@@ -69,13 +61,11 @@ const ProductsUserTable = () => {
              }))   
         )
         )
-        console.log('setRowsVariable',setRowsVariable)
         setRows(()=>setRowsVariable||[])
     },[orders])
 
 
 
-    console.log('filas,de  ordenes pagas y sus productos',rows)
 
     const productosReviewArray=orders.products?.map(product=>( //esto es para cargar el estado productState
         {//id:product._id,

@@ -25,6 +25,5 @@ export const verifyToken = async (req, res, next) => {
 export const isAdmin = async (req, res, next) => {
     const user = await User.findById(req.userId);
  
-    console.log('Role => ', user.role);
     user.role.includes('admin') ? next() : res.status(403).json({message : 'Unauthorized action'})
 }
