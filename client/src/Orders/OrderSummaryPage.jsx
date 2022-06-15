@@ -23,8 +23,9 @@ export default function SummaryPage(){ // esta es la funcion principal
     const [userInfo,setUserInfo]=useState({})
 
     useEffect(()=>{ //si el carrito esta vacio no puede entrar a esta pagina
-        setUser(()=>Cookie.get('user')&&JSON.parse(Cookie.get('user')))
         if(!JSON.parse(Cookie.get('cart'))[0])navigate('/') //para refrescar la pagina, si esta vacio navega al home
+        setUser(()=>Cookie.get('user')&&JSON.parse(Cookie.get('user')))
+        
     },[])
 
     let order = {products:cart, adress: user?.adress,city:user?.city, isPaid: false, totalPrice: total }

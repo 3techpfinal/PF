@@ -1,11 +1,13 @@
 import './App.css';
 /////////// PROVIDERS ///////////////
 
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes,Navigate } from 'react-router-dom';
 import { PayPalScriptProvider} from "@paypal/react-paypal-js";
 import  CartProvider  from './Cart/CartProvider';
-import { useAuth0 } from "@auth0/auth0-react";
-
+import Cookie from 'js-cookie'
+import { useDispatch, useSelector } from 'react-redux';
+import { useState,useEffect } from 'react';
+import { GETWISHLIST } from './actions';
 /////////// PROVIDERS FIN ///////////////
 
 //////////////////////////////// RUTAS ///////////////////////////////////////
@@ -41,27 +43,34 @@ import EditOrder from './Orders/EditOrder'
 import Prueba from './Pruebas/LineChart'
 
 function App() {
+  const isLogged=Cookie.get('user')&&JSON.parse(Cookie.get('user')).name?true:false
+  const isAdmin=Cookie.get('user')&&JSON.parse(Cookie.get('user')).role==='admin'?true:false
+  const dispatch=useDispatch()
+  const [wishlist,setWishList]=useState([])
+  useEffect(()=>{
+    Cookie.get('token')?dispatch(GETWISHLIST()).then((r)=>setWishList(()=>r.payload)):setWishList(()=>[])
+  },[])
   return (
 
     <PayPalScriptProvider options={{ "client-id": 'AQ0xQs7KJfypFz2RqDQlSnT9qYlzBaGyXFsPaTVDQIbgpvD8n1TXUV5Qh-h6vzVdlzd4QjGDFdqOJrup' }}>
       <CartProvider>
         <Routes>
-          <Route path='/' element={<Landing/>} />
-          <Route path='/admin/uploadproduct' element={<UploadProduct/>}/>
-          <Route path='/admin/editproduct/:id' element={<EditProduct/>}/>
-          <Route path='/product/:id' element={<ProductDetails/>}/>
-          <Route path='/profile' element={<Profile/>}/>
+          <Route path='/' element={<Landing wishlist={wishlist} setWishList={setWishList}/>} />
+          <Route path='/admin/uploadproduct' element={!isAdmin?<Navigate replace to='/'/>:<UploadProduct/>}/>
+          <Route path='/admin/editproduct/:id' element={!isAdmin?<Navigate replace to='/'/>:<EditProduct/>}/>
+          <Route path='/product/:id' element={<ProductDetails wishlist={wishlist} setWishList={setWishList}/>}/>
+          <Route path='/profile' element={!isLogged?<Navigate replace to='/'/>:<Profile/>}/>
           <Route path='/cart' element={<Cart/>}/>
-          <Route path='/admin/dashboard' element={<Dashboard/>}/>
-          <Route path='/admin/userstable' element={<UserTable/>}/>
+          <Route path='/admin/dashboard' element={!isAdmin?<Navigate replace to='/'/>:<Dashboard/>}/>
+          <Route path='/admin/userstable' element={!isAdmin?<Navigate replace to='/'/>:<UserTable/>}/>
           <Route path='/orderstable' element={<OrdersTable/>}/>
-          <Route path='/admin/productstable' element={<ProductsTable/>}/>
+          <Route path='/admin/productstable' element={!isAdmin?<Navigate replace to='/'/>:<ProductsTable/>}/>
           <Route path='/passwordchange' element={<PasswordChange/>}/>
           <Route path='/ordersummary' element={<OrderSummary/>}/>
           <Route path='/orderpayment/:id' element={<OrderPayment/>}/>
           <Route path='/orderedit/:id' element={<EditOrder/>}/>
           <Route path='/prueba' element={<Prueba/>}/>
-          <Route path='/user/reviews' element={<Review/>}/>
+          <Route path='/user/reviews' element={!isLogged?<Navigate replace to='/'/>:<Review/>}/>
         </Routes>
       </CartProvider>
     </PayPalScriptProvider>

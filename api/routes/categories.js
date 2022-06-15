@@ -5,10 +5,10 @@ import {verifyToken, isAdmin} from '../middlewares/authJwt.js';
 const router = Router();
 
 router.post('/', [verifyToken, isAdmin], async(req,res,next)=>{
-    const { name } = req.body;
+    const { categoryText } = req.body;
 
     try {
-        const newCategory = new Category({name});
+        const newCategory = new Category({name: categoryText});
         await newCategory.save();
         res.send(newCategory);
     } catch(err){

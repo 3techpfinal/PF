@@ -11,7 +11,7 @@ router.post('/', [verifyToken, isAdmin], async (req, res,next) => {
         const found = await Product.findOne({ name: req.body.name })
 
         if (found) {
-            res.send('You can´t post the same product twice')
+            res.send('ya existe un producto con ese nombre')
         }
         else {
 
@@ -21,7 +21,7 @@ router.post('/', [verifyToken, isAdmin], async (req, res,next) => {
         newProduct.setCreationDate();  
         await newProduct.save()
 
-        res.send(newProduct)
+        res.json("Se creo el producto exitosamente")
         }
     } catch (err) {
         next(err)

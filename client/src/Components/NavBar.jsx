@@ -55,7 +55,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
 
      
 },[isHovered])
-
+  
 
   const categories=useSelector((state)=>state.rootReducer.categories)
   const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
@@ -250,9 +250,13 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                     </Link>
                 </Box>
 
-                <Box display='flex' flexDirection='row'>
-                  <img width='50' src="https://upload.wikimedia.org/wikipedia/commons/1/1a/Flag_of_Argentina.svg" alt="MDN Logo"></img>
-                  <Typography variant='h5'>($)</Typography>   
+                <Box display={{xs:'none', sm:'flex'}} sx={{position:'absolute',top:10,left:'20vw',zIndex:1100}} flexDirection='row' alignItems='center'>
+                  <CardMedia
+                    image={"https://upload.wikimedia.org/wikipedia/commons/thumb/a/a4/Flag_of_the_United_States.svg/1200px-Flag_of_the_United_States.svg.png"}
+                    component='img'
+                    sx={{width:40}}
+                  />
+                  <Typography variant='body2'>(USD)</Typography>   
                 </Box>
 
 
@@ -360,7 +364,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                 <FilterCategory/>
                 <Divider orientation="vertical" flexItem sx={{display:{xs:'none',md:'flex'},bgcolor:'white',marginX:1}}/>
                     <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
-                      {categories.map((e)=>(
+                      {categories.slice(0,4).map((e)=>(
                       <>
                           <Button onClick={()=>{dispatch(SEARCHBYCATEGORY(e._id)); navigate('/') }}>
                             <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>

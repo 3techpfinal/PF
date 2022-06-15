@@ -1,14 +1,16 @@
 import {Box, Button, Card, CardContent, Divider, Grid,Typography} from '@mui/material';
-import { NavLink } from 'react-router-dom';
+import { Navigate, NavLink, useNavigate } from 'react-router-dom';
 import {  OrderSummary } from './OrderSummary';
 import { CartList } from './CartList';
 import NavBar from '../Components/NavBar'
+import { useAuth0 } from '@auth0/auth0-react';
+import swal from 'sweetalert';
 
 
 const CartPage=()=>{
-
-
-
+            
+    const {isAuthenticated}=useAuth0()
+    const navigate=useNavigate()
     return(
         <>
             <NavBar/>
@@ -27,11 +29,20 @@ const CartPage=()=>{
 
                             <OrderSummary/>
                             <Box sx={{mt:3}}>
-                                <NavLink  to='/ordersummary'>
-                                <Button color='secondary' className='circular-btn' fullWidth>
+                                <Button color='secondary' className='circular-btn' fullWidth onClick={()=>{
+                                    if(!isAuthenticated){
+                                        swal({
+                                            title:"Por favor inicie sesión",
+                                            text:"Para completar su compra es necesario iniciar sesión",
+                                            icon:"warning",
+                                            button:"Aceptar"
+                                        })
+                                    }else{
+                                        navigate('/ordersummary')
+                                    }
+                                }}>
                                     Ir al checkout
                                 </Button>
-                                </NavLink>
 
                             </Box>
 
