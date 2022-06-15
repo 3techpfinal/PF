@@ -117,7 +117,7 @@ export default function ProductCard({product,wishlist,setWishList}) {
             <AddShoppingCartIcon  sx={{ml:1}}/>
           </IconButton>
         </Tooltip>
-
+        {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2,ml:'7vw'}}/>:<></>}
       <CardActionArea
       onClick={()=>navigate(`/product/${product._id}`)}
       >
@@ -136,7 +136,6 @@ export default function ProductCard({product,wishlist,setWishList}) {
                   <Typography gutterBottom variant="h6" sx={{color:'white',fontWeight:'200'}}>
                   {product?.name?.slice(0,15)}
                   </Typography>
-                  {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
                 </Box>
             </Tooltip>
 
