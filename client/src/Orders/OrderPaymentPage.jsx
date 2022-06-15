@@ -169,7 +169,7 @@ const OrderPage=()=>{
 
 
                 <Grid item xs={12} sm={7}>
-                    <CartList editable={false} order={order.products} orderIsPaid={isPaid}/>
+                    <CartList editable={false} order={order} orderIsPaid={isPaid}/>
                 </Grid>
                 <Grid item xs={12} sm={5}>
                     <Card className='summary-card'>
