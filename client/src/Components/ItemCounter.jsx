@@ -7,7 +7,9 @@ export default function  ItemCounter ({currentValue, updatedQuantity, maxValue})
 
     const addOrRemove = ( value ) => {
         if ( value === -1 ) {
-          if ( currentValue === 1 ) return;
+          if ( currentValue <= 0 ) return;
+          if ( currentValue <= 1 ) return;
+          
     
           return updatedQuantity( currentValue - 1);
         }

@@ -44,7 +44,7 @@ export default function SummaryPage(){ // esta es la funcion principal
 
 
 
-
+console.log("order",order)
     const editarOrden = async ()=> {
        // if(user.adress&&user.city&&user.phone){
             let ordenNueva = await dispatch(EDITORDER(order))
@@ -65,6 +65,9 @@ export default function SummaryPage(){ // esta es la funcion principal
         //}
     }
 
+
+
+
     return(
            <>
         <NavBar/>
@@ -73,7 +76,7 @@ export default function SummaryPage(){ // esta es la funcion principal
             <Grid container sx={{mt:3}}>
                 <Grid item xs={12} sm={7}>
 
-                     <CartList editable={false}/>  {/*COMPONENTE LISTA DEL CARRITO */}
+                     <CartList order={order} editable={true}/>  {/*COMPONENTE LISTA DEL CARRITO */}
 
                 </Grid>
 

@@ -18,6 +18,16 @@ export const GETCATEGORIES = createAsyncThunk('GETCATEGORIES', async () => { //t
     return response.data
 })
 
+export const CREATECATEGORY = createAsyncThunk('CREATEPRODUCT', async (input) => { //recibe info por post y crea un producto
+    const token=Cookie.get('token')
+    const response=await axios.post(`${api}/categories`,input ,{
+        headers:{
+            'x-access-token':token
+        }
+    })
+    return response.data
+})
+
 export const GETDETAIL = createAsyncThunk('GETDETAIL', async (id) => { //reciben un id y trae un producto
     const response = await axios(`${api}/products/${id}`,{headers:{
         'productId':`${id}`
@@ -27,11 +37,12 @@ export const GETDETAIL = createAsyncThunk('GETDETAIL', async (id) => { //reciben
 
 export const CREATEPRODUCT = createAsyncThunk('CREATEPRODUCT', async (input) => { //recibe info por post y crea un producto
     const token=Cookie.get('token')
-    await axios.post(`${api}/products`,input ,{
+    const response=await axios.post(`${api}/products`,input ,{
         headers:{
             'x-access-token':token
         }
     })
+    return response.data
 })
 
 export const SEARCHBYNAMEPRODUCTS=createAsyncThunk('SEARCHBYNAMEPRODUCTS',async (name)=>{// recibe un string por query y busca un producto

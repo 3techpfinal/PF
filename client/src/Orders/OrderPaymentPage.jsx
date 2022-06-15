@@ -124,6 +124,7 @@ console.log('totalPrice',order.totalPrice)
   
     return(
         
+        // RELAMPAGOS SI isPaid2 es true
         isPaid2?    
         <div style={{ 
             backgroundImage: `url("https://tuderechoasaber.com.do/wp-content/uploads/2020/07/fuego.gif")`, 
@@ -137,7 +138,7 @@ console.log('totalPrice',order.totalPrice)
                 <Sound reproducir={false} />
                 <h1>halo</h1>
         </div>
-        :
+        :  //si isPaid2 es false, muestra el resto
         <>  
             <NavBar/>
             <Sound reproducir={false} />
@@ -171,7 +172,7 @@ console.log('totalPrice',order.totalPrice)
 
 
                 <Grid item xs={12} sm={7}>
-                    <CartList editable={false} order={order.products} orderIsPaid={isPaid}/>
+                    <CartList editable={false} order={order} orderIsPaid={isPaid}/>
                 </Grid>
                 <Grid item xs={12} sm={5}>
                     <Card className='summary-card'>

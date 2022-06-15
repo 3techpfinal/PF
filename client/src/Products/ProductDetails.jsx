@@ -241,8 +241,8 @@ const ProductDetails=()=>{
                 
 
             </Box>}
-
-            <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
+                    
+            {comments[0]&&<Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
                 <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Preguntas al vendedor</Typography>
                 {divider()}
 
@@ -269,7 +269,7 @@ const ProductDetails=()=>{
                     <></>:<Comment product={product} textButton='Hacer una pregunta' user={actualUser}/>}
                </Box>
                 
-            </Box>
+            </Box>}
 
 
             <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>

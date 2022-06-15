@@ -41,8 +41,6 @@ useEffect(()=>{
 },[dispatch])
 
  
-
-
   const fileInputRef=useRef(null) //para esconder el boton feo de input
   //const fileInputRef2=useRef(null) //para esconder el boton feo de input
 
