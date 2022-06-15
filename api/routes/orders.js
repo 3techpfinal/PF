@@ -10,17 +10,7 @@ const router = Router()
 
 router.get("/", verifyToken, async (req, res, next) => {
     
-    //const {name} = req.query //esto es por si quiero traer todos los productos de una orden
-    /*if(name){
-        try {
-            const productInOrder = await Order.product.find({ name: {$regex: req.query.name, $options:'i'}}).populate(["category"])
-            return productInOrder.length === 0 ? res.send("product not found") : res.json(productInOrder)
-            } catch (error) {
-            next(error)
-        }
 
-    }else{
-    */
     
     try {
 
