@@ -10,18 +10,45 @@ const router = Router()
 
 router.get("/", verifyToken, async (req, res, next) => {
     
-    //const {name} = req.query //esto es por si quiero traer todos los productos de una orden
-    /*if(name){
+    const {name} = req.query //esto es por si quiero traer todos los productos de una orden
+    if(name){
         try {
-            const productInOrder = await Order.product.find({ name: {$regex: req.query.name, $options:'i'}}).populate(["category"])
-            return productInOrder.length === 0 ? res.send("product not found") : res.json(productInOrder)
-            } catch (error) {
+            const actualUser = await User.findById(req.userId);
+            const allOrders = await Order.find().populate(['products', 'user']);
+            if(actualUser.role.includes('user')){ allOrders = allOrders.filter(order => order?.user?._id.toString() === req?.userId.toString());}
+            let orderWithProduct=[]
+            let orderWithUser=[]
+
+             allOrders.forEach((order)=>((
+                 order.products.forEach((product)=>{
+                    if(product.name.includes(name))orderWithProduct.push(order)
+                 })
+             )));
+            
+            if(actualUser.role.includes('user'))return res.json(orderWithProduct)
+            
+            allOrders.forEach((order)=>{
+                if(order.user.name.includes(name))orderWithUser.push(order)
+            });
+            
+            return res.json(orderWithProduct.concat(orderWithUser))
+            //const allOrders = await Order.find().populate(['user']);
+
+
+            // const orderWithProduct = await Order.products.find({ name: {$regex: req.query.name, $options:'i'}}).populate(["category"])
+            // const orderWithUser = await Order.users.find({ name: {$regex: req.query.name, $options:'i'}}).populate(["category"])
+
+            // if(orderWithProduct.length === 0 &&  orderWithUser.length=== 0) {return res.send("product not found")} 
+            // if(orderWithProduct.length > 0 &&  orderWithUser.length === 0) {return res.json(orderWithProduct)}
+            // if(orderWithProduct.length === 0 &&  orderWithUser.length > 0) {return res.json(orderWithUser)}
+            // if(orderWithProduct.length > 0 &&  orderWithUser.length > 0) {return res.json(orderWithUser.concat(orderWithProduct))}
+
+        } catch (error) {
             next(error)
         }
 
     }else{
-    */
-    
+
     try {
 
         const actualUser = await User.findById(req.userId);
@@ -37,7 +64,7 @@ router.get("/", verifyToken, async (req, res, next) => {
         next(error)
     }
 }
-//}
+}
 )
 ;
 
