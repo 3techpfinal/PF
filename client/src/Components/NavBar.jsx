@@ -258,7 +258,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                     component='img'
                     sx={{width:40}}
                   />
-                  <Typography variant='body2'>(USD)</Typography>   
+                  <Typography variant='body2'>(U$D)</Typography>   
                 </Box>
 
 
