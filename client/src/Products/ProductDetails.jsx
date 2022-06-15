@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Container,Box } from '@mui/system'
 import NavBar from '../Components/NavBar'
-import { Divider, Typography,Chip,Rating, IconButton,CardMedia,Avatar, Tooltip,Button } from '@mui/material'
+import { Divider, Typography,Chip,Rating, IconButton,CardMedia,Avatar, Tooltip,FormControlLabel, Checkbox } from '@mui/material'
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
@@ -26,7 +26,7 @@ import Comment from '../Components/Comment'
 import Cookie from 'js-cookie'
 
 
-const ProductDetails=()=>{
+const ProductDetails=({wishlist,setWishList})=>{
 
 
     const actualUser = Cookie.get('user') && JSON.parse(Cookie.get('user'))
@@ -37,6 +37,7 @@ const ProductDetails=()=>{
     const [comments,setComments]=useState([])
     const recommended=useSelector((state)=>state.rootReducer.recommended)
     const [loaded,setLoaded]=React.useState(false)
+    const [checked,setChecked]=React.useState(false)
     const {id}=useParams() //traigo el id del producto
     const [tempCartProduct, setTempCartProduct] = useState({})
 
@@ -103,7 +104,7 @@ const ProductDetails=()=>{
 
     return (
         loaded?<Container sx={{mt:15}}>
-            <NavBar/>
+            <NavBar wishlist={wishlist} setWishList={setWishList}/>
             <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:{xs:'column',md:'row'},borderRadius:3,alignItems:'center'}}>
              
                 <Container sx={{width:{xs:'100%',md:'50%'},height:'50%',display:'flex',alignItems:'center',marginY:3}}>
@@ -138,13 +139,7 @@ const ProductDetails=()=>{
                                     Agregar al carrito 
                                     <AddShoppingCartIcon sx={{ml:1}}/>
                                 </IconButton>:
-                                <IconButton 
-                                sx={{bgcolor:'red',borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
-                                >
-                                    Este producto no esta disponible 
-                                </IconButton>
-                                }
-                                
+                                <Chip label= {`Sin Stock`} sx={{m:3}} color='error'/>}
                             </Box>
 
                             
@@ -212,7 +207,7 @@ const ProductDetails=()=>{
                 {divider()}
 
                 
-                 <Container component="div" sx={{ overflow: 'auto',mb:2,maxHeight:400 }}>{/* VALORACIONES */}
+                 <Container component="div" sx={{ overflow: 'auto',mb:2,maxHeight:400,mt:2 }}>{/* VALORACIONES */}
                     {productReviews?.map((productReview)=>(
                         <Box display='flex' sx={{flexDirection:'column'}}>
                             <Box display='flex' flexDirection='column' alignItems='flex-start' justifyContent='center'>
@@ -227,7 +222,7 @@ const ProductDetails=()=>{
                                 
                             </Box>
                             <Box mb={1}>
-                                <Typography variant='body1' sx={{mt:2,maxHeight:200}}>"{productReview.comment}"</Typography>    
+                                {productReview.comment&&<Typography variant='body1' sx={{mt:2,maxHeight:200}}>"{productReview.comment}"</Typography>}    
                             </Box>
                         <Divider sx={{marginX:3,marginY:3}}/>
                         </Box>
@@ -240,12 +235,21 @@ const ProductDetails=()=>{
             </Box>}
 
             <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
-                <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Preguntas al vendedor</Typography>
+                <Box sx={{display:'flex'}}>
+                    <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Preguntas al vendedor</Typography>
+                    {isAdmin&&<FormControlLabel
+                        label="Mostrar solo preguntas sin responder"
+                        control={<Checkbox checked={checked} onChange={()=>setChecked((prev)=>!prev)} />}
+                    />}
+                </Box>
                 {divider()}
 
                 
                 <Container component="div" sx={{ overflow: 'auto',mb:2,maxHeight:400 }}>{/* PREGUNTAS Y RESPUESTAS */}
-                    {comments?.map((comment)=>(
+                    {comments?.filter((e)=>{
+                        if(checked) return !e?.replies[0]
+                        else return e
+                    }).map((comment)=>(
                         <Box display='flex' sx={{flexDirection:'column'}}>
                             <Box mb={1}>
                                 <Typography variant='body1' sx={{mt:2,maxHeight:200}}>"{comment.comment}"</Typography> 
@@ -262,8 +266,14 @@ const ProductDetails=()=>{
 
                     
                 </Container>
+                <Divider flexItem/>
                <Box>{isAdmin?  //Boton pop up Cartel de pregunta, solo para usuarios
-                    <></>:<Comment product={product} textButton='Hacer una pregunta' user={actualUser} setComments={setComments}/>}
+                    <></>:
+                        actualUser?.name?
+                        <Comment product={product} textButton='Hacer una pregunta' user={actualUser} setComments={setComments}/>
+                        :<Box sx={{display:'flex',justifyContent:'center'}}>
+                        <Typography sx={{fontWeight:40,m:3}}>Inicia sesion para hacer preguntas sobre este producto</Typography>    
+                        </Box>}
                </Box>
                 
             </Box>
@@ -291,7 +301,7 @@ const ProductDetails=()=>{
                 modules={[Navigation, Pagination, Scrollbar, A11y]}
                 navigation
                 >
-                {recommended.filter((e)=>e.isActive===true).map(e=><SwiperSlide><ProductCard product={e}/></SwiperSlide>)}
+                {recommended.filter((e)=>e.isActive===true).map(e=><SwiperSlide><ProductCard product={e} wishlist={wishlist} setWishList={setWishList}/></SwiperSlide>)}
             </Swiper>
                 </Container>
             </Box>

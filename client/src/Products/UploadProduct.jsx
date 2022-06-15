@@ -4,10 +4,10 @@ import { useState,useRef } from 'react';
 import {   useNavigate } from "react-router-dom"
 //import { Link } from "react-router-dom";
 import { TextField,Select,Container, CardMedia,Link, Box, UploadOulined,InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import {CREATEPRODUCT,GETCATEGORIES,GETPRODUCTS} from '../actions'
+import {CREATECATEGORY, CREATEPRODUCT,GETCATEGORIES,GETPRODUCTS} from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { UploadOutlined } from '@ant-design/icons';
-
+import Checkbox from '@mui/material/Checkbox';
 import { Navigation, Pagination, Scrollbar, A11y } from 'swiper'
 import { Swiper, SwiperSlide } from 'swiper/react'
 // Import Swiper styles
@@ -35,10 +35,12 @@ export default function CrearPublicacion() {
       dispatch(GETCATEGORIES())
   },[dispatch])
   const categories=useSelector((state)=>state.rootReducer.categories)
-  const[input,setInput]=useState({name:'',price:'',priceOriginal:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
+  const[input,setInput]=useState({name:'',price:'',priceOriginal:'',categoryText:'',category:'Select',description:'',stock:1,imageProduct:[""],rating:0})
   const[images,setImages]=useState([]);//array de strings de url de imagenes 
   const[upLoading,setUpLoading]=useState(false) //estado que sirve para mostrar "cargando foto"
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
+  const [checked, setChecked] = React.useState(false);
+
 
   const handleUpload=  (e)=>{
     const pics = e.target.files;
@@ -78,10 +80,14 @@ export default function CrearPublicacion() {
     element!==image
   ))
 
-
-
   }
 
+  const checkBox = (event) => { //CHECKBOX FUNCION
+    console.log("evento check",event)
+    setChecked(event.target.checked);
+    checked===false?setInput((input)=>({...input, category:''}))
+    :setInput((input)=>({...input, category:'Select'}))
+  };
 
   const validate=(ev)=>{
     
@@ -107,13 +113,17 @@ export default function CrearPublicacion() {
       setInput((input)=>({...input,description:ev.target.value}))
 
     }
-    else if(ev.target.name==='category'){
+    else if(ev.target.name==='categorySelect'){
       setInput((input)=>({...input,category:ev.target.value}))
+    }
+
+    else if(ev.target.name==='categoryText'){
+      setInput((input)=>({...input,categoryText:ev.target.value}))
     }
 
     }
   
-    async function handleSubmit(e){
+    async function handleSubmit(e){ // FUNCION QUE HACE EL POST DEL ESTADO INPUT
       e.preventDefault()
       if(input.price>input.priceOriginal){
         return swal({
@@ -123,27 +133,45 @@ export default function CrearPublicacion() {
         button:"Aceptar"
       })}
 
+      console.log("input",input)
+
       if(!input.price){input.price=input.priceOriginal}
 
-      
-          const newPost={...input,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
-          dispatch(CREATEPRODUCT(newPost)).then(async(r)=>{
-            dispatch(GETPRODUCTS())
-            if(r.meta.requestStatus==="fulfilled"){
-              await swal({
-                title:"Realizado",
-                text:"Se creo el Producto exitosamente!",
-                icon:"success",
-                button:"Aceptar"}).then(()=> {navegar("/")})
-                 
-                  //window.location.reload()
-              
+      checked&&dispatch(CREATECATEGORY(input)).then((r)=>{
+         setInput((pepe)=>({...pepe,category:r.payload._id})) //carga el input con el id de la nueva categoria
+          const newInput={...input,category:r.payload._id}
+          console.log("newInput con categoria nueva",newInput)
+
+          const newInput2={...newInput,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
+          dispatch(CREATEPRODUCT(newInput2)).then(async(r)=>{
+            dispatch(GETPRODUCTS()) //para que cuando vaya al home ya muestre el producto Agregado
+            console.log("resBack crear producto",r)
+            if(r.payload==="Se creo el producto exitosamente"){
+              await swal({title:"Realizado",text:"Se creo el Producto exitosamente!",icon:"success",button:"Aceptar"}).then(()=> {navegar("/")}) 
+                  //window.location.reload()       
             }
           })
-         //se accede al home
-         // window.location.reload();      
-  }
+        })
+    //  console.log("r.payload._id input categoria",r.payload._id)
+      console.log("input con categoria nueva",input)
+         
+      
+      if(!checked){
+        const newPost={...input,imageProduct:images[0]?images:["https://res.cloudinary.com/dnlooxokf/image/upload/v1654057815/images/pzhs1ykafhvxlhabq2gt.jpg"]} // se prepara un objeto con los campos del fomrulario y sus imagenes
+        dispatch(CREATEPRODUCT(newPost)).then(async(r)=>{
+          dispatch(GETPRODUCTS()) //para que cuando vaya al home ya muestre el producto Agregado
+          console.log("resBack crear producto",r)
+          if(r.payload==="Se creo el producto exitosamente"){
+            await swal({title:"Realizado",text:"Se creo el Producto exitosamente!",icon:"success",button:"Aceptar"}).then(()=> {navegar("/")}) 
+                //window.location.reload()       
+          }
+        })
+      }
 
+      
+         //se accede al home
+        // window.location.reload();      
+  }
 
   return (
     <div>
@@ -189,20 +217,28 @@ export default function CrearPublicacion() {
             </TextField>
 
             <Box>
-            <Select
-              id="formcats"
-              select
-              label="Categorias"
-              value={input.category}
-              onChange={(e)=>validate(e)}
-              name='category'
-              fullWidth
-            >
-                <MenuItem key='select' value='Select'>Select</MenuItem>
-                  {categories.map((category) => (
-                <MenuItem key={category._id} value={category._id}>{category.name}</MenuItem>
-              ))}
-            </Select>
+            <Typography >Agregar Categoria</Typography>
+            <Checkbox  onChange={checkBox} inputProps={{ 'aria-label': 'controlled' }}/>
+            {checked?
+
+              <TextField label="Nueva categoria" variant="outlined" name='categoryText' value={input.categoryText} onChange={(e)=>validate(e)}></TextField>
+            :
+                <Select
+                display='none'
+                  id="formcats"
+                  select
+                  label="Categorias"
+                  value={input.category}
+                  onChange={(e)=>validate(e)}
+                  name='categorySelect'
+                  fullWidth
+                >
+                  <MenuItem key='select' value='Select'>Select</MenuItem>
+                    {categories.map((category) => (
+                  <MenuItem key={category._id} value={category._id}>{category.name}</MenuItem>
+                ))}
+                </Select>
+            }
             </Box>         
    
 
@@ -288,7 +324,3 @@ export default function CrearPublicacion() {
     </div>
     );
   }
-
-
-  // <button onClick={(e)=>{handleDelete(e,image)}}>X</button>
-
