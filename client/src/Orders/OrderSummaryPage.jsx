@@ -35,10 +35,12 @@ export default function SummaryPage(){ // esta es la funcion principal
         if(!user?.adress){
             if(userInfo.adress&&userInfo.name&&userInfo.city){
             order = {products:cart,city:userInfo.city, adress: userInfo.adress, isPaid: false, totalPrice: total }
-            let ordenNueva = await dispatch(CREATEORDER(order))
-            dispatch(GETORDER(ordenNueva.payload)).then(()=>
-            navigate(`/orderpayment/${ordenNueva.payload}`))
-            removeAllCartProduct()
+            dispatch(CREATEORDER(order)).then((r)=>{
+                dispatch(GETORDER(r.payload)).then((r)=>{
+                    removeAllCartProduct()
+                    navigate(`/orderpayment/${r.payload._id}`)
+                })
+            })
             }
             else{
                 swal({
@@ -49,10 +51,16 @@ export default function SummaryPage(){ // esta es la funcion principal
                 })
             }
         }else{
-            let ordenNueva = await dispatch(CREATEORDER(order))
-            dispatch(GETORDER(ordenNueva.payload)).then(()=>
-            navigate(`/orderpayment/${ordenNueva.payload}`))
-            removeAllCartProduct()
+            dispatch(CREATEORDER(order)).then((r)=>{
+                dispatch(GETORDER(r.payload)).then((r)=>{
+                    removeAllCartProduct()
+                    navigate(`/orderpayment/${r.payload._id}`)
+                })
+            })
+            // let ordenNueva = await dispatch(CREATEORDER(order))
+            // dispatch(GETORDER(ordenNueva.payload)).then(()=>
+            // navigate(`/orderpayment/${ordenNueva.payload}`))
+            // removeAllCartProduct()
         }
             
     }
