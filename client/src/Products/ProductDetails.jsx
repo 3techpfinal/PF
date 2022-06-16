@@ -269,7 +269,7 @@ const ProductDetails=({wishlist,setWishList})=>{
                 <Divider flexItem/>
                <Box>{isAdmin?  //Boton pop up Cartel de pregunta, solo para usuarios
                     <></>:
-                        actualUser?.name?
+                        actualUser?.email?
                         <Comment product={product} textButton='Hacer una pregunta' user={actualUser} setComments={setComments}/>
                         :<Box sx={{display:'flex',justifyContent:'center'}}>
                         <Typography sx={{fontWeight:40,m:3}}>Inicia sesion para hacer preguntas sobre este producto</Typography>    
