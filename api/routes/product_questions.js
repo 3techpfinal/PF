@@ -1,13 +1,39 @@
 import { Router } from "express";
 import Product_Question from "../models/Product_Question.js";
+import User from "../models/User.js";
 import Product from "../models/Product.js";
 import { isAdmin, verifyToken } from "../middlewares/authJwt.js";
 import Product_Reply from "../models/Product_Reply.js";
 
+
 const router = Router();
 
+//todas las preguntas que hay en la BDD
 
-// obtengo todas las preguntas y respuestas sobre el producto
+router.get("/allquestions", verifyToken, async (req, res, next) => {
+
+    try {
+        const actualUser = await User.findById(req.userId);
+        const allQuestions = await Product_Question.find().populate(['product', 'user','replies']);
+        if(actualUser.role.includes('admin')){
+            return res.send(allQuestions)
+        } else {
+            const userQuestions = allQuestions.filter(question => question?.user?._id.toString() === req.userId.toString());
+            return res.send(userQuestions)
+        }
+    } catch (error) {
+        next(error)
+    }
+});
+
+
+
+
+
+
+
+
+// obtengo todas las preguntas y respuestas sobre un producto
 
 router.get('/:productId/questions', async (req, res, next) => {
 
@@ -36,7 +62,7 @@ router.get('/:productId/questions/:id', async (req, res, next) => {
 
 
 
-// PREGUNTAS del user al admin
+// subir una PREGUNTAS del user al admin
 
 router.post('/:productId/questions', verifyToken, async(req, res, next)=> {
     try{
@@ -73,7 +99,7 @@ router.post('/:productId/questions', verifyToken, async(req, res, next)=> {
 
 
 
-// respuesta del admin a la pregunta del User
+// subir respuesta del admin a la pregunta del User
 
 router.post('/:productId/questions/:questionId', [verifyToken,isAdmin], async(req, res, next)=> {
     try{
@@ -111,7 +137,7 @@ router.post('/:productId/questions/:questionId', [verifyToken,isAdmin], async(re
 
 
 
-// solo el user que creó la pregunta
+// solo el user que creó la pregunta modica la pregunta
 
 router.put('/:productId/questions/:id', verifyToken, async (req, res, next) => {
     try {
@@ -130,7 +156,7 @@ router.put('/:productId/questions/:id', verifyToken, async (req, res, next) => {
 
 
 
-// solo el user que creó la pregunta
+// solo el user que creó la pregunta elimina la regunta
 
 router.delete('/:productId/questions/:id', verifyToken, async (req, res, next) => {
     try {

@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { AttachMoneyOutlined, CreditCardOffOutlined, CreditCardOutlined, DashboardOutlined, GroupOutlined, CategoryOutlined, CancelPresentationOutlined, ProductionQuantityLimitsOutlined, AccessTimeOutlined, AddShoppingCart } from '@mui/icons-material';
+import HelpOutlineOutlinedIcon from '@mui/icons-material/HelpOutlineOutlined';
 import NavBar from '../Components/NavBar'
 import { Grid, Typography,Box,Button,Container } from '@mui/material'
 import  CardDashboard  from './CardDashboard'
@@ -7,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {GETUSERS} from '../actions'
 import { GETPRODUCTS } from '../actions'
 import { GETORDERS } from '../actions'
+import { GETALLQUESTIONS } from '../actions'
 import { Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
 
 
@@ -18,7 +20,8 @@ const DashboardPage = () => {
     const users=useSelector((State) => State.rootReducer.users);
     const orders=useSelector((State) => State.rootReducer.orders);
     let ordenesPagas = orders?.filter((order)=>order.isPaid===true)
-
+    
+    const [questions,setQuestions]=useState([])
     const dispatch=useAppDispatch()
 
     const [refreshIn, setRefreshIn] = useState(25);
@@ -27,6 +30,7 @@ const DashboardPage = () => {
       dispatch(GETUSERS())
       dispatch(GETORDERS())
       dispatch(GETPRODUCTS())
+      dispatch(GETALLQUESTIONS()).then((r)=>setQuestions(()=>r.payload))
     },[dispatch,refreshIn===0])
 
 
@@ -40,6 +44,7 @@ const DashboardPage = () => {
 
     let lowInventory = products?.filter((p)=> p.stock<10)
     let productsWithNoInventory = products?.filter((p)=> p.stock===0)
+    let cantidadDePreguntasSinRespuesta = questions?.filter((question)=>question.replies.length===0)
 
 
 
@@ -72,6 +77,7 @@ const DashboardPage = () => {
             />
             
             <CardDashboard 
+               
                 title={ orders?.length-ordenesPagas?.length }
                 subTitle="Ordenes sin pagar"
                 icon={ <CreditCardOffOutlined color="error" sx={{ fontSize: 40 }} /> }
@@ -99,12 +105,21 @@ const DashboardPage = () => {
                 icon={ <CancelPresentationOutlined color="error" sx={{ fontSize: 40 }} /> }
             />
 
+          
+
             <CardDashboard 
                 title={ lowInventory?.length }
                 subTitle="Bajo Inventario (<10)"
                 icon={ <ProductionQuantityLimitsOutlined color="warning" sx={{ fontSize: 40 }} /> }
             />
 
+
+            <CardDashboard 
+                title={ cantidadDePreguntasSinRespuesta?.length }
+                subTitle="Preguntas sin responder"
+                icon={ <HelpOutlineOutlinedIcon color="error" sx={{ fontSize: 40 }} /> }
+            />
+            
             <CardDashboard 
                 title={ refreshIn }
                 subTitle="Actualización en:"

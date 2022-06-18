@@ -24,6 +24,7 @@ import ProductDetails from './Products/ProductDetails';
 import Dashboard from './Admin/DashboardPage'
 import ProductsTable from './Admin/ProductsTable'
 import UserTable from './Admin/UsersTable'
+import QuestionsTable from './Admin/QuestionsTable'
 
 /// user ////
 import Profile from './Pages/Profile'
@@ -43,7 +44,7 @@ import EditOrder from './Orders/EditOrder'
 import Prueba from './Pruebas/LineChart'
 
 function App() {
-  const isLogged=Cookie.get('user')&&JSON.parse(Cookie.get('user')).name?true:false
+  const isLogged=Cookie.get('user')&&JSON.parse(Cookie.get('user')).email?true:false //estas logeado
   const isAdmin=Cookie.get('user')&&JSON.parse(Cookie.get('user')).role==='admin'?true:false
   const dispatch=useDispatch()
   const [wishlist,setWishList]=useState([])
@@ -63,6 +64,7 @@ function App() {
           <Route path='/cart' element={<Cart/>}/>
           <Route path='/admin/dashboard' element={!isAdmin?<Navigate replace to='/'/>:<Dashboard/>}/>
           <Route path='/admin/userstable' element={!isAdmin?<Navigate replace to='/'/>:<UserTable/>}/>
+          <Route path='/admin/questionstable' element={!isAdmin?<Navigate replace to='/'/>:<QuestionsTable/>}/>
           <Route path='/orderstable' element={<OrdersTable/>}/>
           <Route path='/admin/productstable' element={!isAdmin?<Navigate replace to='/'/>:<ProductsTable/>}/>
           <Route path='/passwordchange' element={<PasswordChange/>}/>

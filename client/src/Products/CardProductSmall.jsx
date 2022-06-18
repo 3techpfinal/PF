@@ -3,7 +3,7 @@ import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
 import CardMedia from '@mui/material/CardMedia';
 import Typography from '@mui/material/Typography';
-import { CardActionArea,Chip, IconButton,Box,Tooltip } from '@mui/material';
+import { CardActionArea,Chip, IconButton,Box,Tooltip , Divider,Grid} from '@mui/material';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 // import Swiper core and required modules
@@ -24,10 +24,9 @@ import { ADDTOWISHLIST,DELETEFROMWISHLIST,GETWISHLIST } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 
-
 export default function ProductCard({product,wishlist,setWishList}) {
   const [isHovered, setIsHovered] = useState (false);
-  const [colorHeart, setColorHeart] = useState ('black');
+  const [colorHeart, setColorHeart] = useState ('white');
   const {isAuthenticated}=useAuth0()
   const wishlistBDD=useSelector((state)=>state.rootReducer.wishList)
   const navigate=useNavigate()
@@ -42,7 +41,7 @@ export default function ProductCard({product,wishlist,setWishList}) {
     },[isHovered,product.imageProduct])
 
     React.useEffect(()=>{
-        setColorHeart(()=>'black')
+        setColorHeart(()=>'white')
         wishlist?.forEach((e)=>{
           if(e._id===product._id)setColorHeart(()=>'red')
         })
@@ -102,67 +101,68 @@ export default function ProductCard({product,wishlist,setWishList}) {
 
 
   return (
-    <Card sx={{ width: {xs:250 ,sm:250},mt:5 }}
-    onMouseEnter={()=> setIsHovered(true)}
-    onMouseLeave={()=> setIsHovered(false)}
-    >
-        {isAuthenticated&&<Tooltip title="Agregar a favoritos" placement="top">
+        <Card 
+        onMouseEnter={()=> setIsHovered(true)}
+        onMouseLeave={()=> setIsHovered(false)}
+        sx={{bgcolor:colorStyles.color1}}
+        >
+          <CardActionArea
+            onClick={()=>navigate(`/product/${product._id}`)}
+          >
+            <Box flexDirection='row'>       
+
+
+            <Box sx={{display:'flex',justifyContent:'space-between'}}>
+            <Box sx={{marginX:5}}>
+                <CardMedia
+                component="img"
+                height="100"
+                width='100'
+                image={productImage}
+                alt="gf"
+                sx={{objectFit:'contain'}}
+                onClick={()=>{navigate(`/product/${product._id}`)}}
+              />
+            </Box>
+           <Box sx={{display:'flex',flexDirection:'column',alignItems:'flex-start',width:'100%',mt:2}} onClick={()=>{navigate(`/product/${product._id}`)}}>
+           <Typography sx={{fontSize:10,maxHeight:50, color:'white'}}>{product.name.slice(0,40)}</Typography>
+           {product.priceOriginal && product.price!==product.priceOriginal ? <Chip  label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
+           <Box>
+                     {product.priceOriginal && product.price!==product.priceOriginal ?
+                       <div>
+                         <Typography sx={{fontSize:10,maxHeight:50, color:'white'}}>{'$'+new Intl.NumberFormat().format(product.price)}</Typography>
+                         <Typography sx={{fontSize:10,maxHeight:50, color:'white'}}><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
+                        </div>
+                      :
+                      <Typography sx={{fontSize:10,maxHeight:50, color:'white'}} >${new Intl.NumberFormat().format(product.price)}</Typography> }
+            </Box>
+           
+           
+           </Box>
+          </Box>
+
+          {isAuthenticated&&<Tooltip title="Agregar a favoritos" placement="top">
           <IconButton onClick={ addToWishList } style={{color: colorHeart}}>
             <FavoriteIcon />
           </IconButton>
         </Tooltip> }
 
         <Tooltip title="Agregar al carrito" placement="top">
-          <IconButton  onClick={ onAddProduct } style={{color: "black"}}>
+          <IconButton  onClick={ onAddProduct } style={{color: "white"}}>
             <AddShoppingCartIcon  sx={{ml:1}}/>
           </IconButton>
         </Tooltip>
 
-      <CardActionArea
-      onClick={()=>navigate(`/product/${product._id}`)}
-      >
-
-       <CardMedia
-            component="img"
-            height="200"
-            image={productImage}
-            alt="gf"
-            sx={{objectFit:'contain'}}
-           />
-        <CardContent   sx={{bgcolor:colorStyles.color1,height:100}}>
-
-            <Tooltip title={product.name} placement="top">  
-                <Box sx={{display:'flex',alignItems:'flex-start',justifyContent:'space-between',mb:1}}>
-                  <Typography gutterBottom variant="h6" sx={{color:'white',fontWeight:'200'}}>
-                  {product?.name?.slice(0,15)}
-                  </Typography>
-                  {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
-                </Box>
-            </Tooltip>
-
-            
-
-            <Box sx={{color:'white',fontWeight:'500',display:'flex', flexDirection:'row',justifyContent:'space-between'}}>
-              <Box>
-                     {product.priceOriginal && product.price!==product.priceOriginal ?
-                       <div>
-                         <Typography>{'$'+new Intl.NumberFormat().format(product.price)}</Typography>
-                         <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
-                        </div>
-                      :
-                      <Typography>${new Intl.NumberFormat().format(product.price)}</Typography> }
-            </Box>
-            <Box sx={{display:'flex',justifyContent:'flex-end'}}>         
-               {product.stock>0?
-               <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>:
-               <Chip label= {`Sin Stock`} color='error'/>}
-            </Box> 
-              
-            </Box> 
 
 
-        </CardContent>
-      </CardActionArea>
-    </Card>
+
+          <Divider/>
+
+
+
+              </Box>
+            </CardActionArea>
+          
+        </Card>
   );
 }

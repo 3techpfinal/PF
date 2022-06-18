@@ -4,7 +4,7 @@ import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-mate
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Grid, Select, MenuItem, Box,CardMedia,Typography,Button } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {MODIFYPRODUCT, GETORDERS,GETPRODUCTS,DELETEPRODUCT,SEARCHBYNAMEPRODUCTS,GETALLQUESTIONS} from '../actions'
+import {MODIFYPRODUCT, GETALLQUESTIONS,GETPRODUCTS,DELETEPRODUCT,SEARCHBYNAMEPRODUCTS} from '../actions'
 import { AppDispatch,RootState } from '../store'
 import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
@@ -13,57 +13,34 @@ import swal from 'sweetalert'
 
 const useAppDispatch = () => useDispatch();
 
-const UsersPage = () => {
+const UsersPage = () => { //FUNCION PRINCIPAL
     
+
+    const products=useSelector((State) => State.rootReducer.products);
+    const questions=useSelector((State) => State.rootReducer.questions);
     const dispatch=useAppDispatch()
     const navigate= useNavigate()
 
-
-    //dispatch(GETCOMMENTS('62aa4aad857ec093f144ca19')).then((r)=> console.log("resBack",r.payload))
-   // console.log("comments de poduct",dispatch(GETCOMMENTS('62aa4aad857ec093f144ca19')).then((r)=>r.payload))
-   
-
     useEffect(()=>{
         dispatch(GETPRODUCTS())
-        dispatch(GETORDERS())
-        dispatch(GETALLQUESTIONS()).then((r)=>setQuestions(()=>r.payload))
+        dispatch(GETALLQUESTIONS())
       },[dispatch])
 
-    const products=useSelector((State) => State.rootReducer.products);
-    const orders=useSelector((State) => State.rootReducer.orders);
-    const [questions,setQuestions]=useState([])
-    console.log("questions",questions)
     const [rows,setRows]=useState([])
+    
+    useEffect(()=>{ //una vez que llegan los productos se llenana las rows
+        setRows(()=>products.map( (product) => ({
+            id: product._id,
+            name: product.name,
+            price: `$${product.price}`,
+            stock: product.stock,
+            image: product.imageProduct[0],
+            estado: product.isActive,
+            date:product.creationDate||"sin fecha en BDD",
+            rating:product.rating? product.rating : "no tiene rating",
 
-    useEffect(()=>{
-         //una vez que llegan los productos se llenana las rows
-        setRows(()=>products.map( (product) => 
-            //console.log("rows",rows)
-            ({
-                id: product._id,
-                name: product.name,
-                price: `$${product.price}`,
-                stock: product.stock,
-                image: product.imageProduct[0],
-                estado: product.isActive,
-                date:product.creationDate||"sin fecha en BDD",
-                rating:product.rating? product.rating : "no tiene rating",
-                salesQuantity: calcularCantidadDeVentasDeUnProducto(orders,product),
-                salesQuantity2: product.amountOfSales,
-                totalQuestions: calcularCantidadDePreguntasTotales(questions,product),
-                totalQuestionsNoAnswer: calcularCantidadDePreguntasSinRespuesta(questions,product),
-            })
-        ))
+        })))
     },[products])
-
-//console.log("rows",rows)
-//'62aa4aad857ec093f144ca19'
-
-
-console.log("questions",questions)
-    const cantidadPreguntasSinResponder= (product,questions) => {
-
-    } 
 
     const productosmap=products.map(product=>( //esto es para cargar el estado productState
         {id:product._id,
@@ -71,23 +48,10 @@ console.log("questions",questions)
     ))
     const [productState,setProductState]=useState([])
    
-    useEffect(()=>{ //esto es para actualizar el estado del producto cuando se selecciona bloqueado 
+    useEffect(()=>{ //eto es para actualizar el estado del producto cuando se selecciona bloqueado 
         setProductState(()=>productosmap)
     },[products])
 
-
-    const handleChange=(e,row)=>{ //funcion que maneja el estado del producto
-        setProductState((state)=>state.map(e=>{
-            if(e.id===row.id){
-                return {
-                    id:e.id,
-                    isActive:!e.isActive} //a la prop isActive le paso su valor negado
-            }
-            else return e
-        }))
-        dispatch(MODIFYPRODUCT({_id:row.id,isActive: e.target.value==='online'?true:false}))
-
- }
 
       const calcularCantidadDeVentasDeUnProducto = (ordenes,producto)=> {
         let contador = 0
@@ -98,22 +62,6 @@ console.log("questions",questions)
             ))   
         ));
         return contador 
-      }
-
-      const calcularCantidadDePreguntasSinRespuesta = (questions,product)=>{
-        let contador = 0;
-        questions.map((question)=>(
-            ((question.product._id===product._id)&&(question.replies.length===0))&&(contador= contador+1)       
-        ))
-        return contador
-      }
-
-      const calcularCantidadDePreguntasTotales = (questions,product)=>{
-        let contador = 0;
-        questions.map((question)=>(
-            (question.product._id===product._id)&&(contador= contador+1)       
-        ))
-        return contador
       }
 
 
@@ -155,7 +103,6 @@ console.log("questions",questions)
                             alt=""
                             className='fadeIn'
                             image={ row.image }
-                            sx={{objectFit:'contain'}}
                         />
                     </a>
                 )
@@ -180,10 +127,6 @@ console.log("questions",questions)
         { field: 'rating', headerName: 'calificacion de usuarios', width: 250 },
         { field: 'price', headerName: 'Precio ($)', width: 250 },
         { field: 'stock', headerName: 'En stock', width: 250 },
-        { field: 'salesQuantity', headerName: 'Cantidad de ventas M1', width: 250 },
-        { field: 'salesQuantity2', headerName: 'Cantidad de ventas M2', width: 250 },
-        { field: 'totalQuestions', headerName: 'Preguntas totales', width: 250 },
-        { field: 'totalQuestionsNoAnswer', headerName: 'Preguntas Sin responder', width: 250 },
         { field: 'status', 
             headerName: 'Estado', 
             width: 300,
@@ -192,7 +135,7 @@ console.log("questions",questions)
                         <Select
                             value={ productState.filter(e=> e.id===row.id)[0]?.isActive?'online':'bloqueado' }
                             label="state"
-                            onChange={(e)=>handleChange(e,row) }
+                            //onChange={(e)=>handleChange(e,row) }
                             sx={{ width: '300px' }}
                         >
                             <MenuItem value='online'> online </MenuItem>
@@ -217,12 +160,12 @@ console.log("questions",questions)
         />
 
         <Grid container className='fadeIn'>
-            <Grid item xs={12} sx={{ height:700, width: 40000 }}>
+            <Grid item xs={12} sx={{ height:900, width: 40000 }}>
                 <DataGrid 
                     rows={ rows }
                     columns={ columns }
                     pageSize={ 20 }
-                    rowsPerPageOptions={ [20] }
+                    rowsPerPageOptions={ [30] }
                 />
 
             </Grid>

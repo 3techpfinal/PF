@@ -14,11 +14,11 @@ const initialState = {
   order:[],
   user:[],
   reviews:[],
-  review:[],
-  productReviews:[],
+  review:[], //tpdas las reviews de la BDD
+  productReviews:[], //reviews de un producto especifico
   wishList:[],
   questions:[],
-  answers:[]
+  allquestions:[],
 }
 
 
@@ -141,10 +141,16 @@ const rootReducer = createReducer(initialState, (builder) => {
       state.wishList=action.payload
     })
 
-    .addCase(actions.GETCOMMENTS.fulfilled, (state, action) => {
+    .addCase(actions.GETPRODUCTQUESTIONS.fulfilled, (state, action) => {
       state.questions=[]
       state.questions=action.payload
     })
+
+    .addCase(actions.GETALLQUESTIONS.fulfilled, (state, action) => {
+      state.allquestions=[]
+      state.allquestions=action.payload
+    })
+
 
     .addCase(actions.MAKEQUESTION.fulfilled, (state, action) => {
     })

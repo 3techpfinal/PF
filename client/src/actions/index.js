@@ -63,8 +63,6 @@ export const ORDERBYPRICE=createAction('ORDERBYPRICE',(order)=>{ //realiza un or
     }
 })
 
-
-
 export const GETRECOMMENDED=createAsyncThunk('GETRECOMMENDED',async (id)=>{
     const all = await axios(`${api}/products`)
     const response = await axios(`${api}/products/${id}`)
@@ -151,7 +149,7 @@ export const MODIFYREVIEW=createAsyncThunk('MODIFYREVIEW',async (postValue)=>{
 })
 
 
-export const GETREVIEWS = createAsyncThunk('GETREVIEWS', async () => { //trae todos los usuarios
+export const GETREVIEWS = createAsyncThunk('GETREVIEWS', async () => { //trae todas las reviews
     const token=Cookie.get('token')
     const response = await axios(`${api}/users/review`,{headers:{
         'x-access-token':`${token}`
@@ -159,7 +157,7 @@ export const GETREVIEWS = createAsyncThunk('GETREVIEWS', async () => { //trae to
     return response.data
 })
 
-export const GETPRODUCTREVIEWS = createAsyncThunk('GETPRODUCTREVIEWS', async (id) => { //trae todos los usuarios
+export const GETPRODUCTREVIEWS = createAsyncThunk('GETPRODUCTREVIEWS', async (id) => { //trae todas las reviews de un producto
     const response = await axios(`${api}/products/${id}/reviews`)
     return response.data
 })
@@ -193,11 +191,19 @@ export const DELETEFROMWISHLIST=createAsyncThunk('DELETEFROMWISHLIST',async (pro
     return wishlist.data
   })
 
-  export const GETCOMMENTS = createAsyncThunk('GETCOMMENTS', async (productId) => { //trae todos los usuarios
+  export const GETPRODUCTQUESTIONS = createAsyncThunk('GETPRODUCTQUESTION', async (productId) => { //Trae todas las preguntas de un producto
     const token=Cookie.get('token')
     const response = await axios(`${api}/products/${productId}/questions`,{headers:{
         'x-access-token':`${token}`
       }})
+    return response.data
+})
+
+export const GETALLQUESTIONS = createAsyncThunk('GETALLQUESTIONS', async () => { //Trae todas las preguntas de la BDD
+    const token=Cookie.get('token')
+    const response = await axios(`${api}/questions`,{headers:{
+        'x-access-token':`${token}`
+    }})
     return response.data
 })
 
@@ -245,7 +251,7 @@ export const EDITORDER=createAsyncThunk('EDITYORDER',async (input)=>{
   })
 
 
-export const SEARCHORDERS = createAsyncThunk('SEARCHORDERS', async (name) => { // trae los productos de una orden
+export const SEARCHORDERS = createAsyncThunk('SEARCHORDERS', async (name) => { //
     const token=Cookie.get('token')
     const response = await axios(`${api}/orders?name=${name}`,{
         headers:{

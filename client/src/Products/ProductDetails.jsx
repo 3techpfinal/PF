@@ -21,7 +21,7 @@ import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Loading from '../Components/Loading'
-import { GETDETAIL,GETRECOMMENDED,GETPRODUCTREVIEWS,GETCOMMENTS} from '../actions';
+import { GETDETAIL,GETRECOMMENDED,GETPRODUCTREVIEWS,GETPRODUCTQUESTIONS} from '../actions';
 import Comment from '../Components/Comment'
 import Cookie from 'js-cookie'
 
@@ -43,7 +43,7 @@ const ProductDetails=({wishlist,setWishList})=>{
 
     React.useEffect(()=>{
         window.scrollTo(0, 0)
-        dispatch(GETDETAIL(id)).then(()=>dispatch(GETCOMMENTS(id))).then((r)=>setComments(()=>r.payload)).then(()=>dispatch(GETPRODUCTREVIEWS(id))).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
+        dispatch(GETDETAIL(id)).then(()=>dispatch(GETPRODUCTQUESTIONS(id))).then((r)=>setComments(()=>r.payload)).then(()=>dispatch(GETPRODUCTREVIEWS(id))).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
 
     },[dispatch,id])
 
@@ -246,9 +246,9 @@ const ProductDetails=({wishlist,setWishList})=>{
 
                 
                 <Container component="div" sx={{ overflow: 'auto',mb:2,maxHeight:400 }}>{/* PREGUNTAS Y RESPUESTAS */}
-                    {comments?.filter((e)=>{
-                        if(checked) return !e?.replies[0]
-                        else return e
+                    {comments?.filter((comment)=>{
+                        if(checked) return !comment?.replies[0]  //Filtra solo los comentarios sin respuestas
+                        else return comment
                     }).map((comment)=>(
                         <Box display='flex' sx={{flexDirection:'column'}}>
                             <Box mb={1}>

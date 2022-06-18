@@ -80,7 +80,6 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
   const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = React.useState(null);
 
   const isMenuOpen = Boolean(anchorEl);
-  const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
 
   const handleProfileMenuOpen = (event) => {
     setAnchorEl(event.currentTarget);
@@ -93,10 +92,6 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
   const handleMenuClose = () => {
     setAnchorEl(null);
     handleMobileMenuClose();
-  };
-
-  const handleMobileMenuOpen = (event) => {
-    setMobileMoreAnchorEl(event.currentTarget);
   };
 
   const menuId = 'primary-search-account-menu';
@@ -118,7 +113,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
       onClose={handleMenuClose}
     >
 
-      {isAuthenticated&&<ListItem 
+      {isAuthenticated&&<ListItem    /// IR A MI PERFIL
           button
           onClick={ () => navigate('/profile') }>
           <ListItemIcon>
@@ -127,7 +122,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
           <ListItemText primary={'Mi perfil'} />
         </ListItem>}
 
-        {isAuthenticated&&<ListItem 
+        {isAuthenticated&&<ListItem  // IR A LAS ORDENES 
           button
           onClick={ () => navigate('/orderstable') }>
           <ListItemIcon>
@@ -136,7 +131,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
           <ListItemText primary={'Ordenes'} />
         </ListItem>}
 
-        {((isAuthenticated)&&(!isAdmin))&&<ListItem 
+        {((isAuthenticated)&&(!isAdmin))&&<ListItem  //IR A LAS REVIEWS
           button
           onClick={ () => navigate('/user/reviews') }>
           <ListItemIcon>
@@ -185,54 +180,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
   );
 
   const mobileMenuId = 'primary-search-account-menu-mobile';
-  const renderMobileMenu = (
-    <Menu
-      anchorEl={mobileMoreAnchorEl}
-      anchorOrigin={{
-        vertical: 65,
-        horizontal: 'right',
-      }}
-      id={mobileMenuId}
-      keepMounted
-      transformOrigin={{
-        vertical: 'top',
-        horizontal: 'right',
-      }}
-      open={isMobileMenuOpen}
-      onClose={handleMobileMenuClose}
-    >
-      <MenuItem>
-        <p>Messages</p>
-      </MenuItem>
-
-      <MenuItem>
-        <IconButton
-          size="large"
-          aria-label="show 17 new notifications"
-          color="inherit"
-        >
-          <Badge badgeContent={17} color="error">
-            <NotificationsIcon />
-          </Badge>
-        </IconButton>
-        <p>Notifications</p>
-      </MenuItem>
-
-
-      <MenuItem onClick={handleProfileMenuOpen}>
-        <IconButton
-          size="large"
-          aria-label="account of current user"
-          aria-controls="primary-search-account-menu"
-          aria-haspopup="true"
-          color="inherit"
-        >
-          <AccountCircle />
-        </IconButton>
-        <p>Profile</p>
-      </MenuItem>
-    </Menu>
-  );
+  
 
   return (
   <>
@@ -348,20 +296,6 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                       Login
                     </Button>}
                   </Box>
-
-                  {/* <Box sx={{ display: { xs: 'flex', md: 'none' } }}>
-                    <IconButton
-                      size="large"
-                      aria-label="show more"
-                      aria-controls={mobileMenuId}
-                      aria-haspopup="true"
-                      onClick={handleMobileMenuOpen}
-                      color="inherit"
-                    >
-                      <MoreIcon />
-                    </IconButton>
-                  </Box> */}
-
                 </Box>
 
 
@@ -387,7 +321,6 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
               </Box>
 
             </AppBar>
-            {/* {renderMobileMenu} */}
             {renderMenu}
           </Container>
     </>

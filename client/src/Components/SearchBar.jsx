@@ -33,7 +33,7 @@ export default function SearchInput({placeholder,url,dinamic,action}) {
         e.preventDefault()
         dispatch(action(input))
         navigate(`${url}`)
-        setInput(()=>'')
+        //setInput(()=>'')
       }}
     >
       <InputBase

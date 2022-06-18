@@ -127,7 +127,7 @@ const UsersPage = () => {
             renderCell: (params)=>{
                 return (
                         params.row?.isPaid?
-                        <Button fullWidth sx={{color:'gray', backgroundColor:'gray'}}></Button> :
+                        <Button fullWidth sx={{  color:'gray', backgroundColor:'gray'}}></Button> :
                         <Button  onClick={(e)=> deleteOrder(params.row) }>
                             eliminar
                         </Button>
@@ -138,11 +138,6 @@ const UsersPage = () => {
 
 
     ];
-
-
-
-    
-
 
 
 
@@ -161,10 +156,6 @@ const UsersPage = () => {
                 action={SEARCHORDERS}
         />
 
-        
-
-
-   
             <Grid container className='fadeIn'>
                 <Grid item xs={12} sx={{ height:650, width: 40000 }}>
                     <DataGrid 
