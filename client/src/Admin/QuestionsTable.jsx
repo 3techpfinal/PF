@@ -29,13 +29,6 @@ const UsersPage = () => { //FUNCION PRINCIPAL
     const products=useSelector((State) => State.rootReducer.products);
     const questions=useSelector((State) => State.rootReducer.allquestions);
 
-    // let prudctsWithQuestions = products.filter((product)=>(
-    //     (product.questions.length>0)&&(product.questions.filter((question)=>(
-    //         question.replies.length===0
-    //     )))
-    // ))
-
-
     //DEVUELVE ARRAY CON TODOS LOS PRODUCTOS SIN RESPUESTA, PERO SI TIENE 2 PREGUNTAS SIN RESPONDER TOMA EL PRODUCTO 2 VECES
     let productsWithNoAnswers = (products) =>{
         let array= []
@@ -126,6 +119,7 @@ const UsersPage = () => { //FUNCION PRINCIPAL
                             alt=""
                             className='fadeIn'
                             image={ row.image }
+                            sx={{objectFit:'contain'}}
                         />
                     </a>
                 )
@@ -164,7 +158,7 @@ const UsersPage = () => { //FUNCION PRINCIPAL
 <>
     <NavBar/>
     <Box mt={15} >
-    <Typography variant='h2'>Productos</Typography>
+    <Typography variant='h2'>PREGUNTAS SIN RESPONDER</Typography>
     <SearchBar 
                 placeholder="buscar por nombre de producto"
                 url='/admin/userstable'

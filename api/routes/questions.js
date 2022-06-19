@@ -1,4 +1,3 @@
-
 import { Router } from "express";
 import Product_Question from "../models/Product_Question.js";
 import User from "../models/User.js";
@@ -6,10 +5,7 @@ import Product from "../models/Product.js";
 import { isAdmin, verifyToken } from "../middlewares/authJwt.js";
 import Product_Reply from "../models/Product_Reply.js";
 
-
-
 const router = Router();
-
 
 router.get("/", verifyToken, async (req, res, next) => {
 
