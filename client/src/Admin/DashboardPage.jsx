@@ -92,7 +92,6 @@ const DashboardPage = () => {
             />
 
             <CardDashboard
-              
                 link='admin/productstable'
                 title={products?.length }
                 subTitle="Productos"
