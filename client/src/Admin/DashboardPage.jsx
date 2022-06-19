@@ -115,11 +115,12 @@ const DashboardPage = () => {
 
 
             <CardDashboard 
+                link='admin/questionstable'
                 title={ cantidadDePreguntasSinRespuesta?.length }
                 subTitle="Preguntas sin responder"
                 icon={ <HelpOutlineOutlinedIcon color="error" sx={{ fontSize: 40 }} /> }
             />
-            
+
             <CardDashboard 
                 title={ refreshIn }
                 subTitle="Actualización en:"

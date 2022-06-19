@@ -18,10 +18,8 @@ const UsersPage = () => {
     const dispatch=useAppDispatch()
     const navigate= useNavigate()
 
-
     //dispatch(GETCOMMENTS('62aa4aad857ec093f144ca19')).then((r)=> console.log("resBack",r.payload))
    // console.log("comments de poduct",dispatch(GETCOMMENTS('62aa4aad857ec093f144ca19')).then((r)=>r.payload))
-   
 
     useEffect(()=>{
         dispatch(GETPRODUCTS())
@@ -33,6 +31,7 @@ const UsersPage = () => {
     const orders=useSelector((State) => State.rootReducer.orders);
     const [questions,setQuestions]=useState([])
     console.log("questions",questions)
+    console.log("products",products)
     const [rows,setRows]=useState([])
 
     useEffect(()=>{
@@ -60,10 +59,12 @@ const UsersPage = () => {
 //'62aa4aad857ec093f144ca19'
 
 
-console.log("questions",questions)
+    console.log("questions",questions)
     const cantidadPreguntasSinResponder= (product,questions) => {
 
     } 
+
+
 
     const productosmap=products.map(product=>( //esto es para cargar el estado productState
         {id:product._id,

@@ -16,8 +16,7 @@ const useAppDispatch = () => useDispatch();
 const UsersPage = () => { //FUNCION PRINCIPAL
     
 
-    const products=useSelector((State) => State.rootReducer.products);
-    const questions=useSelector((State) => State.rootReducer.questions);
+  
     const dispatch=useAppDispatch()
     const navigate= useNavigate()
 
@@ -27,9 +26,36 @@ const UsersPage = () => { //FUNCION PRINCIPAL
       },[dispatch])
 
     const [rows,setRows]=useState([])
+    const products=useSelector((State) => State.rootReducer.products);
+    const questions=useSelector((State) => State.rootReducer.allquestions);
+
+    // let prudctsWithQuestions = products.filter((product)=>(
+    //     (product.questions.length>0)&&(product.questions.filter((question)=>(
+    //         question.replies.length===0
+    //     )))
+    // ))
+
+
+    //DEVUELVE ARRAY CON TODOS LOS PRODUCTOS SIN RESPUESTA, PERO SI TIENE 2 PREGUNTAS SIN RESPONDER TOMA EL PRODUCTO 2 VECES
+    let productsWithNoAnswers = (products) =>{
+        let array= []
+        products.map((product)=>(
+            product.questions.filter((question)=>(
+                (question.replies.length===0)&&array.push(product)
+            ))
+        ))
+        return array
+    }
+    //PARA QUE NO SE REPITA EL ARRAY DE PRODUCTOS CON PREGUNTAS SIN RESPONDER
+    let productsWithNoAnswersNoRepeat = productsWithNoAnswers(products).filter((order,index)=>{
+        return productsWithNoAnswers(products).indexOf(order) === index;
+    })
+
+
+    console.log("questions",questions)
     
     useEffect(()=>{ //una vez que llegan los productos se llenana las rows
-        setRows(()=>products.map( (product) => ({
+        setRows(()=>productsWithNoAnswersNoRepeat.map( (product) => ({
             id: product._id,
             name: product.name,
             price: `$${product.price}`,
@@ -38,9 +64,10 @@ const UsersPage = () => { //FUNCION PRINCIPAL
             estado: product.isActive,
             date:product.creationDate||"sin fecha en BDD",
             rating:product.rating? product.rating : "no tiene rating",
-
+            totalQuestions: product.questions.length,
+            totalQuestionsNoAnswer: calcularCantidadDePreguntasSinRespuesta(questions,product),
         })))
-    },[products])
+    },[dispatch,products])
 
     const productosmap=products.map(product=>( //esto es para cargar el estado productState
         {id:product._id,
@@ -51,18 +78,6 @@ const UsersPage = () => { //FUNCION PRINCIPAL
     useEffect(()=>{ //eto es para actualizar el estado del producto cuando se selecciona bloqueado 
         setProductState(()=>productosmap)
     },[products])
-
-
-      const calcularCantidadDeVentasDeUnProducto = (ordenes,producto)=> {
-        let contador = 0
-        ordenes.map((orden)=>(
-            orden.isPaid&&
-            orden.products.map((product)=>(
-               ( product._id===producto._id) && (contador=contador + product.quantity)       
-            ))   
-        ));
-        return contador 
-      }
 
 
       const deleteOrder=async(row)=>{
@@ -89,6 +104,14 @@ const UsersPage = () => { //FUNCION PRINCIPAL
             }
           });
     }
+
+    const calcularCantidadDePreguntasSinRespuesta = (questions,product)=>{
+        let contador = 0;
+        questions.map((question)=>(
+            ((question.product._id===product._id)&&(question.replies.length===0))&&(contador= contador+1)       
+        ))
+        return contador
+      }
     
     const columns = [
         { 
@@ -109,18 +132,8 @@ const UsersPage = () => { //FUNCION PRINCIPAL
             }
         },
 
-        { 
-            field: 'edit', 
-            headerName: 'Editar',
-            
-            renderCell: ({ row } ) => {
-                return (
-                    <a href={ `/admin/editproduct/${ row.id }` }  rel="noreferrer">
-                        <Typography color='black'>editar</Typography>
-                    </a>
-                )
-            }
-        },
+        { field: 'totalQuestions', headerName: 'Preguntas totales', width: 250 },
+        { field: 'totalQuestionsNoAnswer', headerName: 'Preguntas Sin responder', width: 250 },
 
         { field: 'name', headerName: 'Producto', width: 350 },
         { field: 'date', headerName: 'Fecha de publicacion', width: 250 },

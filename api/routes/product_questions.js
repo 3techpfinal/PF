@@ -8,30 +8,6 @@ import Product_Reply from "../models/Product_Reply.js";
 
 const router = Router();
 
-//todas las preguntas que hay en la BDD
-
-router.get("/allquestions", verifyToken, async (req, res, next) => {
-
-    try {
-        const actualUser = await User.findById(req.userId);
-        const allQuestions = await Product_Question.find().populate(['product', 'user','replies']);
-        if(actualUser.role.includes('admin')){
-            return res.send(allQuestions)
-        } else {
-            const userQuestions = allQuestions.filter(question => question?.user?._id.toString() === req.userId.toString());
-            return res.send(userQuestions)
-        }
-    } catch (error) {
-        next(error)
-    }
-});
-
-
-
-
-
-
-
 
 // obtengo todas las preguntas y respuestas sobre un producto
 
