@@ -101,6 +101,7 @@ export default function ProductCard({product,wishlist,setWishList}) {
 
 
   return (
+    <Grid  item xs={12} sm={4} md={4} container spacing={5}  sx={{justifyContent:{xs:'space-around'},mt:2}}>
         <Card 
         onMouseEnter={()=> setIsHovered(true)}
         onMouseLeave={()=> setIsHovered(false)}
@@ -142,7 +143,7 @@ export default function ProductCard({product,wishlist,setWishList}) {
           </Box>
 
           {isAuthenticated&&<Tooltip title="Agregar a favoritos" placement="top">
-          <IconButton onClick={ addToWishList } style={{color: colorHeart}}>
+          <IconButton onClick={ addToWishList } style={{color: 'white'}}>
             <FavoriteIcon />
           </IconButton>
         </Tooltip> }
@@ -164,5 +165,6 @@ export default function ProductCard({product,wishlist,setWishList}) {
             </CardActionArea>
           
         </Card>
+      </Grid>
   );
 }

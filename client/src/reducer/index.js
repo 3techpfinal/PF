@@ -71,7 +71,7 @@ const rootReducer = createReducer(initialState, (builder) => {
     .addCase(actions.CREATEPRODUCT.fulfilled, (state, action) => {
     })
 
-    .addCase(actions.GETDETAIL.fulfilled, (state, action) => {
+    .addCase(actions.GETPRODUCT.fulfilled, (state, action) => {
       state.detail=[]
       state.detail=action.payload
     })
@@ -124,10 +124,10 @@ const rootReducer = createReducer(initialState, (builder) => {
       }
     })
 
-    .addCase(actions.GETREVIEW.fulfilled, (state, action) => { //obtiene una sola review
+    /*.addCase(actions.GETREVIEW.fulfilled, (state, action) => { //obtiene una sola review
       state.review=[]
       state.review=action.payload
-    })
+    })*/
 
     .addCase(actions.GETREVIEWS.fulfilled, (state, action) => { //obtiene todas la reviews de la bdd
       state.reviews=action.payload

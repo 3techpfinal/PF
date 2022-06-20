@@ -14,7 +14,7 @@ import ImageListItem from '@mui/material/ImageListItem';
 
 
 import { useDispatch, useSelector } from "react-redux";
-import {GETDETAIL,GETPRODUCTS} from '../actions'
+import {GETPRODUCTS} from '../actions'
 
 
 
@@ -25,7 +25,6 @@ export const CartList = ({ editable = false,order=false,orderIsPaid=false }) => 
     const {id} = useParams()
 
     useEffect(()=>{
-        //dispatch(GETDETAIL(id))
         dispatch(GETPRODUCTS())
       },[dispatch])
 

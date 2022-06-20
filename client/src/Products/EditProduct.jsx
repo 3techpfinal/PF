@@ -4,7 +4,7 @@ import { useState,useRef,useEffect } from 'react';
 import {   useNavigate } from "react-router-dom"
 //import { Link } from "react-router-dom";
 import { TextField,Select,Container, CardMedia,Link, Box, UploadOulined,InputLabel, OutlinedInput, InputAdornment, MenuItem, Typography, Button, FormLabel, FormControlLabel } from '@mui/material';
-import {GETCATEGORIES,GETDETAIL,MODIFYPRODUCT,GETPRODUCTS} from '../actions'
+import {GETCATEGORIES,GETPRODUCT,MODIFYPRODUCT,GETPRODUCTS} from '../actions'
 import { useDispatch, useSelector } from 'react-redux'
 import { UploadOutlined } from '@ant-design/icons';
 
@@ -33,7 +33,7 @@ export default function EditarPublicacion() {
   const product=useSelector((state)=>state.rootReducer.detail)
 
   useEffect(()=>{
-    dispatch(GETDETAIL(id))
+    dispatch(GETPRODUCT(id))
 },[dispatch])
 
 useEffect(()=>{

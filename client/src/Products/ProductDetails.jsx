@@ -21,7 +21,7 @@ import 'swiper/css/scrollbar';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Loading from '../Components/Loading'
-import { GETDETAIL,GETRECOMMENDED,GETPRODUCTREVIEWS,GETPRODUCTQUESTIONS} from '../actions';
+import { GETPRODUCT,GETRECOMMENDED,GETPRODUCTREVIEWS,GETPRODUCTQUESTIONS} from '../actions';
 import Comment from '../Components/Comment'
 import Cookie from 'js-cookie'
 
@@ -43,13 +43,13 @@ const ProductDetails=({wishlist,setWishList})=>{
 
     React.useEffect(()=>{
         window.scrollTo(0, 0)
-        dispatch(GETDETAIL(id)).then(()=>dispatch(GETPRODUCTQUESTIONS(id))).then((r)=>setComments(()=>r.payload)).then(()=>dispatch(GETPRODUCTREVIEWS(id))).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
+        dispatch(GETPRODUCT(id)).then(()=>dispatch(GETPRODUCTQUESTIONS(id))).then((r)=>setComments(()=>r.payload)).then(()=>dispatch(GETPRODUCTREVIEWS(id))).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
 
     },[dispatch,id])
 
     
 
-    React.useEffect(()=>setTempCartProduct(()=>({//cuando se llene prodcut (con GETDETAIL) setea el tempcardproduct
+    React.useEffect(()=>setTempCartProduct(()=>({
         _id: product._id,
         imageProduct: product.imageProduct,
         price: product.price,

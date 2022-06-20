@@ -54,11 +54,20 @@ const DashboardPage = () => {
       <NavBar/>
 
     
-          <Box display="flex" flexDirection='column'  justifyContent='center'   mt={15}>
-                <Typography    variant='h3' component='h1'>
-                    { <DashboardOutlined /> }{' '} { 'Dashboard' }
-                </Typography>
-                <Typography  variant='h2' sx={{ mb: 1 }}>{ 'Estadisticas generales' }</Typography>
+          <Box display="flex" flexDirection='row' justifyContent='space-between'    mt={15}>
+                <Box>
+                    <Typography    variant='h3' component='h1'>
+                        { <DashboardOutlined /> }{' '} { 'Dashboard' }
+                    </Typography>
+                    <Typography  variant='h2' sx={{ mb: 1 }}>{ 'Estadisticas generales' }</Typography>
+                </Box>
+                <Box>
+                    <CardDashboard 
+                        title={ refreshIn }
+                        subTitle="Actualización en:"
+                        icon={ <AccessTimeOutlined color="secondary" sx={{ fontSize: 40 }} /> }
+                    />
+                </Box>
           </Box>
         
         <Grid container spacing={2}>
@@ -120,11 +129,7 @@ const DashboardPage = () => {
                 icon={ <HelpOutlineOutlinedIcon color="error" sx={{ fontSize: 40 }} /> }
             />
 
-            <CardDashboard 
-                title={ refreshIn }
-                subTitle="Actualización en:"
-                icon={ <AccessTimeOutlined color="secondary" sx={{ fontSize: 40 }} /> }
-            />
+
 
         </Grid>
 

@@ -32,7 +32,7 @@ export default function FormDialog({product,user,textButton,question, isAdmin,se
     userEsmail:'',
   })
 
-React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL) setea el tempcardproduct
+React.useEffect(()=>SetPostValue(()=>({
    //FORMATO DE ENVIO DE DATOS A LA BDD
   productId: product._id,
   productName:product.name,

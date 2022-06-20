@@ -13,6 +13,7 @@ code {
 }
 
 
+
 .lds-dual-ring {
   display: inline-block;
   width: 80px;
@@ -45,10 +46,16 @@ a{
 
 .disabled-link {
   pointer-events: none;
+  
 }
 
- .botonDashboard:hover {
+.button-active{
+  box-shadow: rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
+  background-color: #6c1c1c;
+}
+
+.button-active:hover {
   box-shadow: 0 12px 16px 0 rgba(147, 140, 0, 0.24), 0 17px 50px 0 rgba(62, 65, 46, 0.19);
   background-color: #faffc4;
-
+  transition-duration: 0.3s;
 } 

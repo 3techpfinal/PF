@@ -60,7 +60,7 @@ export default function FormDialog({product,order,func,reviews}) { //FUNCION PRI
  }
 
 
-React.useEffect(()=>SetPostValue(()=>({//cuando se llene prodcut (con GETDETAIL) setea el tempcardproduct
+React.useEffect(()=>SetPostValue(()=>({
    //FORMATO DE ENVIO DE DATOS A LA BDD
   reviewId:idReviewObtain(product, order,  reviews),
   review: value,

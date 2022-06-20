@@ -6,7 +6,7 @@ import { PayPalButtons,usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import { useParams } from 'react-router-dom';
-import { GETORDER, PAYORDER,GETDETAIL,GETPRODUCTS } from '../actions';
+import { GETORDER, PAYORDER,GETPRODUCTS } from '../actions';
 import NavBar from '../Components/NavBar'
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import swal from 'sweetalert';
@@ -49,13 +49,7 @@ const OrderPage=()=>{
     const [isPaid,setIsPaid]=useState(order.isPaid?true:false)
     const [isPaid2,setIsPaid2]=useState(false) //muestra o no los relampagos
 
-     //const detalle=useSelector((State) => State.rootReducer.detail);
-
-    /* const producto=async(ide)=>{
-         await dispatch(GETDETAIL(ide))
-    }
-*/
-
+/*
     const verificarSihayStock=(orden,productsBDD)=>{
     let verificacion=[true,'']
     orden.products.map((productOrder)=>(
@@ -68,7 +62,7 @@ const OrderPage=()=>{
     ))
     return verificacion
     }
-
+*/
 
     useEffect(()=>{
             order.isPaid && setIsPaid(()=>true)

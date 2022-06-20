@@ -1,7 +1,7 @@
 import { Grid,CardMedia, Box, Typography, Divider } from '@mui/material'
 import { Container } from '@mui/system'
 import * as React from 'react'
-import ProductCard from '../Products/CardProduct'
+import CardProduct from '../Products/CardProductSmall'
 import NavBar from '../Components/NavBar'
 import { Autoplay,Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
@@ -90,12 +90,17 @@ const Landing=({wishlist,setWishList})=>{
                     <Typography variant='h4' sx={{m:3}}>No hay productos con este nombre</Typography>
                 </Box>
                 :
-                <Grid container   sx={{justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}> 
+                <Box>
+                {/* <Grid container   sx={{justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>  */}
                     {products.filter((e)=>e.isActive===true).map(e=>// para no mostrar cuando el producto esta bloqueado
-                        <Grid key={e._id} md={3} sx={{display:'flex',justifyContent:'center'}}>
-                            <ProductCard key={e._id} product={e} wishlist={wishlist} setWishList={setWishList}/>
-                        </Grid>)}
-                </Grid>}
+                        //<Grid key={e._id} md={3} sx={{display:'flex',justifyContent:'center'}}>
+
+                            <CardProduct key={e._id} product={e} wishlist={wishlist} setWishList={setWishList}/>
+
+                       // </Grid>
+                       )
+                    }
+                </Box>}
 
                
           
