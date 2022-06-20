@@ -4,7 +4,7 @@ import Typography from '@mui/material/Typography';
 import { CardMedia, IconButton,Box,Divider } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useSelector,useDispatch} from 'react-redux'
-import { GETWISHLIST,DELETEFROMWISHLIST } from '../actions';
+import { DELETEFROMWISHLIST } from '../actions';
 import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import { NavLink, useNavigate } from 'react-router-dom';

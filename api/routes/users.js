@@ -179,9 +179,9 @@ router.put('/:id', verifyToken, async (req, res, next) => {
 
 router.get("/wishlist/:id", verifyToken, async (req, res, next) => {
     try {
-        const updatedUser=await User.findById(req.userId).populate('wishList')
+        const User=await User.findById(req.userId).populate('wishList')
         
-        res.status(200).json(updatedUser.wishList?updatedUser.wishList:[])
+        res.status(200).json(User.wishList?updatedUser.wishList:[])
     } catch (error) {
         next(error)
     }

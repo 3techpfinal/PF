@@ -98,10 +98,6 @@ const ProductDetails=({wishlist,setWishList})=>{
         onUpdateQuantity(cant) //solamente dejo que hayan pedidos la cantidad de productos en stock, aca seteo el
    }
 
-   const makeQuestion=()=>{
-
-   }
-
     return (
         loaded?<Container sx={{mt:15}}>
             <NavBar wishlist={wishlist} setWishList={setWishList}/>
@@ -146,19 +142,22 @@ const ProductDetails=({wishlist,setWishList})=>{
 
                             <Box display='flex' flexDirection='row'>
                                 <Box>
+                                    {/* PRECIO DEL PRODUCTO INICIO */}
                                 {product.priceOriginal && product.price!==product.priceOriginal ?
                                     <div>
                                         <Typography variant='h5' sx={{mt:1,fontWeight:12}}>{'$'+new Intl.NumberFormat().format(product.price)} </Typography>
                                         <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
                                     </div>
                                     :
-                                    <Typography variant='h5' sx={{mt:1,fontWeight:12}}> {'$'+new Intl.NumberFormat().format(product.price)} </Typography>}                  
+                                    <Typography variant='h5' sx={{mt:1,fontWeight:12}}> {'$'+new Intl.NumberFormat().format(product.price)} </Typography>}   
+                                    {/* PRECIO DEL PRODUCTO FIN */}               
                                 </Box>
                                 <Box display='flex' justifyContent="end">
+                                    {/* PORCENTAJE DE DESCUENTO SI ES QUE EXISTE */}   
                                     {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
                                 </Box>
                             </Box>
-
+                                    {/* ITEM COUNTER */}         
                                 <Box sx={{my:2,display:'flex',alignItems:'center',justifyContent:'left'}}>
                                     <Typography variant='subtitle2'>Cantidad </Typography>
                                     <ItemCounter 
@@ -167,7 +166,8 @@ const ProductDetails=({wishlist,setWishList})=>{
                                         updatedQuantity={ (value)=>onUpdateQuantity(value)  } 
                                     />
                                 </Box>
-                            
+                                
+                            {/*DESCRIPCION DEL PRODUCTO*/}   
                             <Typography overflow={'auto'} variant='body1' sx={{mt:2,maxHeight:200}}>{product.description}</Typography>
 
 

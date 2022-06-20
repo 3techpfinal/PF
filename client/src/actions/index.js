@@ -254,7 +254,8 @@ export const MAKEANSWER = createAsyncThunk('MAKEANSWER', async (input) => { //
                         //   ACCIONES PARA ORDENES Y PAGOS  //   
                         /////////////////////////////////////    
 
-export const GETORDERS = createAsyncThunk('GETORDERS', async () => { // trae todas las ordenes
+// Devuelve todas las ordenes de la BDD
+export const GETORDERS = createAsyncThunk('GETORDERS', async () => { 
     const token=Cookie.get('token')
     const response = await axios(`${api}/orders`,{
         headers:{
@@ -264,6 +265,7 @@ export const GETORDERS = createAsyncThunk('GETORDERS', async () => { // trae tod
     return response.data
 })
 
+//Editar una orden de la BDD
 export const EDITORDER=createAsyncThunk('EDITYORDER',async (input)=>{
     const token=Cookie.get('token')
     const order=await axios.put(`${api}/orders/${input._id}`,input,{headers:{
@@ -272,7 +274,7 @@ export const EDITORDER=createAsyncThunk('EDITYORDER',async (input)=>{
     return order.data
 })
 
-
+//Buscar en una orden, en el backend esta la logica, puedo buscar por nombre o email de usuario y por producto
 export const SEARCHORDERS = createAsyncThunk('SEARCHORDERS', async (name) => { //
     const token=Cookie.get('token')
     const response = await axios(`${api}/orders?name=${name}`,{
@@ -283,6 +285,7 @@ export const SEARCHORDERS = createAsyncThunk('SEARCHORDERS', async (name) => { /
     return response.data
 })
 
+//Devuelve una orden deteminada
 export const GETORDER=createAsyncThunk('GETORDER',async (id)=>{
     const token=Cookie.get('token')
     const result=await axios.get(`${api}/orders/${id}`,{
@@ -293,7 +296,7 @@ export const GETORDER=createAsyncThunk('GETORDER',async (id)=>{
     return result.data
   })
 
-
+//Crea una orden
 export const CREATEORDER=createAsyncThunk('CREATEORDER',async (data)=>{
     const token=Cookie.get('token')
     const result=await axios.post(`${api}/orders`,data,{
@@ -304,7 +307,8 @@ export const CREATEORDER=createAsyncThunk('CREATEORDER',async (data)=>{
     return result.data._id
 })
   
-  export const PAYORDER=createAsyncThunk('PAYORDER',async (data)=>{
+// Pagar una orden
+export const PAYORDER=createAsyncThunk('PAYORDER',async (data)=>{
     const token=Cookie.get('token')
     var result=await axios.post(`${api}/orders/pay`,data,{
         headers:{
@@ -313,7 +317,7 @@ export const CREATEORDER=createAsyncThunk('CREATEORDER',async (data)=>{
     return result.data
 })
 
-
+//Eliminar una orden
 export const DELETEORDER=createAsyncThunk('DELETEORDER',async (id)=>{
     const token=Cookie.get('token')
     const result=await axios.delete(`${api}/orders/${id}`,{
