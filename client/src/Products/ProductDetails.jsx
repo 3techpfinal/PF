@@ -126,15 +126,22 @@ const ProductDetails=({wishlist,setWishList})=>{
                     <Box sx={{flexDirection:'column'}}>
                         <Box sx={{m:1,border:'1px solid lightgray',p:3,pt:1,borderRadius:5}}>
                             <Box sx={{display:'flex',justifyContent:'space-between'}}>
+
+                                {/* TITULO DEL PRODUCTO */}
                                 <Tooltip title={product.name} placement='left'>
-                                <Typography sx={{fontSize:{xs:20,sm:30},maxHeight:150}}>{product.name.length>35?product.name.slice(0,35)+'...':product.name}</Typography>
+                                    <Typography sx={{fontSize:{xs:20,sm:30},maxHeight:150}}>{product.name.length>35?product.name.slice(0,35)+'...':product.name}</Typography>
                                 </Tooltip>
-                                {product.isActive && product.stock>0?<IconButton 
-                                sx={{bgcolor:colorStyles.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
-                                onClick={ onAddProduct }>
+
+                                {/* BOTON AGREGAR AL CARRITO */}
+                                {product.isActive && product.stock>0?
+                                <IconButton 
+                                    sx={{bgcolor:colorStyles.color2,borderRadius:3,fontSize:{xs:10,sm:15},color:'black',height:50}}
+                                    onClick={ onAddProduct }
+                                >
                                     Agregar al carrito 
                                     <AddShoppingCartIcon sx={{ml:1}}/>
-                                </IconButton>:
+                                </IconButton>
+                                :
                                 <Chip label= {`Sin Stock`} sx={{m:3}} color='error'/>}
                             </Box>
 
@@ -166,7 +173,7 @@ const ProductDetails=({wishlist,setWishList})=>{
                                         updatedQuantity={ (value)=>onUpdateQuantity(value)  } 
                                     />
                                 </Box>
-                                
+
                             {/*DESCRIPCION DEL PRODUCTO*/}   
                             <Typography overflow={'auto'} variant='body1' sx={{mt:2,maxHeight:200}}>{product.description}</Typography>
 
@@ -184,16 +191,22 @@ const ProductDetails=({wishlist,setWishList})=>{
                             {divider()}
                             {typo('Color: Violeta')}
                             {divider()} */}
+
+                            {/* MUESTRA EL STOCK DEL PRODUCTO */}
                             <Box sx={{display:'flex',alignItems:'center'}}> 
-                            {typo(`Stock:`)}
-                            {product.stock>0?
-                            <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>:
-                            <Chip label= {`Sin Stock`} color='error'/>}
+                                {typo(`Stock:`)}
+                                {product.stock>0?
+                                <Chip label= {`${product.stock} en Stock`} sx={{bgcolor:colorStyles.color2}}/>
+                                :
+                                <Chip label= {`Sin Stock`} color='error'/>}
                             </Box>
+
                             {divider()}
+
+                            {/* VALORACION GENERAL DEL PRODUCTO */}
                             <Box sx={{display:'flex',alignItems:'center'}}>
-                            {typo('Valoracion: ')}
-                            <Rating readOnly defaultValue={product.rating} precision={0.1}/>
+                                {typo('Valoracion: ')}
+                                <Rating readOnly defaultValue={product.rating} precision={0.1}/>
                             </Box>
 
                         </Box>
@@ -202,37 +215,38 @@ const ProductDetails=({wishlist,setWishList})=>{
             </Box>
 
             {productReviews.length>0&&
-            <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
-                <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Valoraciones</Typography>
-                {divider()}
+                <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
+                    <Typography sx={{fontSize:{xs:15,md:30},m:2,ml:4}}>Valoraciones</Typography>
+                    {divider()}
 
-                
-                 <Container component="div" sx={{ overflow: 'auto',mb:2,maxHeight:400,mt:2 }}>{/* VALORACIONES */}
-                    {productReviews?.map((productReview)=>(
-                        <Box display='flex' sx={{flexDirection:'column'}}>
-                            <Box display='flex' flexDirection='column' alignItems='flex-start' justifyContent='center'>
-                                <Box sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
-                                    <Avatar src={productReview.user.avatar} alt={productReview.user.email}/>
-                                    <Typography ml={1}>{productReview.user.email}</Typography>
+                    
+                    <Container component="div" sx={{ overflow: 'auto',mb:2,maxHeight:400,mt:2 }}>{/* VALORACIONES */}
+                        {productReviews?.map((productReview)=>(
+                            <Box display='flex' sx={{flexDirection:'column'}}>
+                                <Box display='flex' flexDirection='column' alignItems='flex-start' justifyContent='center'>
+                                    <Box sx={{display:'flex',flexDirection:'row',alignItems:'center',justifyContent:'center'}}>
+                                        <Avatar src={productReview.user.avatar} alt={productReview.user.email}/>
+                                        <Typography ml={1}>{productReview.user.email}</Typography>
+                                    </Box>
+                                    <Box display='flex' mt={1}>
+                                        <Rating  readOnly defaultValue={productReview.review} precision={0.1}/>
+                                    </Box>
+                                    
+                                    
                                 </Box>
-                                <Box display='flex' mt={1}>
-                                    <Rating  readOnly defaultValue={productReview.review} precision={0.1}/>
+                                <Box mb={1}>
+                                    {productReview.comment&&<Typography variant='body1' sx={{mt:2,maxHeight:200}}>"{productReview.comment}"</Typography>}    
                                 </Box>
-                                
-                                
+                            <Divider sx={{marginX:3,marginY:3}}/>
                             </Box>
-                            <Box mb={1}>
-                                {productReview.comment&&<Typography variant='body1' sx={{mt:2,maxHeight:200}}>"{productReview.comment}"</Typography>}    
-                            </Box>
-                        <Divider sx={{marginX:3,marginY:3}}/>
-                        </Box>
-                
-                    ))
-                    }
-               </Container>
-                
+                    
+                        ))
+                        }
+                </Container>
+                    
 
-            </Box>}
+                </Box>
+            }
 
             <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:'column',borderRadius:3,mt:4,mb:3}}>
                 <Box sx={{display:'flex'}}>

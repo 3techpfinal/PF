@@ -20,8 +20,8 @@ import { useNavigate } from 'react-router-dom';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import AddShoppingCartIcon from '@mui/icons-material/AddShoppingCart';
 import  CartContext from '../Cart/CartContext';
-import { ADDTOWISHLIST,DELETEFROMWISHLIST,GETWISHLIST } from '../actions';
-import { useDispatch, useSelector } from 'react-redux';
+import { ADDTOWISHLIST,DELETEFROMWISHLIST } from '../actions';
+import { useDispatch } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 
 
@@ -29,7 +29,6 @@ export default function ProductCard({product,wishlist,setWishList}) {
   const [isHovered, setIsHovered] = useState (false);
   const [colorHeart, setColorHeart] = useState ('black');
   const {isAuthenticated}=useAuth0()
-  const wishlistBDD=useSelector((state)=>state.rootReducer.wishList)
   const navigate=useNavigate()
   const dispatch=useDispatch()
     const productImage = useMemo(()=>{
