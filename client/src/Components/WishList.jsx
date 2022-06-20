@@ -35,7 +35,7 @@ export default function BasicPopover({wishlist,setWishList}) {
     <div>
       <IconButton aria-describedby={id} variant="contained" onClick={handleClick} style={{color: 'white'}}>
         <Badge badgeContent={wishlist?.length} color="error">
-        <FavoriteIcon/>
+           <FavoriteIcon/>
         </Badge>
       </IconButton>
       <Popover
@@ -56,23 +56,24 @@ export default function BasicPopover({wishlist,setWishList}) {
           <>
           <Box sx={{display:'flex',justifyContent:'space-between'}}>
             <Box sx={{width:100,marginX:1}}>
-            <CardMedia
-            component="img"
-            height="100"
-            width='100'
-            image={product?.imageProduct[0]}
-            alt="gf"
-            sx={{objectFit:'contain'}}
-            onClick={()=>{navigate(`/product/${product._id}`)}}
-           />
+              <CardMedia
+                component="img"
+                height="100"
+                width='100'
+                image={product?.imageProduct[0]}
+                alt="gf"
+                sx={{objectFit:'contain'}}
+                onClick={()=>{navigate(`/product/${product._id}`)}}
+              />
             </Box>
-           <Box sx={{display:'flex',flexDirection:'column',alignItems:'flex-start',width:'100%',mt:2}} onClick={()=>{navigate(`/product/${product._id}`)}}>
-           <Typography sx={{fontSize:10,maxHeight:50}}>{product.name.slice(0,40)}</Typography>
-           <Typography sx={{fontSize:10,maxHeight:50}}>${product.price}</Typography>
-           </Box>
-           <IconButton onClick={()=>deleteElement(product._id)}style={{color: 'red',borderRadius:0}}>
-            <FavoriteIcon />
-          </IconButton>
+            <Box sx={{display:'flex',flexDirection:'column',alignItems:'flex-start',width:'100%',mt:2}} onClick={()=>{navigate(`/product/${product._id}`)}}>
+              <Typography sx={{fontSize:10,maxHeight:50}}>{product.name.slice(0,40)}</Typography>
+              <Typography sx={{fontSize:10,maxHeight:50}}>${product.price}</Typography>
+            </Box>
+
+            <IconButton onClick={()=>deleteElement(product._id)}style={{color: 'red',borderRadius:0}}>
+              <FavoriteIcon />
+            </IconButton>
           </Box>
           <Divider/>
           </>

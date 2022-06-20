@@ -24,10 +24,10 @@ import { ADDTOWISHLIST,DELETEFROMWISHLIST } from '../actions';
 import { useDispatch } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 
-
+//FUNCION PRINCIPAL
 export default function ProductCard({product,wishlist,setWishList}) {
   const [isHovered, setIsHovered] = useState (false);
-  const [colorHeart, setColorHeart] = useState ('black');
+  const [colorHeart, setColorHeart] = useState ();
   const {isAuthenticated}=useAuth0()
   const navigate=useNavigate()
   const dispatch=useDispatch()
@@ -45,7 +45,8 @@ export default function ProductCard({product,wishlist,setWishList}) {
         wishlist?.forEach((e)=>{
           if(e._id===product._id)setColorHeart(()=>'red')
         })
-    },[wishlist])
+    })
+    
     const { addProductToCart,cart} = useContext( CartContext )
 
     const [tempCartProduct, setTempCartProduct] = useState({
@@ -73,16 +74,15 @@ export default function ProductCard({product,wishlist,setWishList}) {
 
     const addToWishList = () => { 
       if(colorHeart==="black"){
-        setColorHeart("red")
+        //setColorHeart("red")
         setWishList((old)=>[...old,product])
         dispatch(ADDTOWISHLIST({productId:product._id}))
       }
       else{
-        setColorHeart("black")
+       // setColorHeart("black")
         setWishList((old)=>old.filter(e=>e!==product))
         dispatch(DELETEFROMWISHLIST({productId:product._id}))
-      }
-      
+      } 
     }
 
 

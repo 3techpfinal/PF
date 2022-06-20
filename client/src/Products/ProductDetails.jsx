@@ -18,20 +18,24 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 import 'swiper/css/scrollbar';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 import { useDispatch, useSelector } from 'react-redux';
 import { useParams } from 'react-router-dom';
 import Loading from '../Components/Loading'
-import { GETPRODUCT,GETRECOMMENDED,GETPRODUCTREVIEWS,GETPRODUCTQUESTIONS} from '../actions';
+import { GETPRODUCT,ADDTOWISHLIST,DELETEFROMWISHLIST,GETRECOMMENDED,GETPRODUCTREVIEWS,GETPRODUCTQUESTIONS} from '../actions';
 import Comment from '../Components/Comment'
 import Cookie from 'js-cookie'
-
+import { useAuth0 } from '@auth0/auth0-react';
 
 const ProductDetails=({wishlist,setWishList})=>{
 
+    const {isAuthenticated}=useAuth0()
+    const product=useSelector((state)=>state.rootReducer.detail)
+   const [colorHeart, setColorHeart] = useState ();
 
     const actualUser = Cookie.get('user') && JSON.parse(Cookie.get('user'))
     const dispatch=useDispatch()
-    const product=useSelector((state)=>state.rootReducer.detail)
+    
     const isAdmin=useSelector((state)=>state.rootReducer.isAdmin)
     const productReviews=useSelector((state)=>state.rootReducer.productReviews)
     const [comments,setComments]=useState([])
@@ -42,12 +46,27 @@ const ProductDetails=({wishlist,setWishList})=>{
     const [tempCartProduct, setTempCartProduct] = useState({})
 
     React.useEffect(()=>{
+        let isinlist = false
+        wishlist?.forEach((e)=>{
+          if(e._id===product._id)isinlist=true
+        })
+        setColorHeart(()=>isinlist===true?'red':'black')
+    },[wishlist])
+
+
+    React.useEffect(()=>{
         window.scrollTo(0, 0)
-        dispatch(GETPRODUCT(id)).then(()=>dispatch(GETPRODUCTQUESTIONS(id))).then((r)=>setComments(()=>r.payload)).then(()=>dispatch(GETPRODUCTREVIEWS(id))).then(()=>dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
+        dispatch(GETPRODUCT(id)).then(()=>
+        dispatch(GETPRODUCTQUESTIONS(id))).then((r)=>setComments(()=>r.payload)).then(()=>
+        dispatch(GETPRODUCTREVIEWS(id))).then(()=>
+        dispatch(GETRECOMMENDED(id))).then(()=>setLoaded(true))
 
     },[dispatch,id])
 
+
     
+    console.log("wishlist",wishlist)
+    console.log("product",product)
 
     React.useEffect(()=>setTempCartProduct(()=>({
         _id: product._id,
@@ -98,6 +117,21 @@ const ProductDetails=({wishlist,setWishList})=>{
         onUpdateQuantity(cant) //solamente dejo que hayan pedidos la cantidad de productos en stock, aca seteo el
    }
 
+   const addToWishList = () => { 
+    if(colorHeart==="black"){
+     
+      setWishList((old)=>[...old,product])
+      dispatch(ADDTOWISHLIST({productId:product._id}))
+     // setColorHeart("red")
+    }
+    else{
+      
+      setWishList((old)=>old.filter(e=>e!==product))
+      dispatch(DELETEFROMWISHLIST({productId:product._id}))
+     // setColorHeart("black")
+    } 
+  }
+
     return (
         loaded?<Container sx={{mt:15}}>
             <NavBar wishlist={wishlist} setWishList={setWishList}/>
@@ -122,13 +156,22 @@ const ProductDetails=({wishlist,setWishList})=>{
                 </Swiper>
                 </Container>
 
+
                 <Box sx={{flexDirection:'column',width:{xs:'100%',md:'50%'}}}>
                     <Box sx={{flexDirection:'column'}}>
                         <Box sx={{m:1,border:'1px solid lightgray',p:3,pt:1,borderRadius:5}}>
                             <Box sx={{display:'flex',justifyContent:'space-between'}}>
 
+                                {/* AGREGAR A FAVORITOS */}
+                                {isAuthenticated&&
+                                <Tooltip title="Agregar a favoritos" placement="top">
+                                    <IconButton onClick={ addToWishList } style={{color: colorHeart}}>
+                                        <FavoriteIcon />
+                                    </IconButton>
+                                </Tooltip> }
+
                                 {/* TITULO DEL PRODUCTO */}
-                                <Tooltip title={product.name} placement='left'>
+                                <Tooltip title={product.name} placement='top'>
                                     <Typography sx={{fontSize:{xs:20,sm:30},maxHeight:150}}>{product.name.length>35?product.name.slice(0,35)+'...':product.name}</Typography>
                                 </Tooltip>
 

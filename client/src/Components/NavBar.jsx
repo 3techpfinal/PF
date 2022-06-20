@@ -54,8 +54,6 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
     return isHovered?
     <CartList/>
     : <></>
-
-     
 },[isHovered])
   
 
