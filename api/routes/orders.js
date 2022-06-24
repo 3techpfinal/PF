@@ -8,6 +8,7 @@ const router = Router()
 
  //import * as IPaypal from '../paypalInterface'
 
+//Devuelve todas las ordenes, pero si se le pasa algo por query realiza una busqueda por usuario o producto en una orden
 router.get("/", verifyToken, async (req, res, next) => {
     
     const {name} = req.query //Para realizar la Busqueda de ordenes por poducto, usuario o mail
@@ -57,7 +58,7 @@ router.get("/", verifyToken, async (req, res, next) => {
         }
 
     }else{
-
+//Si no se evnia nada por query, entonces devuelve todas las ordenes, y a un usuario todas sus ordenes
     try {
 
         const actualUser = await User.findById(req.userId);
@@ -77,7 +78,7 @@ router.get("/", verifyToken, async (req, res, next) => {
 )
 ;
 
-
+//Devuelve una orden en particular a traves de su id de orden
 router.get("/:id",verifyToken,  async(req, res, next) => {
     const { id } = req.params
     try {
@@ -91,8 +92,8 @@ router.get("/:id",verifyToken,  async(req, res, next) => {
 
 
 
-
-router.post('/', verifyToken, async (req, res, next) => { //crear orden
+ //crear orden
+router.post('/', verifyToken, async (req, res, next) => {
     try {
 
     const newOrder = new Order(req.body); //adress, paymentId, totalPrice, products : [{},{}]
@@ -113,7 +114,7 @@ router.post('/', verifyToken, async (req, res, next) => { //crear orden
     }
 });
 
-
+ //Edita una orden
 router.put('/:id', verifyToken, async (req, res, next) => {
 
     try {

@@ -37,7 +37,7 @@ export default function  ItemCounter ({currentValue, updatedQuantity, maxValue})
 /* 
 esto va donde se quiera implementar
 
-    const [tempCartProduct, setTempCartProduct] = useState({
+    const [productsInCart, setProductsInCart] = useState({
         quantity: 1
       })
 
@@ -48,7 +48,11 @@ esto va donde se quiera implementar
           }));
       }
 
-    <ItemCounter currentValue={tempCartProduct.quantity} updatedQuantity={onUpdateQuantity} maxValue={500}/>
+    <ItemCounter 
+      currentValue={productsInCart.quantity} 
+      updatedQuantity={onUpdateQuantity} 
+      maxValue={500}
+    />
 
 
         */

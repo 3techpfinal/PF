@@ -41,7 +41,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
   paddingBottom: theme.spacing(1),
   // Override media queries injected by theme.mixins.toolbar
   '@media all': {
-    minHeight: 30,
+    minHeight: 20,
   },
 }));
 
@@ -185,14 +185,14 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
         
           <Container sx={{ flexGrow: 1, zIndex: 'tooltip'}} position="fixed" top='0px'>
             <AppBar sx={{bgcolor:color.color1}} >
-              <StyledToolbar sx={{justifyContent:'space-between',alignItems:'center',height:30,mt:1}}>
+              <StyledToolbar sx={{justifyContent:'space-between',alignItems:'center',height:15,mt:1}}>
                 
                 <Box>
                     <Link to='/'>
                       <CardMedia 
                         image={logo}
                         component='img'
-                        sx={{width: 100, height: 80, objectFit:'contain'}}
+                        sx={{width: 50, height: 30, objectFit:'contain'}}
                         onClick={()=>dispatch(GETPRODUCTS())}
                         />                          
                     </Link>
@@ -209,48 +209,40 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
 
 
 
-                <Box sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
-                  <SearchBar 
-                  placeholder="Buscar por producto o categoria"
-                  url='/'
-                  dinamic={false}
-                  action={SEARCHBYNAMEPRODUCTS}
-                  />
-                </Box>
+
 
       
               
                 <Box sx={{display:'flex',alignItems:'center', justifyContent:'flex-end'}}>
 
-
-                    {/* <IconButton style={{color: 'white'}}>
-                      <FavoriteIcon>
-                        
-                      </FavoriteIcon>
-                    </IconButton> */}
+                    <Box flexDirection='column' sx={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+                      <FilterCategory title={'Categorias'}/>
+                      
+                    </Box>
                     {isAuthenticated&&<WishList wishlist={wishlist} setWishList={setWishList}/>}
                     
 
                     <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
-                        <IconButton size="large" aria-label="show 4 new mails" color="inherit">
+                        <IconButton fontsize="medium" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={numberOfItems} color="error">
-                                <ShoppingCart />
+                                <ShoppingCart/>
                             </Badge>
                         </IconButton>
                     </NavLink>
 
-                  <Box sx={{ display: { md: 'flex' } }}>
+                  <Box marginRight={1} sx={{display: { md: 'flex' } }}>
                     {isAuthenticated?
                     <IconButton
-                      size="large"
+                     
                       edge="end"
                       aria-label="account of current user"
                       aria-controls={menuId}
                       aria-haspopup="true"
                       onClick={handleProfileMenuOpen}
                       color="inherit"
+                      size="small"
                     >
-                      <Avatar alt={user?.name} src={user?.avatar||user?.picture} />
+                      <Avatar  alt={user?.name} src={user?.avatar||user?.picture} />
                     </IconButton>
                     :
                     <Button sx={{bgcolor:color.color2,color:'black',ml:2}}
@@ -297,27 +289,23 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                 </Box>
 
 
+
+
                 
               </StyledToolbar>
 
               <Divider sx={{bgcolor:color.color3,m:1}}/>
-              
+                <Box marginBottom={1} marginX={5}>
+                  <SearchBar 
+                  placeholder="Buscar por producto o categoria"
+                  url='/'
+                  dinamic={false}
+                  action={SEARCHBYNAMEPRODUCTS}
+                 
+                  />
+                </Box>
 
-              <Box sx={{display:'flex',justifyContent:'center',mb:1,alignItems:'center'}}>
-                <Typography variant='body2' sx={{mr:2}}>Categorias: </Typography>
-                  <FilterCategory title={'Todos'}/>
-                <Divider orientation="vertical" flexItem sx={{display:{xs:'none',md:'flex'},bgcolor:'white',marginX:1}}/>
-                    <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
-                      {categories.slice(0,4).map((e)=>(
-                      <>
-                          <Button onClick={()=>{dispatch(SEARCHBYCATEGORY(e._id)); navigate('/') }}>
-                            <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>
-                          </Button>
-                        <Divider orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
-                      </>               
-                    ))}
-                    </Box>
-              </Box>
+
 
             </AppBar>
             {renderMenu}

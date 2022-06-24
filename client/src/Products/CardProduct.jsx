@@ -45,7 +45,7 @@ export default function ProductCard({product,wishlist,setWishList}) {
         wishlist?.forEach((e)=>{
           if(e._id===product._id)setColorHeart(()=>'red')
         })
-    })
+    },[wishlist])
     
     const { addProductToCart,cart} = useContext( CartContext )
 
@@ -80,7 +80,7 @@ export default function ProductCard({product,wishlist,setWishList}) {
       }
       else{
        // setColorHeart("black")
-        setWishList((old)=>old.filter(e=>e!==product))
+        setWishList((old)=>old.filter(e=>e._id!==product._id))
         dispatch(DELETEFROMWISHLIST({productId:product._id}))
       } 
     }

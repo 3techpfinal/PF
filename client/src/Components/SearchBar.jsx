@@ -37,7 +37,7 @@ export default function SearchInput({placeholder,url,dinamic,action}) {
       }}
     >
       <InputBase
-        sx={{ ml: 1, flex: 1, color: 'white',fontSize:{xs:9,md:18} }}
+        sx={{ ml: 1, flex: 1, color: 'white',fontSize:{xs:12,md:18} }}
         placeholder={placeholder}
         value={input}
         onChange={(e) =>handleChange(e)}

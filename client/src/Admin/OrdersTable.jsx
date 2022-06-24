@@ -84,6 +84,20 @@ const UsersPage = () => {
     const columns = [
         { field: 'name', headerName: 'Usuario', width: 250 },
         { field: 'email', headerName: 'email', width: 250 },
+
+        { 
+            field: 'edit', 
+            headerName: 'Editar',
+            
+            renderCell: ({ row } ) => {
+                return (
+                    <a href={ `/orderedit/${ row.id }` }  rel="noreferrer">
+                        <Typography color='black'>{row.isPaid?'':'editar'}</Typography>
+                    </a>
+                )
+            }
+        },
+
         { field: 'orderNumber', headerName: 'Nº de Orden', width: 250 },
         { field: 'amountOfProducts', headerName: 'Cantidad de productos \n de un tipo', width: 280 },
         { field: 'amountOfProductsTotal', headerName: 'Cantidad de productos totales', width: 280 },

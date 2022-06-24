@@ -19,9 +19,6 @@ const useAppDispatch = () => useDispatch();
 export default function FormDialog({product,user,textButton,question, isAdmin,setComments}) { //FUNCION PRINCIPAL
 
   const dispatch=useAppDispatch()
-  const navegar = useNavigate()
-  const [value, setValue] = React.useState(0);
-  const [hover, setHover] = React.useState(-1);
 
   const [postValue,SetPostValue]=React.useState({
     productId:'',

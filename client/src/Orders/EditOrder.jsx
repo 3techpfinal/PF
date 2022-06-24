@@ -1,4 +1,4 @@
-import { Box, Button, Card, CardContent, Divider, Grid, Typography } from '@mui/material';
+import { Box, Button, Card, CardContent, Divider, Grid,Chip, Typography, CardActionArea, CardMedia, } from '@mui/material';
 import { Link, NavLink, useNavigate, useParams } from "react-router-dom";
 import { CartList, OrderSummary } from '../Cart';
 import NavBar from '../Components/NavBar'
@@ -12,16 +12,19 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import InfoOutlinedIcon from '@mui/icons-material/InfoOutlined';
 import swal from 'sweetalert'
-
+import { CreditScoreOutlined } from '@mui/icons-material';
+import colorStyles from '../styles'
+import ItemCounter from '../Components/ItemCounter'
 import {EDITORDER, GETORDER} from '../actions'
 
-export default function SummaryPage(){ // esta es la funcion principal
+export default function EditOrder(){ // esta es la funcion principal
     
     
-    const [inputOrder,setInputOrder]=useState({})
+    //const [inputOrder,setInputOrder]=useState({})
     const navigate = useNavigate()    
     const dispatch= useDispatch();
-
+    const [BDD,setBDD]=useState([])
+    const productsBDD=useSelector((State) => State.rootReducer.products);
     const {id}=useParams()
 
     const order=useSelector((state)=>state.rootReducer.order)
@@ -31,26 +34,36 @@ export default function SummaryPage(){ // esta es la funcion principal
         dispatch(GETORDER(id))
     },[dispatch])
 
-    // useEffect(()=>{setInputOrder({
-    //     /*order.products.map((product)=>{(
-    //         _id:order._id,
-    //         price:order.totalPrice
-    //         products:                                                               
-    //     })*/
 
-    // })},[order]
-    // )
+    const [inputOrder,setInputOrder]=useState({
+        _id: order._id,
+        totalPrice: order?.totalPrice,
+        products:order?.products
+      })
 
+    useEffect(()=>{setInputOrder(()=>({
+        _id:order._id,
+        totalPrice:order.totalPrice,
+        products:order.products                                                               
+    }))
+    },[order])
+
+    //Para ver el Stock que tiene el producto en la BDD
+    useEffect(()=>{
+        setBDD(()=>productsBDD.map(e=>({
+            _id:e._id,
+            stock:e.stock
+            })))
+    },[productsBDD])
 
 
 
 console.log("order",order)
+
     const editarOrden = async ()=> {
        // if(user.adress&&user.city&&user.phone){
-            let ordenNueva = await dispatch(EDITORDER(order))
-            dispatch(GETORDER(ordenNueva.payload)).then(()=> // me voy al resumen a ver si pago o no
-            navigate(`/ordersummary/${ordenNueva.payload}`))
-            //removeAllCartProduct()
+            await dispatch(EDITORDER(order))
+            navigate('/orderstable')
       //  }
         //else{
             // swal({
@@ -64,6 +77,47 @@ console.log("order",order)
             
         //}
     }
+    const [productInOrder, setproductInOrder] = useState({
+        quantity: 2 
+    })
+
+
+    const onUpdateQuantity = ( quantity,productIn ) => {
+        //console.log("inputOrder",inputOrder)
+       
+        let arrayProducts=order.products
+        productIn.quantity=quantity
+        arrayProducts.filter((product)=>(productIn._id!==product._id))
+        arrayProducts.push(productIn)
+        console.log("arrayProducts",arrayProducts)
+
+       /* setInputOrder( currentProduct => ({
+            ...currentProduct,
+            products:arrayProducts
+          }));
+         */
+      /*    orderState.totalPrice=0
+          orderState?.products?.forEach((product)=>{
+            or*derState?.totalPrice=orderState?.totalPrice+product.price*product.quantity
+        })*/
+      }
+
+
+  /*    useEffect(()=>{
+        var totalPrice=0
+        order.products.forEach((product)=>{
+          totalPrice=totalPrice+product.price*product.quantity
+      })
+    },[order])*/
+
+      const calcularCantidaddeProductosTotalesEnOrden = (order) =>{
+        let contador = 0
+        order?.products?.map((product)=>(
+            contador = contador + product.quantity
+        ))
+        return contador      
+    }
+
 
 
 
@@ -76,7 +130,79 @@ console.log("order",order)
             <Grid container sx={{mt:3}}>
                 <Grid item xs={12} sm={7}>
 
-                     <CartList order={order} editable={true}/>  {/*COMPONENTE LISTA DEL CARRITO */}
+
+                    {/*COMPONENTE LISTA DEL CARRITO INICIO*/}
+                    <>
+            {
+                inputOrder.products?.map( product => (//product es un elemento del array cart
+                    <Grid container spacing={2} key={ product._id } sx={{ mb:1 }}>
+                        <Grid item xs={3}>
+                            
+                            <NavLink to={`/product/${ product._id }`} >
+                               <Card >
+                                    <CardActionArea>
+                                        <CardMedia 
+                                            image={product.imageProduct?product.imageProduct[0]:"https://res.cloudinary.com/dnlooxokf/image/upload/v1651532672/sample.jpg"}
+                                            component='img'
+                                            sx={{ borderRadius: '5px',width: 150, height: 200, objectFit:'contain'}}
+                                        />
+                                    </CardActionArea> 
+                                </Card>
+                            </NavLink>
+                        </Grid>
+
+
+
+                        <Grid item xs={7}>
+                                <Box display='flex' flexDirection='column'>
+                                    <Typography variant='body1' sx={{fontWeight:20}}>{ product.name }</Typography>
+
+                                    
+                                        <ItemCounter 
+                                            currentValue={ product.quantity }
+                                            maxValue={ product.stock  } 
+                                            updatedQuantity={(value)=>onUpdateQuantity(value,product)}
+                                        />                           
+                                    
+                         
+                                
+                                </Box>
+                                <Box display='flex' flexDirection='column' >
+                                    <Typography variant='h6'>{BDD.filter(e=>product._id===e._id)[0]?.stock } {'Disponibles'}</Typography>
+                                   
+                                
+                                </Box>
+                        
+                        </Grid>
+
+                        <Grid item xs={2} display='flex' alignItems='center' flexDirection='column'>
+                         {/*mustro el porcentaje de descuento??*/}   
+                        {product.priceOriginal && product.price!==product.priceOriginal ? <Chip label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2}}/>:<></>}
+                        {/* muestro los dos precios, uno tachado? */}
+                        {product.priceOriginal && product.price!==product.priceOriginal ?
+                        <div>
+                            {'$'+new Intl.NumberFormat().format(product.price)}
+                            <Typography><del> ${new Intl.NumberFormat().format(product.priceOriginal)}</del></Typography>
+                        </div>
+                        :
+                        '$'+new Intl.NumberFormat().format(product.price)}
+                            
+                            
+                                <Button 
+                                    variant='text' 
+                                    color='secondary' 
+                                   // onClick={ () => removeCartProduct( product ) }
+                                >
+                                    Borrar
+                                </Button>
+                            
+                        
+                    </Grid>
+                </Grid>
+                ))
+            }
+        </>
+                     {/*COMPONENTE LISTA DEL CARRITO FIN */}
 
                 </Grid>
 
@@ -114,13 +240,42 @@ console.log("order",order)
                                     Editar
                                 </Link>
                             </Box>
+                             {/*COMPONENTE RESUMEN DE ORDEN INICIO*/}
 
-                            <OrderSummary/>
+
+                            <Grid container>
+
+                            <Grid item xs={6}>
+                            <Typography>No. Productos</Typography>
+                            </Grid>
+                            <Grid item xs={6} display='flex' justifyContent='end'>
+                            <Typography>{calcularCantidaddeProductosTotalesEnOrden(order)} { order?.products?.length > 1 ? 'productos': 'producto' }</Typography>
+                            </Grid>
+
+
+
+                            <Grid item xs={6} sx={{ mt:2 }}>
+                            <Typography variant="subtitle1">Total:</Typography>
+                            </Grid>
+                            <Grid item xs={6} sx={{ mt:2 }} display='flex' justifyContent='end'>
+
+
+
+
+                            <Typography  variant="subtitle1">{ `$ ${new Intl.NumberFormat().format(inputOrder.totalPrice)}` }</Typography>
+
+                            </Grid>
+
+
+                            </Grid>
+
+
+                            {/*COMPONENTE RESUMEN DE ORDEN FIN */}
 
                             <Box sx={{mt:3}} >
             
                                     <Button color='secondary' className='circular-btn' fullWidth onClick={()=>editarOrden()}>
-                                        Editar Orden
+                                        Guardar cambios
                                     </Button>                    
 
                             </Box>

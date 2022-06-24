@@ -12,7 +12,15 @@ export const OrderSummary = () => {
     const dispatch=useDispatch()
     const {cart,total}=useContext(CartContext)
     const order=useSelector((state)=>state.rootReducer.order)
-    const [array,setArray]=useState([])
+    const [array,setArray]=useState()
+
+    const calcularCantidaddeProductosTotalesEnOrden = (order) =>{
+        let contador = 0
+        order?.products?.map((product)=>(
+            contador = contador + product.quantity
+        ))
+        return contador      
+    }
 
     useEffect(()=>{
         dispatch(GETORDER(id))
@@ -26,6 +34,7 @@ export const OrderSummary = () => {
     },[order])
     // const items=order?order.products.length:numberOfItems
     // const amount=order?order.totalPrice:total
+    console.log("array",array)
   return (
     array?
     
@@ -35,7 +44,7 @@ export const OrderSummary = () => {
             <Typography>No. Productos</Typography>
         </Grid>
         <Grid item xs={6} display='flex' justifyContent='end'>
-            <Typography>{array.length} { array.length > 1 ? 'productos': 'producto' }</Typography>
+            <Typography>{calcularCantidaddeProductosTotalesEnOrden(array[0])} { array[0]?.products?.length > 1 ? 'productos': 'producto' }</Typography>
         </Grid>
 
 

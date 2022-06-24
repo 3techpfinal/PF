@@ -274,7 +274,7 @@ export const EDITORDER=createAsyncThunk('EDITYORDER',async (input)=>{
     return order.data
 })
 
-//Buscar en una orden, en el backend esta la logica, puedo buscar por nombre o email de usuario y por producto
+//Buscar producto o usuario en una orden, en las rutas esta la logica, puedo buscar por nombre o email de usuario y por nombre de producto
 export const SEARCHORDERS = createAsyncThunk('SEARCHORDERS', async (name) => { //
     const token=Cookie.get('token')
     const response = await axios(`${api}/orders?name=${name}`,{
@@ -285,7 +285,7 @@ export const SEARCHORDERS = createAsyncThunk('SEARCHORDERS', async (name) => { /
     return response.data
 })
 
-//Devuelve una orden deteminada
+//Devuelve una orden deteminada a  traves del id de la orden
 export const GETORDER=createAsyncThunk('GETORDER',async (id)=>{
     const token=Cookie.get('token')
     const result=await axios.get(`${api}/orders/${id}`,{

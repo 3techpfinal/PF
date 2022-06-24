@@ -2,7 +2,9 @@ import { Grid,CardMedia, Box, Typography, Divider } from '@mui/material'
 import { Container } from '@mui/system'
 import * as React from 'react'
 import CardProduct from '../Products/CardProduct'
+import CardProductSmall from '../Products/CardProductSmall'
 import NavBar from '../Components/NavBar'
+import NavBarSmall from '../Components/NavBarSmall'
 import { Autoplay,Navigation, Pagination, Scrollbar, A11y } from 'swiper';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import 'swiper/css';
@@ -49,7 +51,11 @@ const Landing=({wishlist,setWishList})=>{
     return(
         products[0]?
             <Container sx={{mt:12,minWidth:'100%',p:{xs:0}}}>
-                <NavBar wishlist={wishlist} setWishList={setWishList}/>
+
+                
+                <Box sx={{display:{md:'none',xs:'flex'}}}><NavBarSmall wishlist={wishlist} setWishList={setWishList} /></Box>
+                <Box sx={{display:{md:'flex',xs:'none'}}}><NavBar wishlist={wishlist} setWishList={setWishList} sx={{display:{xs:'none',md:'flex'}}}/></Box>
+               
 
                 <Box mt={15}>
                 <Swiper 
@@ -91,7 +97,7 @@ const Landing=({wishlist,setWishList})=>{
                 </Box>
                 :
                 <Box>
-                    <Grid container   sx={{justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>  
+                    {/* <Grid container   sx={{display:{xs:'none',md:'flex'},justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>  
                     {products.filter((e)=>e.isActive===true).map(e=>// para no mostrar cuando el producto esta bloqueado
                         <Grid key={e._id} md={3} sx={{display:'flex',justifyContent:'center'}}>
 
@@ -99,6 +105,21 @@ const Landing=({wishlist,setWishList})=>{
 
                         </Grid>
                        )
+                    }
+                    </Grid> */}
+                    <Box marginX={1} sx={{display:{xs:'flex',md:'none'},flexDirection:'column'}}>
+                    {products.filter((e)=>e.isActive===true).map(e=>// para no mostrar cuando el producto esta bloqueado                   
+                            <CardProductSmall key={e._id} product={e} wishlist={wishlist} setWishList={setWishList}/>
+                       )
+                    }
+                    </Box>
+
+                    <Grid container   sx={{display:{xs:'none',md:'flex'},justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>  
+                    {products.filter((e)=>e.isActive===true).map(e=>// para no mostrar cuando el producto esta bloqueado       
+                    <Grid key={e._id} md={3} sx={{display:'flex',justifyContent:'center'}}>            
+                            <CardProduct key={e._id} product={e} wishlist={wishlist} setWishList={setWishList}/>
+                    </Grid>
+                       )  
                     }
                     </Grid>
                 </Box>}

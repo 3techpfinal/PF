@@ -7,7 +7,7 @@ import { maxHeight } from '@mui/system';
 import color from '../styles'
 import {useLocation, useNavigate } from 'react-router-dom';
 
-export default function FilterByCategory() {
+export default function FilterByCategory({title}) {
     const [sValue,setSvalue]=React.useState('Todos')
     const location=useLocation()
     const navigate=useNavigate()
@@ -21,16 +21,15 @@ export default function FilterByCategory() {
 
     async function handleFilterCategory(e) {      
       if(e.target.value==="Todos") {
-      dispatch(GETPRODUCTS())
-      if(location!=='/')navigate('/')
-    }
+        dispatch(GETPRODUCTS())
+        if(location!=='/')navigate('/')
+      }
       else{
-      dispatch(SEARCHBYCATEGORY(e.target.value))
-
-      if(location!=='/')navigate('/')}
+        dispatch(SEARCHBYCATEGORY(e.target.value))
+        if(location!=='/')navigate('/')
+      }
 
       return e.target.value
-      
     }
 
   return (
@@ -44,13 +43,13 @@ export default function FilterByCategory() {
               handleFilterCategory(e)
             }}
             name='category'
-            sx={{ height:24,bgcolor:color.color3 }}
+            sx={{ height:24,bgcolor:color.color3,fontSize:{xs:11} }}
           >
               <MenuItem key='select' value='Todos' onClick={()=>{
                 dispatch(GETPRODUCTS()) 
                 if(location!=='/')navigate('/')
                 }}>
-                  Todos
+                  {title}
               </MenuItem>
                   {categories.map((category) => (
                     <MenuItem key={category._id} name={category.name} value={category._id}>

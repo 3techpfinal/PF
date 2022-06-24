@@ -50,7 +50,7 @@ function App() {
   const [wishlist,setWishList]=useState([])
   useEffect(()=>{
     Cookie.get('token')?dispatch(GETWISHLIST()).then((r)=>setWishList(()=>r.payload)):setWishList(()=>[])
-  })
+  },[])
   return (
 
     <PayPalScriptProvider options={{ "client-id": 'AQ0xQs7KJfypFz2RqDQlSnT9qYlzBaGyXFsPaTVDQIbgpvD8n1TXUV5Qh-h6vzVdlzd4QjGDFdqOJrup' }}>

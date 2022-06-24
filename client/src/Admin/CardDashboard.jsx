@@ -26,8 +26,8 @@ export default function SummaryTile ({ title, subTitle, icon,link})  {
     
     <Grid  item xs={12} sm={4} md={3}>
           
-            <NavLink  to={`/${link}`} className={link!==undefined?'button-active':'disabled-link'}> 
-                <Card  className='button-active' sx={{ display: 'flex', height:'200' }}>
+            <Link  to={`/${link}`} className={link!==undefined?'button-active':'disabled-link'}> 
+                <Card  className='button-active' sx={{ display: 'flex', height:'200', boxShadow: 'rgba(50, 50, 93, 0.25) 0px 13px 27px -5px, rgba(0, 0, 0, 0.3) 0px 8px 16px -8px'}}>
                     <CardContent sx={{ width: 50, display:'flex', justifyContent: 'center', alignItems: 'center' }}>
                         { icon }
                     </CardContent>
@@ -36,7 +36,7 @@ export default function SummaryTile ({ title, subTitle, icon,link})  {
                         <Typography variant='caption'>{ subTitle }</Typography>
                     </CardContent> 
                 </Card>
-            </NavLink>   
+            </Link>   
               
     </Grid>
 
