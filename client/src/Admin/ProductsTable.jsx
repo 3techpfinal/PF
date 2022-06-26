@@ -2,7 +2,7 @@
 import { useState, useEffect } from 'react';
 import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-material'
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
-import { Grid, Select, MenuItem, Box,CardMedia,Typography,Button } from '@mui/material';
+import { Grid, Select, MenuItem, Box,CardMedia,Typography,Button, Tooltip } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
 import {MODIFYPRODUCT, GETORDERS,GETPRODUCTS,DELETEPRODUCT,SEARCHBYNAMEPRODUCTS,GETALLQUESTIONS} from '../actions'
 import { AppDispatch,RootState } from '../store'
@@ -147,16 +147,17 @@ const UsersPage = () => {
         { 
             field: 'img', 
             headerName: 'Foto',
-            
+     
             renderCell: ({ row } ) => {
                 return (
-                    <a href={ `/product/${ row.id }` } target="_blank" rel="noreferrer">
+                    <a href={ `/product/${ row.id }` }>
                         <CardMedia 
+                            sx={{objectFit:'contain'}}
                             component='img'
                             alt=""
                             className='fadeIn'
                             image={ row.image }
-                            sx={{objectFit:'contain'}}
+                           
                         />
                     </a>
                 )
@@ -166,17 +167,20 @@ const UsersPage = () => {
         { 
             field: 'edit', 
             headerName: 'Editar',
-            
             renderCell: ({ row } ) => {
                 return (
                     <a href={ `/admin/editproduct/${ row.id }` }  rel="noreferrer">
-                        <Typography color='black'>editar</Typography>
+                            <Typography color='black'>editar</Typography>
                     </a>
                 )
             }
         },
 
-        { field: 'name', headerName: 'Producto', width: 350 },
+        { field: 'name', headerName: 'Producto', width: 350, renderCell: ({ row } ) => {return(<> <Tooltip title={row.name} placement="top"> 
+                                                                                                    <Typography color='black'>{row.name}</Typography>
+                                                                                                  </Tooltip>
+                                                                                               </>) 
+                                                                                        }},
         { field: 'date', headerName: 'Fecha de publicacion', width: 250 },
         { field: 'rating', headerName: 'calificacion de usuarios', width: 250 },
         { field: 'price', headerName: 'Precio ($)', width: 250 },
@@ -198,7 +202,7 @@ const UsersPage = () => {
                         >
                             <MenuItem value='online'> online </MenuItem>
                             <MenuItem value='bloqueado'> bloqueado </MenuItem>
-                            <MenuItem onClick={(e)=> deleteOrder(row)} display='flex' flexDirection='center' color='red'  >Eliminar</MenuItem>
+                            <MenuItem onClick={(e)=> deleteOrder(row)} display='flex' flexDirection='center'> <Typography color='red'>Eliminar</Typography></MenuItem>
                         </Select>
                 )
             }

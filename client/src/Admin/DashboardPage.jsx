@@ -10,7 +10,7 @@ import { GETPRODUCTS } from '../actions'
 import { GETORDERS } from '../actions'
 import { GETALLQUESTIONS } from '../actions'
 import { Link, useLocation, Navigate, useNavigate } from 'react-router-dom';
-
+import Loading from '../Components/Loading'
 
 const useAppDispatch = () => useDispatch();
 
@@ -49,6 +49,8 @@ const DashboardPage = () => {
 
 
   return (
+    products[0]&&orders[0]&&users[0]&&questions[0]?
+
     <Container>
 
       <NavBar/>
@@ -134,7 +136,9 @@ const DashboardPage = () => {
         </Grid>
 
 
-    </Container>
+    </Container> 
+    :
+    <Loading/>
   )
 }
 

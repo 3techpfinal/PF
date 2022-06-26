@@ -9,6 +9,8 @@ import SearchBar from '../Components/SearchBar'
 import { Chip } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert'
+import PopUpList from '../Components/PopUpList'
+
 
 
 const useAppDispatch = () => useDispatch();
@@ -32,9 +34,13 @@ const UsersPage = () => {
     const orders=useSelector((State) => State.rootReducer.orders);
     const [rows,setRows]=useState([])
 
+    console.log('rows',rows)
+
     useEffect(()=>{ //una vez que llegan las ordenes se llenana las rows
         setRows(()=>orders.map( (order) => ({
+            
             id:order._id,
+            products: order.products,
             name: order?.user?.name || "no hay nombres",
             email: order?.user?.email || "no hay nombres",
             orderNumber: order?._id || "no hay orden",
@@ -99,7 +105,18 @@ const UsersPage = () => {
         },
 
         { field: 'orderNumber', headerName: 'Nº de Orden', width: 250 },
-        { field: 'amountOfProducts', headerName: 'Cantidad de productos \n de un tipo', width: 280 },
+        {
+            field:'products',
+            headerName:'Productos',
+            width: 200,
+            sortable: false,
+            renderCell: ({ row })=>{
+                return (         
+                            <PopUpList list={row.products}/>
+                        )
+                
+            }
+         },
         { field: 'amountOfProductsTotal', headerName: 'Cantidad de productos totales', width: 280 },
         { field: 'totalPrice', headerName: 'Precio total', width: 150 },
         {
@@ -141,9 +158,10 @@ const UsersPage = () => {
             renderCell: (params)=>{
                 return (
                         params.row?.isPaid?
-                        <Button fullWidth sx={{  color:'gray', backgroundColor:'gray'}}></Button> :
-                        <Button  onClick={(e)=> deleteOrder(params.row) }>
-                            eliminar
+                        <Button fullWidth sx={{  color:'gray', backgroundColor:'gray'}}></Button>
+                        :
+                        <Button  color='error' onClick={(e)=> deleteOrder(params.row) }>
+                            <Typography color='red'>Eliminar</Typography>
                         </Button>
                         )
                 
