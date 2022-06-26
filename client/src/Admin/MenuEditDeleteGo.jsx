@@ -1,7 +1,7 @@
 import * as React from 'react';
 import Popover from '@mui/material/Popover';
 import Typography from '@mui/material/Typography';
-import { CardMedia,Button, IconButton,Box,Divider } from '@mui/material';
+import { CardMedia,Button, IconButton,Box,Divider, Tooltip } from '@mui/material';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import {useSelector,useDispatch} from 'react-redux'
 import '@fontsource/roboto/300.css';
@@ -28,7 +28,7 @@ export default function BasicPopover({dato,row,goToElement,deleteElement,editEle
   return (
     <div>
       <IconButton aria-describedby={id} variant="contained" onClick={handleClick} style={{color: 'white'}}>
-           <Typography color='black'>{dato}</Typography>
+          <Tooltip title={row.name} placement="top"><Typography color='black'>{dato}</Typography></Tooltip> 
       </IconButton>
       <Popover
         id={id}
@@ -47,10 +47,10 @@ export default function BasicPopover({dato,row,goToElement,deleteElement,editEle
           <>
           <Box sx={{display:'flex',justifyContent:'space-between'}}>
 
-            <Box sx={{display:'flex',flexDirection:'column',alignItems:'flex-start',width:'100%',mt:2}} >
+            <Box sx={{display:'flex',flexDirection:'column', justifyContent:'center' ,width:'100%',mt:2}} >
                 <Button onClick={()=>goToElement()}> Ver </Button>
                 <Button onClick={()=>editElement()}> {row.isPaid?'':'editar'} </Button>
-                <Button  color='error' onClick={(e)=> deleteElement() }><Typography>{row.isPaid?'':'Eliminar'}</Typography></Button>
+                <Button  color='error' onClick={(e)=> deleteElement() }>{row.isPaid?'':'Eliminar'}</Button>
             </Box>
 
           </Box>
