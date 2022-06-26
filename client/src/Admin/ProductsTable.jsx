@@ -10,6 +10,7 @@ import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
 import { NavLink, useNavigate } from 'react-router-dom';
 import swal from 'sweetalert'
+import MenuEditDeleteGo from './MenuEditDeleteGo'
 
 const useAppDispatch = () => useDispatch();
 
@@ -117,8 +118,15 @@ const UsersPage = () => {
         return contador
       }
 
+      const goToProduct=async (id)=>{
+        navigate(`/product/${id}`)
+     }
+     const editProduct=async (id)=>{
+        navigate(`/admin/editproduct/${id}`)
+     }
 
-      const deleteOrder=async(row)=>{
+
+      const deleteProduct=async(row)=>{
         swal({
             title: "Estas seguro que deseas eliminar el producto?",
             text: "",
@@ -164,23 +172,18 @@ const UsersPage = () => {
             }
         },
 
-        { 
-            field: 'edit', 
-            headerName: 'Editar',
-            renderCell: ({ row } ) => {
-                return (
-                    <a href={ `/admin/editproduct/${ row.id }` }  rel="noreferrer">
-                            <Typography color='black'>editar</Typography>
-                    </a>
-                )
-            }
-        },
-
-        { field: 'name', headerName: 'Producto', width: 350, renderCell: ({ row } ) => {return(<> <Tooltip title={row.name} placement="top"> 
-                                                                                                    <Typography color='black'>{row.name}</Typography>
-                                                                                                  </Tooltip>
-                                                                                               </>) 
-                                                                                        }},
+        { field: 'name', headerName: 'Producto', width: 350,        renderCell: ({row})=>{
+            return (
+                    <MenuEditDeleteGo 
+                        dato={row.name} 
+                        row={row} 
+                        goToElement={()=>goToProduct(row.id)} 
+                        editElement= {()=>editProduct(row.id)}
+                        deleteElement={()=>deleteProduct(row)}
+                    />
+                    )
+            
+        }},
         { field: 'date', headerName: 'Fecha de publicacion', width: 250 },
         { field: 'rating', headerName: 'calificacion de usuarios', width: 250 },
         { field: 'price', headerName: 'Precio ($)', width: 250 },
@@ -202,7 +205,7 @@ const UsersPage = () => {
                         >
                             <MenuItem value='online'> online </MenuItem>
                             <MenuItem value='bloqueado'> bloqueado </MenuItem>
-                            <MenuItem onClick={(e)=> deleteOrder(row)} display='flex' flexDirection='center'> <Typography color='red'>Eliminar</Typography></MenuItem>
+                            <MenuItem onClick={(e)=> deleteProduct(row)} display='flex' flexDirection='center'> <Typography color='red'>Eliminar</Typography></MenuItem>
                         </Select>
                 )
             }

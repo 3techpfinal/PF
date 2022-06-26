@@ -128,6 +128,7 @@ router.put('/:id', verifyToken, async (req, res, next) => {
 
 });
 
+//Eliminar una orden
 router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
 
     try {
@@ -140,7 +141,6 @@ router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
 });
 
 // `Order : ${found._id} successfully deleted
-
 
 router.post('/pay',verifyToken, async(req, res) => {
 

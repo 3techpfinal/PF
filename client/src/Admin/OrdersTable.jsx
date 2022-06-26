@@ -10,7 +10,7 @@ import { Chip } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert'
 import PopUpList from '../Components/PopUpList'
-
+import OrderMenu from './MenuEditDeleteGo'
 
 
 const useAppDispatch = () => useDispatch();
@@ -54,8 +54,11 @@ const UsersPage = () => {
 
     const navigate= useNavigate()
 
-      const verOrden=async (id)=>{
-        dispatch(GETORDER(id)).then(()=>navigate(`/orderpayment/${id}`))
+    const goToOrder=async (id)=>{
+       navigate(`/orderpayment/${id}`)
+    }
+    const editOrder=async (id)=>{
+       navigate(`/orderedit/${id}`)
     }
 
     const deleteOrder=async(row)=>{
@@ -79,6 +82,7 @@ const UsersPage = () => {
              })
      
             } else {
+                swal("No se pudo eliminar la orden!", { icon: "error",});
             }
           });
     }
@@ -88,23 +92,43 @@ const UsersPage = () => {
 
 
     const columns = [
-        { field: 'name', headerName: 'Usuario', width: 250 },
-        { field: 'email', headerName: 'email', width: 250 },
-
-        { 
-            field: 'edit', 
-            headerName: 'Editar',
+        { field: 'name', headerName: 'Usuario', width: 250, renderCell: ({row})=>{
+            return (
+                    <OrderMenu 
+                        dato={row.name} 
+                        row={row} 
+                        goToElement={()=>goToOrder(row.id)} 
+                        editElement= {()=>editOrder(row.id)}
+                        deleteElement={()=>deleteOrder(row)}
+                    />
+                    )
             
-            renderCell: ({ row } ) => {
-                return (
-                    <a href={ `/orderedit/${ row.id }` }  rel="noreferrer">
-                        <Typography color='black'>{row.isPaid?'':'editar'}</Typography>
-                    </a>
-                )
-            }
-        },
+        }},
+        { field: 'email', headerName: 'email', width: 250, renderCell: ({row})=>{
+            return (
+                    <OrderMenu 
+                        dato={row.id} 
+                        row={row} 
+                        goToElement={()=>goToOrder(row.id)} 
+                        editElement= {()=>editOrder(row.id)}
+                        deleteElement={()=>deleteOrder(row)}
+                    />
+                    )
+            
+        }},
 
-        { field: 'orderNumber', headerName: 'Nº de Orden', width: 250 },
+        { field: 'orderNumber', headerName: 'Nº de Orden', width: 250,renderCell: ({row})=>{
+            return (
+                    <OrderMenu 
+                        dato={row.email} 
+                        row={row} 
+                        goToElement={()=>goToOrder(row.id)} 
+                        editElement= {()=>editOrder(row.id)}
+                        deleteElement={()=>deleteOrder(row)}
+                    />
+                    )
+            
+        } },
         {
             field:'products',
             headerName:'Productos',
@@ -128,46 +152,7 @@ const UsersPage = () => {
                     ? ( <Chip variant='outlined' label="Pagada" color="success" /> )
                     : ( <Chip variant='outlined' label="Pendiente" color="error" /> )
             }
-        },
-        {
-            field:'orden',
-            headerName:'Ver orden',
-            width: 200,
-            sortable: false,
-            renderCell: (params)=>{
-                return (
-                
-                        // <NavLink to={`/order/${params.row.id}`}>
-                        //     <Link underline='always'>
-                                <Button onClick={()=>verOrden(params.row.id)}>
-                                     Ver Orden
-                                </Button>
-                        //     </Link>
-                        // </NavLink>
-
-                        )
-                
-            }
-         },
-
-         {
-            field:'delete',
-            headerName:'eliminar',
-            width: 200,
-            sortable: false,
-            renderCell: (params)=>{
-                return (
-                        params.row?.isPaid?
-                        <Button fullWidth sx={{  color:'gray', backgroundColor:'gray'}}></Button>
-                        :
-                        <Button  color='error' onClick={(e)=> deleteOrder(params.row) }>
-                            <Typography color='red'>Eliminar</Typography>
-                        </Button>
-                        )
-                
-            }
-         }
-
+        },  
 
     ];
 

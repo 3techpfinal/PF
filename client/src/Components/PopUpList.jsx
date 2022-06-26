@@ -35,7 +35,7 @@ export default function BasicPopover({list}) {
     <div>
       <IconButton aria-describedby={id} variant="contained" onClick={handleClick} style={{color: 'white'}}>
         <Badge badgeContent={list?.length} color="error">
-           <Typography color='black'>Mostrar Productos</Typography>
+           <Typography color='black'>Mostrar Orden</Typography>
         </Badge>
       </IconButton>
       <Popover
@@ -68,9 +68,9 @@ export default function BasicPopover({list}) {
               />
             </Box>
             <Box sx={{display:'flex',flexDirection:'column',alignItems:'flex-start',width:'100%',mt:2}} onClick={()=>{navigate(`/product/${product._id}`)}}>
-              <Typography sx={{fontSize:15,maxHeight:70}}>{product.name.slice(0,40)}</Typography>
-              <Typography sx={{fontSize:12,maxHeight:70}}>Precio: ${product.price}</Typography>
-              <Typography sx={{fontSize:15,maxHeight:70}}>Cantidad de productos:{product.quantity}</Typography>
+              <Typography sx={{fontSize:18,maxHeight:70}}>{product.name.slice(0,40)}</Typography>
+              <Typography sx={{fontSize:15,maxHeight:70}}>Precio: ${product.price}</Typography>
+              <Typography sx={{fontSize:18,maxHeight:70}}>Cantidad de productos:{product.quantity}</Typography>
             </Box>
 
             {/* <IconButton onClick={()=>deleteElement(product._id)}style={{color: 'red',borderRadius:0}}>
