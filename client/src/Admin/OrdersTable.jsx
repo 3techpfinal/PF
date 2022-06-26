@@ -107,7 +107,7 @@ const UsersPage = () => {
         { field: 'email', headerName: 'email', width: 250, renderCell: ({row})=>{
             return (
                     <OrderMenu 
-                        dato={row.id} 
+                        dato={row.email} 
                         row={row} 
                         goToElement={()=>goToOrder(row.id)} 
                         editElement= {()=>editOrder(row.id)}
@@ -120,7 +120,7 @@ const UsersPage = () => {
         { field: 'orderNumber', headerName: 'Nº de Orden', width: 250,renderCell: ({row})=>{
             return (
                     <OrderMenu 
-                        dato={row.email} 
+                        dato={row.id} 
                         row={row} 
                         goToElement={()=>goToOrder(row.id)} 
                         editElement= {()=>editOrder(row.id)}
