@@ -3,8 +3,8 @@ import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import Cookie from 'js-cookie'
 
 //export const api='https://t3ch22.herokuapp.com'
-export const api='http://localhost:3000'
-//export const api='https://app3tech-backend.herokuapp.com' (mi app)
+//export const api='http://localhost:3000'
+export const api='https://app3tech-backend.herokuapp.com'
 
                         /////////////////////////////////////   
                         //      ACCIONES PARA PRODUCTOS    //   

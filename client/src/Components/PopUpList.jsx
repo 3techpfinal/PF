@@ -9,7 +9,7 @@ import '@fontsource/roboto/300.css';
 import '@fontsource/roboto/500.css';
 import { NavLink, useNavigate } from 'react-router-dom';
 import Badge from '@mui/material/Badge';
-
+import colorStyles from '../styles'
 export default function BasicPopover({list}) {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const dispatch=useDispatch()
@@ -34,7 +34,7 @@ export default function BasicPopover({list}) {
   return (
     <div>
       <IconButton aria-describedby={id} variant="contained" onClick={handleClick} style={{color: 'white'}}>
-        <Badge badgeContent={list?.length} color="error">
+        <Badge  color='success' badgeContent={list?.length} >
            <Typography color='black'>Mostrar Orden</Typography>
         </Badge>
       </IconButton>

@@ -10,7 +10,7 @@ import { Chip } from '@mui/material'
 import { useNavigate } from 'react-router-dom';
 import swal from 'sweetalert'
 import PopUpList from '../Components/PopUpList'
-import OrderMenu from './MenuEditDeleteGo'
+import MenuEditDeleteGo from './MenuEditDeleteGo'
 
 
 const useAppDispatch = () => useDispatch();
@@ -94,7 +94,7 @@ const UsersPage = () => {
     const columns = [
         { field: 'name', headerName: 'Usuario', width: 250, renderCell: ({row})=>{
             return (
-                    <OrderMenu 
+                    <MenuEditDeleteGo 
                         dato={row.name} 
                         row={row} 
                         goToElement={()=>goToOrder(row.id)} 
@@ -106,7 +106,7 @@ const UsersPage = () => {
         }},
         { field: 'email', headerName: 'email', width: 250, renderCell: ({row})=>{
             return (
-                    <OrderMenu 
+                    <MenuEditDeleteGo 
                         dato={row.email} 
                         row={row} 
                         goToElement={()=>goToOrder(row.id)} 
@@ -119,7 +119,7 @@ const UsersPage = () => {
 
         { field: 'orderNumber', headerName: 'Nº de Orden', width: 250,renderCell: ({row})=>{
             return (
-                    <OrderMenu 
+                    <MenuEditDeleteGo 
                         dato={row.id} 
                         row={row} 
                         goToElement={()=>goToOrder(row.id)} 
