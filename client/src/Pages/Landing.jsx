@@ -49,14 +49,14 @@ const Landing=({wishlist,setWishList})=>{
     },[products])
 
     return(
-        products[0]?
+
             <Container sx={{mt:12,minWidth:'100%',p:{xs:0}}}>
 
                 
                 <Box sx={{display:{md:'none',xs:'flex'}}}><NavBarSmall wishlist={wishlist} setWishList={setWishList} /></Box>
                 <Box sx={{display:{md:'flex',xs:'none'}}}><NavBar wishlist={wishlist} setWishList={setWishList} sx={{display:{xs:'none',md:'flex'}}}/></Box>
                
-
+        {products[0]?<>
                 <Box mt={15}>
                 <Swiper 
                     modules={[Autoplay, Navigation, Pagination, Scrollbar, A11y]}
@@ -125,10 +125,10 @@ const Landing=({wishlist,setWishList})=>{
                 </Box>}
 
                
-          
+                </>:<Loading/>}
             </Container>
 
-        :<Loading/> 
+        
    
     )
 }

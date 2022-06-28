@@ -49,13 +49,14 @@ const DashboardPage = () => {
 
 
   return (
-    products[0]&&orders[0]&&users[0]&&questions[0]?
+    
 
     <Container>
 
       <NavBar/>
 
-    
+      {products[0]&&orders[0]&&users[0]&&questions[0]?
+      <>
           <Box display="flex" flexDirection='row' justifyContent='space-between'    mt={15}>
                 <Box>
                     <Typography    variant='h3' component='h1'>
@@ -134,11 +135,11 @@ const DashboardPage = () => {
 
 
         </Grid>
-
-
+        </>
+        :
+    <Loading/>}
     </Container> 
-    :
-    <Loading/>
+
   )
 }
 

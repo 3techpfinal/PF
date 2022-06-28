@@ -133,8 +133,11 @@ const ProductDetails=({wishlist,setWishList})=>{
   }
 
     return (
-        loaded?<Container sx={{mt:15}}>
+       
+        <Container sx={{mt:15}}>
             <NavBar wishlist={wishlist} setWishList={setWishList}/>
+            {loaded?
+            <>
             <Box sx={{boxShadow:'rgba(0, 0, 0, 0.35) 0px 5px 15px;',display:'flex',justifyContent:'space-between',flexDirection:{xs:'column',md:'row'},borderRadius:3,alignItems:'center'}}>
              
                 <Container sx={{width:{xs:'100%',md:'50%'},height:'50%',display:'flex',alignItems:'center',marginY:3}}>
@@ -362,8 +365,8 @@ const ProductDetails=({wishlist,setWishList})=>{
             </Swiper>
                 </Container>
             </Box>
-            
-        </Container>:<Loading/>
+            </>:<Loading/>}
+        </Container>
     )
 }
 

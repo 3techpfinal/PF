@@ -8,7 +8,6 @@ import '@fontsource/roboto/500.css';
 const Loading=()=>{
     return(
         <>
-        <NavBar/>
         <Box sx={{mt:20,display:'flex',alignItems:'center',flexDirection:'column'}}>
             <div className="lds-dual-ring"></div>
             <Typography sx={{m:3,fontWeight:20,fontSize:20}}>Procesando...</Typography>
