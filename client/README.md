@@ -1,3 +1,35 @@
+# Introduccion
+3TECH es una aplicación de e-commerce de productos de tecnología.
+Puede ser utilizada por cualquier comercio que quiera vender sus productos en internet.
+Utiliza Base de Datos MongoDB
+Backend: NodeJS, Express, JavaScrit
+Frontend: React.JS
+
+Funcionalidades:
+
+● Plataforma de pago (Pyapal).
+● Es una aplicación Responsive: para ser visualizado en diferentes dispositivos.
+● Recomendación de productos similares, los productos buscados
+
+👨🏽 Cliente:
+-Registro y login con email o cuenta de Google.
+-Carrito de compra
+-Lista de deseos
+-Hacer preguntas al vendedor acerca de un producto en particular.
+-Realizar una compra y registar un historial de compras.
+-Notificaciones por correo eléctronico (compra realizada).
+-Calificar y reseñar los productos comprados.
+-Búsqueda de productos por nombre de producto
+-Filtrado de productos por categoría
+-Ordenar productos por precio
+
+🎩 Administrador:
+-Crear, modificar, eliminar o bloquear productos.
+-Crear nuevas categorías de productos
+-Cambiar rol de usuarios (si son administradores de la aplcación o usurios) y/o bloquearlos (impidiendo que inicien sesión).
+-Responder a preguntas hechas por los usuarios sobre los productos.
+-Acceso a un Dashboard con datos fundamentales sobre la aplicación: cantidad de compras que se realizarion, cantidad de preguntas sin responder, productos con bajo o sin stock, ordenes de usuarios que no estan pagas, administración de usuarios, administracion de productos, búsqueda de ordenes realizadas por los usuarios.
+
 # comandos para correr el front y el back:
 npm run dev: para correr el back desde carpeta api
 npm start: para correr el front desde carpeta client
