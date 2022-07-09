@@ -24,7 +24,6 @@ const categories=['https://res.cloudinary.com/dnlooxokf/image/upload/v1654579315
 //const categories=['https://i.pinimg.com/originals/9f/5d/34/9f5d34242941aa388fc3ec559501543c.gif']
 const Landing=({wishlist,setWishList})=>{
 
-
     const [nameCatg,setNameCatg]=React.useState('Productos')
     const dispatch=useDispatch()
 
@@ -51,7 +50,6 @@ const Landing=({wishlist,setWishList})=>{
     return(
 
             <Container sx={{mt:12,minWidth:'100%',p:{xs:0}}}>
-
                 
                 <Box sx={{display:{md:'none',xs:'flex'}}}><NavBarSmall wishlist={wishlist} setWishList={setWishList} /></Box>
                 <Box sx={{display:{md:'flex',xs:'none'}}}><NavBar wishlist={wishlist} setWishList={setWishList} sx={{display:{xs:'none',md:'flex'}}}/></Box>
@@ -114,7 +112,7 @@ const Landing=({wishlist,setWishList})=>{
                     }
                     </Box>
 
-                    <Grid container   sx={{display:{xs:'none',md:'flex'},justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>  
+                    <Grid container   sx={{display:{md:'flex'},justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>  
                     {products.filter((e)=>e.isActive===true).map(e=>// para no mostrar cuando el producto esta bloqueado       
                     <Grid key={e._id} md={3} sx={{display:'flex',justifyContent:'center'}}>            
                             <CardProduct key={e._id} product={e} wishlist={wishlist} setWishList={setWishList}/>

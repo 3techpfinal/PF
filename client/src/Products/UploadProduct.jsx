@@ -137,7 +137,7 @@ export default function CrearPublicacion() {
 
       if(!input.price){input.price=input.priceOriginal}
 
-      checked&&dispatch(CREATECATEGORY(input)).then((r)=>{
+      checked&&dispatch(CREATECATEGORY(input)).then((r)=>{// crea una nueva categoria
          setInput((pepe)=>({...pepe,category:r.payload._id})) //carga el input con el id de la nueva categoria
           const newInput={...input,category:r.payload._id}
           console.log("newInput con categoria nueva",newInput)

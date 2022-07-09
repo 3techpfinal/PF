@@ -24,6 +24,7 @@ import { ADDTOWISHLIST,DELETEFROMWISHLIST } from '../actions';
 import { useDispatch } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
 
+
 //FUNCION PRINCIPAL
 export default function ProductCard({product,wishlist,setWishList}) {
   const [isHovered, setIsHovered] = useState (false);
@@ -122,6 +123,7 @@ export default function ProductCard({product,wishlist,setWishList}) {
       >
 
        <CardMedia
+            
             component="img"
             height="200"
             image={productImage}

@@ -1,7 +1,8 @@
-npm run dev para correr el back
-nom start para correr el front
+# comandos para correr el front y el back:
+npm run dev: para correr el back desde carpeta api
+npm start: para correr el front desde carpeta client
 
-comandos para deployar el front:
+# comandos para deployar el front:
 npm install -g create-react-app
 create-react-app my-app
 cd my-app
@@ -12,6 +13,30 @@ git commit -m "react-create-app on Heroku"
 git push heroku master
 
 
+# asi elimino un apuntado
+PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> git remote -v
+heroku  https://git.heroku.com/app-3tech-front.git (fetch)
+heroku  https://git.heroku.com/app-3tech-front.git (push)
+PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> git remote remove heroku
+
+
+asi se cambia de apuntado en heroku o git, para cuando quiera cambiar un url
+git remote add origin https://e-3tech.herokuapp.com/
+ # COMANDOS PARA HEROKU
+///////////////  COMANDOS PARA SUBIR A HEROKU INICIO  //////////////////////////
+PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> heroku create -b https://github.com/mars/create-react-app-buildpack.git e-3tech
+Creating ⬢ e-3tech... done
+Setting buildpack to https://github.com/mars/create-react-app-buildpack.git... done
+https://e-3tech.herokuapp.com/ | https://git.heroku.com/e-3tech.git
+
+PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> git add .    
+
+PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> git commit -m "react-create-app on Heroku"
+On branch master
+nothing to commit, working tree clean
+
+PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> git push heroku master
+///////////////  COMANDOS PARA SUBIR A HEROKU FIN  //////////////////////////
 # Getting Started with Create React App
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
