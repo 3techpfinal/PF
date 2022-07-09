@@ -30,10 +30,23 @@ Funcionalidades:
 -Responder a preguntas hechas por los usuarios sobre los productos.
 -Acceso a un Dashboard con datos fundamentales sobre la aplicación: cantidad de compras que se realizarion, cantidad de preguntas sin responder, productos con bajo o sin stock, ordenes de usuarios que no estan pagas, administración de usuarios, administracion de productos, búsqueda de ordenes realizadas por los usuarios.
 
-# comandos para correr el front y el back:
-npm run dev: para correr el back desde carpeta api
-npm start: para correr el front desde carpeta client
 
+# Instrucciones
+
+
+# comandos para correr el front y el back:
+Escribir el comando npm install, desde la carpeta api y desde client
+La carpeta api respresenta el Backend
+La carpeta client representa el Frontend
+Escribir los sigientes comandos:
+npm run dev:  correr el back desde carpeta api
+npm start:  correr el front desde carpeta client
+
+
+
+
+
+# NOTAS PARA LOS CREADRES
 # comandos para deployar el front:
 npm install -g create-react-app
 create-react-app my-app
