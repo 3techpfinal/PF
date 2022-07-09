@@ -7,9 +7,9 @@ Frontend: React.JS
 
 Funcionalidades:
 
-● Plataforma de pago (Pyapal).
-● Es una aplicación Responsive: para ser visualizado en diferentes dispositivos.
-● Recomendación de productos similares, los productos buscados
+● Plataforma de pago (Pyapal).<br/>
+● Es una aplicación Responsive: para ser visualizado en diferentes dispositivos.<br/>
+● Recomendación de productos similares, los productos buscados<br/>
 
 👨🏽 Cliente:
 -Registro y login con email o cuenta de Google.
