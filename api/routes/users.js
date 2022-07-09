@@ -26,10 +26,6 @@ router.post('/review',verifyToken, async (req, res,next) => { //modificado por G
         //newProduct.setCreationDate();  
         await newReview.save()
         
-
-
-
-
         const totalReviews=await Review.find({product:productId}) //trae reviews de un producto
         let total=0
         totalReviews.forEach(e=>total=total+e.review) //e.review es la calificacion de una orden, e es cada orden

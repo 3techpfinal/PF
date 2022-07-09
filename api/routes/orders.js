@@ -15,38 +15,44 @@ router.get("/", verifyToken, async (req, res, next) => {
     if(name){
         try {
             const actualUser = await User.findById(req.userId);
-            //traigo todas las ordenes
+            //TRAE TODAS LAS ORDENES
             const allOrders = await Order.find().populate(['products', 'user']);
-            //si es un usuario, solo tragio las ordenes del mismo
+            //SI ES USUARIO SOLO TRAE LASS ORDENES DEL MISMO, O SEA, NO ES ADMIN
             if(actualUser.role.includes('user')){ allOrders = allOrders.filter(order => order?.user?._id.toString() === req?.userId.toString());}
-            //creo 2 arrays vgacios
+            
             let orderWithProduct=[]
             let orderWithUser=[]
             let arrayOrders=[]
 
+            // FUNCIIN QUE ELIMINA LOS ACENTOS
             const removeAccents = (str) => {
                 return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
               } 
            
-
+            //SI EL TEXTO QUE VIENE EN PARAMETRO NAME, LO CONTIENE EL NOMBRE DEL PRODUCTO, ENTONCES GUARDO EN EL ARRAY  orderWithProduct, LA ORDEN
             allOrders.forEach((order)=>((
                  order?.products?.forEach((product)=>{
                     if(removeAccents(product?.name?.toLowerCase()).includes(removeAccents(name.toLowerCase())))orderWithProduct.push(order)
                  })
              )));
             
+             // SI ES UN USUARIO DEVUELVE EL ARRAY DE PRODUCTOS, QUE TENDRA LOS PRODUCTOS CON LA BUSQUEDA QUE HAYA REALIZADO
             if(actualUser.role.includes('user'))return res.json(orderWithProduct)
             
+            //SI EL TEXTO QUE VIENE EN PARAMETRO NAME, LO CONTIENE EL MAIL DEL USUARIO, ENTONCES GUARDO EN EL ARRAY  orderWithUser LA  ORDEN
             allOrders.forEach((order)=>{
                 if(order?.user?.email.toLowerCase().includes(name.toLowerCase()))orderWithUser.push(order)
             });
 
+            //SI EL TEXTO QUE VIENE EN PARAMETRO NAME, LO CONTIENE EL NOMBRE DEL USUARIO, ENTONCES GUARDO EN EL ARRAY  orderWithUser LA  ORDEN
             allOrders.forEach((order)=>{
                 if(order?.user?.name?.toLowerCase().includes(name.toLowerCase()))orderWithUser.push(order)
             });
 
+            // SE UNIFICA EN UN SOLO ARRAY TODAS LAS ORDENES QUE INCLUYAN LO QUE SE BUSCA, VINIENDO POR PARAMETRO EN NAME
             arrayOrders=orderWithProduct.concat(orderWithUser)
 
+            // FUNCION QUE QUITA LOS ELEMENTOS REPETIDOS DE UNA ARRAY
             let arrayOrdersNoRepeatLines = arrayOrders.filter((order,index)=>{
                 return arrayOrders.indexOf(order) === index;
             })

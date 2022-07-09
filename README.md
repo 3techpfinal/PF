@@ -1,68 +1,68 @@
 # Introduccion
-3TECH es una aplicación de e-commerce de productos de tecnología.
-Puede ser utilizada por cualquier comercio que quiera vender sus productos en internet.
-Utiliza Base de Datos MongoDB
-Backend: NodeJS, Express, JavaScrit
-Frontend: React.JS
+3TECH es una aplicación de e-commerce de productos de tecnología.<br/>
+Puede ser utilizada por cualquier comercio que quiera vender sus productos en internet.<br/>
+Utiliza Base de Datos MongoDB<br/>
+Backend: NodeJS, Express, JavaScrit<br/>
+Frontend: React.JS<br/>
 
-Funcionalidades:
+Funcionalidades:<br/>
 
 ● Plataforma de pago (Pyapal).<br/>
 ● Es una aplicación Responsive: para ser visualizado en diferentes dispositivos.<br/>
 ● Recomendación de productos similares, los productos buscados<br/>
 
-👨🏽 Cliente:
--Registro y login con email o cuenta de Google.
--Carrito de compra
--Lista de deseos
--Hacer preguntas al vendedor acerca de un producto en particular.
--Realizar una compra y registar un historial de compras.
--Notificaciones por correo eléctronico (compra realizada).
--Calificar y reseñar los productos comprados.
--Búsqueda de productos por nombre de producto
--Filtrado de productos por categoría
--Ordenar productos por precio
+👨🏽 Cliente:<br/>
+-Registro y login con email o cuenta de Google.<br/>
+-Carrito de compra<br/>
+-Lista de deseos<br/>
+-Hacer preguntas al vendedor acerca de un producto en particular.<br/>
+-Realizar una compra y registar un historial de compras.<br/>
+-Notificaciones por correo eléctronico (compra realizada).<br/>
+-Calificar y reseñar los productos comprados.<br/>
+-Búsqueda de productos por nombre de producto<br/>
+-Filtrado de productos por categoría<br/>
+-Ordenar productos por precio<br/>
 
-🎩 Administrador:
--Crear, modificar, eliminar o bloquear productos.
--Crear nuevas categorías de productos
--Cambiar rol de usuarios (si son administradores de la aplcación o usurios) y/o bloquearlos (impidiendo que inicien sesión).
--Responder a preguntas hechas por los usuarios sobre los productos.
--Acceso a un Dashboard con datos fundamentales sobre la aplicación: cantidad de compras que se realizarion, cantidad de preguntas sin responder, productos con bajo o sin stock, ordenes de usuarios que no estan pagas, administración de usuarios, administracion de productos, búsqueda de ordenes realizadas por los usuarios.
-
-
-# Instrucciones
+🎩 Administrador:<br/>
+-Crear, modificar, eliminar o bloquear productos.<br/>
+-Crear nuevas categorías de productos<br/>
+-Cambiar rol de usuarios (si son administradores de la aplcación o usurios) y/o bloquearlos (impidiendo que inicien sesión).<br/>
+-Responder a preguntas hechas por los usuarios sobre los productos.<br/>
+-Acceso a un Dashboard con datos fundamentales sobre la aplicación: cantidad de compras que se realizarion, cantidad de preguntas sin responder, productos con bajo o sin stock, ordenes de usuarios que no estan pagas, administración de usuarios, administracion de productos, búsqueda de ordenes realizadas por los usuarios.<br/>
 
 
-# comandos para correr el front y el back:
-Escribir el comando npm install, desde la carpeta api y desde client
-La carpeta api respresenta el Backend
-La carpeta client representa el Frontend
-Escribir los sigientes comandos:
-npm run dev:  correr el back desde carpeta api
-npm start:  correr el front desde carpeta client
+# Instrucciones<br/>
 
 
+# comandos para correr el front y el back:<br/>
+Escribir el comando npm install, desde la carpeta api y desde client<br/>
+La carpeta api respresenta el Backend<br/>
+La carpeta client representa el Frontend<br/>
+Escribir los sigientes comandos:<br/>
+npm run dev:  correr el back desde carpeta api<br/>
+npm start:  correr el front desde carpeta client<br/>
 
 
 
-# NOTAS PARA LOS CREADRES
-# comandos para deployar el front:
-npm install -g create-react-app
-create-react-app my-app
-cd my-app
-git init
-heroku create -b https://github.com/mars/create-react-app-buildpack.git
-git add .
-git commit -m "react-create-app on Heroku"
-git push heroku master
+
+
+# NOTAS PARA LOS CREADRES<br/>
+# comandos para deployar el front:<br/>
+npm install -g create-react-app<br/>
+create-react-app my-app<br/>
+cd my-app<br/>
+git init<br/>
+heroku create -b https://github.com/mars/create-react-app-buildpack.git<br/>
+git add .<br/>
+git commit -m "react-create-app on Heroku"<br/>
+git push heroku master<br/>
 
 
 # asi elimino un apuntado
-PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> git remote -v
-heroku  https://git.heroku.com/app-3tech-front.git (fetch)
-heroku  https://git.heroku.com/app-3tech-front.git (push)
-PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> git remote remove heroku
+PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> git remote -v<br/>
+heroku  https://git.heroku.com/app-3tech-front.git (fetch)<br/>
+heroku  https://git.heroku.com/app-3tech-front.git (push)<br/>
+PS C:\Users\Mi PC\Desktop\PROYECTOS HENRY\3TECH-Front\Front> git remote remove heroku<br/>
 
 
 asi se cambia de apuntado en heroku o git, para cuando quiera cambiar un url
