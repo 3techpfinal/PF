@@ -23,6 +23,7 @@ import  CartContext from '../Cart/CartContext';
 import { ADDTOWISHLIST,DELETEFROMWISHLIST,GETPRODUCTREVIEWS } from '../actions';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAuth0 } from '@auth0/auth0-react';
+import { Link } from 'react-router-dom';
 
 export default function ProductCard({product,wishlist,setWishList}) {
   const [isHovered, setIsHovered] = useState (false);
@@ -108,7 +109,7 @@ export default function ProductCard({product,wishlist,setWishList}) {
 
   return (
     <Card>
-      <CardActionArea>
+      
         <Box sx={{display:'flex',flexDirection:'row',bgcolor:colorStyles.color1,width:'100%',height:'40vw',marginY:2,boxShadow:'rgba(0, 0, 0, 0.4) 0px 2px 4px, rgba(0, 0, 0, 0.3) 0px 7px 13px -3px, rgba(0, 0, 0, 0.2) 0px -3px 0px inset;'}}> 
                 <Box sx={{width:'30%',bgcolor:'white',border:`5px solid ${colorStyles.color1}`}}>
                   {product.priceOriginal && product.price!==product.priceOriginal ? <Chip  label={`-${(100-(product.price*100/product.priceOriginal)).toFixed(0)}%`} sx={{bgcolor:colorStyles.color2,position:'absolute'}}/>:<></>}
@@ -125,10 +126,11 @@ export default function ProductCard({product,wishlist,setWishList}) {
 
                 <Box sx={{display:'flex',flexDirection:'row',bgcolor:colorStyles.color1,width:'70%'}}>
                     <Box sx={{display:'flex',flexDirection:'column',alignItems:'flex-start',width:'100%',mt:2,ml:2}}>
+                    <Link to = {'/product/'+product._id}>
                       <Box>
                         <Typography sx={{fontSize:'3.5vw',maxHeight:50, color:'white'}}>{product.name.length>60?product.name.slice(0,60)+'...':product.name}</Typography>
                       </Box>
-                    
+                    </Link>
                       <Box>
                           {product.priceOriginal && product.price!==product.priceOriginal ?
                           <div>
@@ -138,7 +140,7 @@ export default function ProductCard({product,wishlist,setWishList}) {
                           :
                           <Typography sx={{fontSize:'5vw',maxHeight:50, color:'white'}} >${new Intl.NumberFormat().format(product.price)}</Typography> }
                       </Box>
-          
+                 
                       <Box sx={{width:'100%',display:'flex',justifyContent:'space-around',alignItems:'center'}}>
                         <Rating style={{ borderBlockColor:'white' }} readOnly defaultValue={product.rating} color='white' precision={0.1}/>
                         <Typography sx={{color:'white'}}>{productReviews.length}</Typography>
@@ -148,18 +150,19 @@ export default function ProductCard({product,wishlist,setWishList}) {
                             <FavoriteIcon fontSize='small'/>
                           </IconButton>
                         </Tooltip> }
-
+                        <CardActionArea>
                         <Tooltip title="Agregar al carrito" placement="top">
                           <IconButton  onClick={ onAddProduct } style={{color: "white"}}>
                             <AddShoppingCartIcon fontSize='small' sx={{ml:1}}/>
                           </IconButton>
                         </Tooltip>
+                        </CardActionArea>
                       </Box>
-
+                     
                     </Box>
           </Box>       
         </Box>
-      </CardActionArea> 
+      
     </Card>
   );
 }
