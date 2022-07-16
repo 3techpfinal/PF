@@ -16,20 +16,20 @@ router.post('/signup', signUp);
 
 router.post('/login', logIn);
 
-
+// CREAR UNA CALIFICACION
 router.post('/review',verifyToken, async (req, res,next) => { //modificado por Gabi 09/6
     //  try {
         //console.log('body',req.body)
         const{productId,review,comment,orderId,showProduct,showUser}=req.body //recibo del body datos, product es productId
         const newReview = new Review({review:review,comment:comment,product:productId, order:orderId, showProduct:showProduct, showUser:showUser})
-        newReview.user=req.userId //req.userId se guarda en el verify token, viene por token
+        newReview.user=req.userId //req.userId se guarda en el verify token, viene por Header
         //newProduct.setCreationDate();  
         await newReview.save()
         
         const totalReviews=await Review.find({product:productId}) //trae reviews de un producto
         let total=0
         totalReviews.forEach(e=>total=total+e.review) //e.review es la calificacion de una orden, e es cada orden
-        let divisor=totalReviews.length<1?1:totalReviews.length //e.review es la calificacion de una orden, e es cada orden
+        let divisor=totalReviews.length<1?1:totalReviews.length //
         await Product.findByIdAndUpdate(productId,{rating:(total/divisor).toFixed(1)},{upsert: true, new : true}) //hace el promedio del producto de la BDD
         const thisOrder=await Order.findById(orderId) //traigo la orden de la BDD que tiene  el id Orden que traje en body
         const thisOrderProducts=thisOrder?.products?.map(product=>{ //busco el producto que estoy calificando y le pongo has review true
@@ -46,7 +46,8 @@ router.post('/review',verifyToken, async (req, res,next) => { //modificado por G
     // }
 });
 
-router.put('/review/:reviewId', verifyToken, async (req, res, next) => { //modifica la calificacion
+// MODIFICA LA CALIFICACION
+router.put('/review/:reviewId', verifyToken, async (req, res, next) => { 
     try {
         const{productId,review,comment,orderId}=req.body
         const { reviewId } = req.params;
@@ -72,6 +73,8 @@ router.put('/review/:reviewId', verifyToken, async (req, res, next) => { //modif
 
 });
 
+
+// TRAE TODAS LAS CALIFICACIONES, si sos usuario, solo las del usuario
 router.get("/review", verifyToken, async (req, res, next) => {
     
     
@@ -96,7 +99,7 @@ router.get("/review", verifyToken, async (req, res, next) => {
 )
 ;
 
-
+//DEVUELVE TODOS LOS USUARIOS O BUSCAR USUARIO POR NOMBRE 
 router.get("/", [verifyToken, isAdmin], async (req, res, next) => {
    
     const {name} = req.query
@@ -123,7 +126,7 @@ router.get("/", [verifyToken, isAdmin], async (req, res, next) => {
 });
 
 
-
+// BUSCAR USUARIO POR ID
 router.get("/:id", async (req,res,next) => {
     const { id } = req.params;
     try {
@@ -135,7 +138,7 @@ router.get("/:id", async (req,res,next) => {
 
 });
 
-
+// BORRAR USUARIO POR ID
 router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
 
     // el ban se logra quitando acceso temporal a la cuenta, habría que hacer una copia en otro esquema inaccesible, cosa de guardar los datos
@@ -151,6 +154,7 @@ router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
     }
 });
 
+//  MODIFICA EL PASSWORD
 router.put('/:id', verifyToken, async (req, res, next) => {
     try {
         const { id } = req.params;
@@ -173,6 +177,8 @@ router.put('/:id', verifyToken, async (req, res, next) => {
 
 });
 
+
+// TRAE TODOS LOS PRODUCTOS DE LA WISHLIST
 router.get("/wishlist/:id", verifyToken, async (req, res, next) => {
     try {
         const UserById=await User.findById(req.userId).populate('wishList')
@@ -183,6 +189,8 @@ router.get("/wishlist/:id", verifyToken, async (req, res, next) => {
     }
 });
 
+
+// CREA UNA WISHLIST
 router.post('/wishlist', verifyToken, async (req, res, next) => {
     try {
         const {productId}=req.body
@@ -198,6 +206,8 @@ router.post('/wishlist', verifyToken, async (req, res, next) => {
     }
 });
 
+
+//ELIMINA PRODUCTO DE LA WISHLIST, CON EL ID
 router.put('/wishlist/:id', verifyToken, async (req, res, next) => {
         
     try {
