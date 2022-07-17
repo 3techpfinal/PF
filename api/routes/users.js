@@ -16,6 +16,87 @@ router.post('/signup', signUp);
 
 router.post('/login', logIn);
 
+
+//DEVUELVE TODOS LOS USUARIOS O BUSCAR USUARIO POR NOMBRE 
+router.get("/", [verifyToken, isAdmin], async (req, res, next) => {
+   
+    const {name} = req.query
+    if(name){
+        try {
+            const userName = await User.find({ name: {$regex: req.query.name, $options:'i'}}).populate(['cart','wishList','orders'])
+            return userName.length === 0 ? res.send("user not found") : res.json(userName)
+            } catch (error) {
+            next(error)
+        }
+    }
+    
+    else {
+        
+        try {
+            //http://localhost:3000/users
+            const allUsers = await User.find({});
+            return res.json(allUsers)
+            } catch (error) {
+            next(error)
+        }
+    }
+   
+});
+
+
+// BUSCAR USUARIO POR ID
+router.get("/:id", async (req,res,next) => {
+    const { id } = req.params;
+    try {
+        const found = await User.findById(id)
+        return res.send(found)
+    } catch (error) {
+        res.status(404).json({ error: "Error : User not found" })
+    }
+
+});
+
+// BORRAR USUARIO POR ID
+router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
+
+    // el ban se logra quitando acceso temporal a la cuenta, habría que hacer una copia en otro esquema inaccesible, cosa de guardar los datos
+    // front pregunta si confirma x acción
+
+    // esto es permaban, ojo
+    try {
+        const { id } = req.params;
+        const found = await User.findByIdAndRemove({ _id: id })
+        res.json({ message: `User : ${found.userEmail} - ID : ${found._id} successfully deleted` })
+    } catch (err) {
+        next(err)
+    }
+});
+
+//  MODIFICA LOS DATOS DEL USUARIO  
+router.put('/:id', verifyToken, async (req, res, next) => {
+    try {
+        const { id } = req.params;
+        //if(req.body.role || req.body.roles) return res.status(403).json({message : 'Unauthorized action'})
+        if (req.body.password) {
+            // defino si el valor es password para darle un tratamientoo específico
+            const encryptedPassword = await encryptPassword(req.body.password)
+            await User.findByIdAndUpdate(id, { $set:{password : encryptedPassword}});
+            const updatedUser = await User.findById({ _id: id })
+            return res.send(updatedUser)
+        }
+            await User.findByIdAndUpdate({ _id: id }, req.body);// le paso todo el body, el método compara y cambia todo automáticamente     
+            const updatedUser = await User.findById({ _id: id })
+            req.userId===id?res.send(updatedUser):res.send('ok')
+            
+    } catch (err) {
+        next(err)
+    }
+
+});
+
+
+
+
 // CREAR UNA CALIFICACION
 router.post('/review',verifyToken, async (req, res,next) => { //modificado por Gabi 09/6
     //  try {
@@ -98,84 +179,6 @@ router.get("/review", verifyToken, async (req, res, next) => {
 //}
 )
 ;
-
-//DEVUELVE TODOS LOS USUARIOS O BUSCAR USUARIO POR NOMBRE 
-router.get("/", [verifyToken, isAdmin], async (req, res, next) => {
-   
-    const {name} = req.query
-    if(name){
-        try {
-            const userName = await User.find({ name: {$regex: req.query.name, $options:'i'}}).populate(['cart','wishList','orders'])
-            return userName.length === 0 ? res.send("user not found") : res.json(userName)
-            } catch (error) {
-            next(error)
-        }
-    }
-    
-    else {
-        
-        try {
-            //http://localhost:3000/users
-            const allUsers = await User.find({});
-            return res.json(allUsers)
-            } catch (error) {
-            next(error)
-        }
-    }
-   
-});
-
-
-// BUSCAR USUARIO POR ID
-router.get("/:id", async (req,res,next) => {
-    const { id } = req.params;
-    try {
-        const found = await User.findById(id)
-        return res.send(found)
-    } catch (error) {
-        res.status(404).json({ error: "Error : User not found" })
-    }
-
-});
-
-// BORRAR USUARIO POR ID
-router.delete('/:id', [verifyToken, isAdmin], async (req, res, next) => {
-
-    // el ban se logra quitando acceso temporal a la cuenta, habría que hacer una copia en otro esquema inaccesible, cosa de guardar los datos
-    // front pregunta si confirma x acción
-
-    // esto es permaban, ojo
-    try {
-        const { id } = req.params;
-        const found = await User.findByIdAndRemove({ _id: id })
-        res.json({ message: `User : ${found.userEmail} - ID : ${found._id} successfully deleted` })
-    } catch (err) {
-        next(err)
-    }
-});
-
-//  MODIFICA EL PASSWORD
-router.put('/:id', verifyToken, async (req, res, next) => {
-    try {
-        const { id } = req.params;
-        //if(req.body.role || req.body.roles) return res.status(403).json({message : 'Unauthorized action'})
-        if (req.body.password) {
-            // defino si el valor es password para darle un tratamientoo específico
-            const encryptedPassword = await encryptPassword(req.body.password)
-            await User.findByIdAndUpdate(id, { $set:{password : encryptedPassword}});
-            const updatedUser = await User.findById({ _id: id })
-            return res.send(updatedUser)
-        }
-            await User.findByIdAndUpdate({ _id: id }, req.body);
-            // le paso todo el body, el método compara y cambia todo automáticamente
-            const updatedUser = await User.findById({ _id: id })
-            req.userId===id?res.send(updatedUser):res.send('ok')
-            
-    } catch (err) {
-        next(err)
-    }
-
-});
 
 
 // TRAE TODOS LOS PRODUCTOS DE LA WISHLIST

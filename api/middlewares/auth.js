@@ -17,7 +17,7 @@ export const signUp = async (req, res, next) => {
             res.send('There is an account already created with this email')
         } else {
 
-            const newUser = new User({name, lastName, email, password: await encrypter.encryptPassword(password) });
+            const newUser = new User({name, lastName, email, password: await encrypter.encryptPassword(password)});
 
             newUser.setCreationDate();
 

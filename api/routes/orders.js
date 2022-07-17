@@ -24,7 +24,7 @@ router.get("/", verifyToken, async (req, res, next) => {
             let orderWithUser=[]
             let arrayOrders=[]
 
-            // FUNCIIN QUE ELIMINA LOS ACENTOS
+            // FUNCION QUE ELIMINA LOS ACENTOS
             const removeAccents = (str) => {
                 return str.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
               } 
@@ -215,32 +215,32 @@ router.post('/pay',verifyToken, async(req, res) => {
     }
     
 
-    if ( dbOrder.totalPrice !== Number(data.purchase_units[0].amount.value) ) {
+   /* if ( dbOrder.totalPrice !== Number(data.purchase_units[0].amount.value) ) {
         //await db.disconnect();
         return res.status(200).json({ message: 'Los montos de PayPal y nuestra orden no son iguales' });
-    }
+    }*/
 
-    dbOrder.products.forEach(async (product,i)=>{
+    dbOrder?.products?.forEach(async (product,i)=>{
         const thisProduct=await Product.findById(product._id)
         if(thisProduct.stock<product.quantity){ 
             return res.status(200).json({ message: `No hay stock suficiente de ${product.name.length>25?product.name.slice(0,25)+'...':product.name}` });
         }
         else{
             await Product.findByIdAndUpdate(product._id,{stock:(thisProduct.stock-product.quantity)})
-            if(!product[i+1]){
+            
+           //if(!product[i+1]){
                 dbOrder.paymentId = transactionId;
-                dbOrder.products.forEach(async(product)=>{
+                //dbOrder.products.forEach(async(product)=>{
                     await Product.findByIdAndUpdate(product._id, {amountOfSales: thisProduct.amountOfSales+product.quantity });
-                })         
-                dbOrder.isPaid = true;
-                await dbOrder.save();
-                // await db.disconnect();
-
-                
-                return res.status(200).json({ message: "Orden pagada con éxito" });
-            }
+               // })         
+           // }
         }
     })
+
+    dbOrder.isPaid = true;
+    await dbOrder.save();
+    // await db.disconnect();
+    return res.status(200).json({ message: "Orden pagada con éxito" });
 
     
 })
