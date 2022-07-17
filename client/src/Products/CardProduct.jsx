@@ -41,6 +41,8 @@ export default function ProductCard({product,wishlist,setWishList}) {
          
     },[isHovered,product.imageProduct])
 
+
+    // CUANDO CAMBIA LA WISHLIST, MAPEA TODOS LOS PRODUCTOS DE LA WISHLIST Y SI COINCIDE CON EL DE CardProduct PINTA DE ROJO EL CORAZÓN
     React.useEffect(()=>{
         setColorHeart(()=>'black')
         wishlist?.forEach((e)=>{
@@ -75,12 +77,10 @@ export default function ProductCard({product,wishlist,setWishList}) {
 
     const addToWishList = () => { 
       if(colorHeart==="black"){
-        //setColorHeart("red")
         setWishList((old)=>[...old,product])
         dispatch(ADDTOWISHLIST({productId:product._id}))
       }
       else{
-       // setColorHeart("black")
         setWishList((old)=>old.filter(e=>e._id!==product._id))
         dispatch(DELETEFROMWISHLIST({productId:product._id}))
       } 

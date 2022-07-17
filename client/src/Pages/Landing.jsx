@@ -39,7 +39,7 @@ const Landing=({wishlist,setWishList})=>{
             var inicial='Productos'
             if(typeof products === "string"){ setNameCatg("")}//si es string es porque el back tira error, no encontro producto por ej
             else{
-                var ref=products[0]?.category.name
+                var ref=products[0]?.category?.name
                 setNameCatg(ref)
                 products.forEach((e)=>{
                     if(e?.category?.name!==ref){  setNameCatg(inicial)}
@@ -112,7 +112,7 @@ const Landing=({wishlist,setWishList})=>{
                     }
                     </Box>
 
-                    <Grid container   sx={{display:{md:'flex'},justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>  
+                    <Grid container   sx={{display:{xs:'none',md:'flex'},justifyContent:{xs:'space-around',md:'flex-start'},mt:2}}>  
                     {products.filter((e)=>e.isActive===true).map(e=>// para no mostrar cuando el producto esta bloqueado       
                     <Grid key={e._id} md={3} sx={{display:'flex',justifyContent:'center'}}>            
                             <CardProduct key={e._id} product={e} wishlist={wishlist} setWishList={setWishList}/>

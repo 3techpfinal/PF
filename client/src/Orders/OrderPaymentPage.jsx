@@ -1,7 +1,7 @@
 import { Box, Button, Card, CardContent, Divider, Grid, Typography, Link, Chip,Container, CardMedia } from '@mui/material';
 import { CartList, OrderSummary } from '../Cart';
 import CartContext from '../Cart/CartContext'
-import { CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
+import { BackspaceOutlined, CreditCardOffOutlined, CreditScoreOutlined } from '@mui/icons-material';
 import { PayPalButtons,usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { useContext, useEffect, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
@@ -79,6 +79,7 @@ const OrderPage=()=>{
         
             dispatch1(PAYORDER({transactionId: details.id, orderId: order._id})).then((r)=>{
                 if(r.payload?.message==='Orden pagada con éxito'){
+                    console.log("res backend", r)
                     setIsPaid(()=>true)
                     setIsPaid2(()=>true)
                     

@@ -55,7 +55,8 @@ const DashboardPage = () => {
 
       <NavBar/>
 
-      {products[0]&&orders[0]&&users[0]&&questions[0]?
+      {/* {products[0]&&orders[0]&&users[0]&&questions[0]? */}
+      {products[0]&&users[0]?
       <>
           <Box display="flex" flexDirection='row' justifyContent='space-between'    mt={15}>
                 <Box>

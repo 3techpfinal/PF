@@ -41,7 +41,7 @@ export default function CrearPublicacion() {
   const navegar = useNavigate()  //para navegar al home luego de postear el formulario
   const [checked, setChecked] = React.useState(false);
 
-
+///////////////////////// SUBIR FOTO A CLOUDINARY /////////////////////
   const handleUpload=  (e)=>{
     const pics = e.target.files;
     if (pics[0]===undefined)  return  0
@@ -64,6 +64,8 @@ export default function CrearPublicacion() {
         .catch(error=>console.log(error));
       }
   };
+//________________________ SUBIR FOTO A CLOUDINARY___________________________////
+
 
   const handleDelete=(e,image)=>{
     e.preventDefault()

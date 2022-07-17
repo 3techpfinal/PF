@@ -24,10 +24,11 @@ const UsersPage = () => {
     const usuarios=useSelector((State) => State.rootReducer.users);
     const orders=useSelector((State) => State.rootReducer.orders);
 
-//////////////////////////////  modificar el estado del usuario INICIO /////////////////////////
+//////////////////////////////////////// MODIFICAR EL ROL DEL USUARIO INICIO //////////////////////////////////////
+
     const [userState,setUserState]=useState([]) //estado de usuarios para mostrar
     
-    const userStatemap=usuarios.map(user=>( //cargar  estado productState con datos de la BDD
+    const userStatemap=usuarios.map(user=>( //cargar el  estado con datos de la BDD
         {id:user._id,
         cuentaSuspendida:user.suspendedAccount}
     ))
@@ -82,7 +83,7 @@ const handleChangeRol=(e,row)=>{ //e es el nuevo valor
     dispatch(MODIFYUSER({_id:row.id, role:e.target.value}))
 }
 
-//|||||______________________________  modificar el ROL del usuario ____________________////
+//|||||______________________________  MODIFICAR EL ROL DEL USUARIO FIN____________________////
 
 
     const calcularCantidadProductosCompradosTotales = (ordenes,usuario)=> {

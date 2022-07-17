@@ -254,9 +254,9 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                     </IconButton>
                     :
                     <Button sx={{bgcolor:color.color2,color:'black',ml:2}}
-                    onClick={()=>loginWithPopup().then(()=>getIdTokenClaims()).then(r=>axios.post(`${api}/users/login`,{token:r.__raw})).then(r=>{
-                      Cookie.set('token',r.data.token)
-                      Cookie.set('user',JSON.stringify(r.data.user))
+                    onClick={()=>loginWithPopup().then(()=>getIdTokenClaims()).then(r=>axios.post(`${api}/users/login`,{token:r?.__raw})).then(r=>{
+                      Cookie.set('token',r?.data.token)
+                      Cookie.set('user',JSON.stringify(r?.data.user))
                       axios.post(`${api}/cart`,{
                         cart:JSON.parse( Cookie.get('cart') ),
                         totalPrice:total

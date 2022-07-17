@@ -47,7 +47,8 @@ const UsersPage = () => {
             amountOfProducts: order?.products.length || "",
             amountOfProductsTotal: calcularCantidaddeProductosTotalesEnOrden(order),
             totalPrice: `${'$'+ new Intl.NumberFormat().format(order?.totalPrice)}` || "sin precio",
-            isPaid: order.isPaid
+            isPaid: order.isPaid,
+            date: order.creationDate
         })))
     },[orders])
 
@@ -142,6 +143,7 @@ const UsersPage = () => {
             }
          },
         { field: 'amountOfProductsTotal', headerName: 'Cantidad de productos totales', width: 280 },
+        { field: 'date', headerName: 'Fecha', width: 150 },
         { field: 'totalPrice', headerName: 'Precio total', width: 150 },
         {
             field: 'isPaid',
