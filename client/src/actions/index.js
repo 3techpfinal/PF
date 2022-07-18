@@ -2,7 +2,6 @@ import axios from "axios"
 import { createAction, createAsyncThunk } from "@reduxjs/toolkit"
 import Cookie from 'js-cookie'
 
-//export const api='https://t3ch22.herokuapp.com'
 export const api='http://localhost:3000'
 //export const api='https://app3tech-backend.herokuapp.com'
 
@@ -124,7 +123,12 @@ export const VERIFYADMIN=createAsyncThunk('VERIFYADMIN',async ()=>{
 
 //Busca un usuario por el nombre
 export const SEARCHBYNAMEUSERS=createAsyncThunk('SEARCHBYNAMEUSERS',async (name)=>{
-    const result=await axios(`${api}/users?name=${name}`) 
+    const token=Cookie.get('token')
+    const result=await axios.get(`${api}/users?name=${name}`,{
+        headers:{
+            'x-access-token':token
+        }
+    }) 
     return result.data
 })
 

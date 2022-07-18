@@ -4,7 +4,7 @@ import { DashboardOutlined, GroupOutlined, PeopleOutline } from '@mui/icons-mate
 import { DataGrid, GridColDef, GridValueGetterParams } from '@mui/x-data-grid';
 import { Grid, Select, MenuItem, Box, TextField, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import {GETUSERS, GETORDERS,SEARCHBYNAMEUSERS,MODIFYUSER} from '../actions'
+import {GETUSERS, GETORDERS,SEARCHBYNAMEUSERS,MODIFYUSER,SEARCHORDERS} from '../actions'
 import { AppDispatch,RootState } from '../store'
 import NavBar from '../Components/NavBar'
 import SearchBar from '../Components/SearchBar'
@@ -21,10 +21,15 @@ const UsersPage = () => {
         dispatch(GETORDERS())
       },[dispatch])
 
+
+
     const usuarios=useSelector((State) => State.rootReducer.users);
     const orders=useSelector((State) => State.rootReducer.orders);
 
-//////////////////////////////////////// MODIFICAR EL ROL DEL USUARIO INICIO //////////////////////////////////////
+
+
+
+//////////////////////////////////////// MODIFICAR EL ESTADO DEL USUARIO INICIO //////////////////////////////////////
 
     const [userState,setUserState]=useState([]) //estado de usuarios para mostrar
     
@@ -48,10 +53,10 @@ const UsersPage = () => {
         }))
         dispatch(MODIFYUSER({_id:row.id,suspendedAccount: e.target.value==='online'?true:false}))
  }
-//|||||______________________________  modificar el estado del usuario FIN ____________________////
+//|||||______________________________  MODIFICAR EL ESTADO DEL USUARIO  FIN ____________________////
 
 
-//////////////////////////////  modificar el ROL del usuario /////////////////////////
+//////////////////////////////  MODIFICAR EL ROL DEL USUARIO /////////////////////////
 const [userRol,setUserRol]=useState([]) //estado de usuarios para mostrar
 
 const userRolStatemap=usuarios.map(user=>( // cargar estado userRolStatemap con  datos de la BDD
@@ -153,7 +158,7 @@ const handleChangeRol=(e,row)=>{ //e es el nuevo valor
         name: user.name||"sin nombre",
         email: user.email,
         products: user?.products?.length,
-        rol: user.role,
+        rol: user?.role,
         estado: user?.suspendedAccount,
         amountOfBuys: calcularCantidadProductosCompradosTotales(orders,user)
     }))

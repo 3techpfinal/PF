@@ -110,7 +110,7 @@ const rootReducer = createReducer(initialState, (builder) => {
     })
                         
     .addCase(actions.SEARCHBYNAMEUSERS.fulfilled, (state, action) => {
-      state.users=[]
+      //state.users=[]
       state.users=action.payload
     })
     .addCase(actions.VERIFYADMIN.fulfilled, (state, action) => {

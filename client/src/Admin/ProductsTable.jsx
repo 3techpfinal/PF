@@ -30,7 +30,8 @@ const UsersPage = () => {
 
     const products=useSelector((State) => State.rootReducer.products);
     const orders=useSelector((State) => State.rootReducer.orders);
-    const [questions,setQuestions]=useState([])
+    const [questions2,setQuestions]=useState([])
+    const questions=useSelector((State) => State.rootReducer.allquestions);
     console.log("questions",questions)
     console.log("products",products)
     const [rows,setRows]=useState([])
@@ -67,7 +68,7 @@ const UsersPage = () => {
 
 
 
-    const productosmap=products.map(product=>( //esto es para cargar el estado productState
+    const productosmap=products?.map(product=>( //esto es para cargar el estado productState
         {id:product._id,
         isActive:product.isActive}
     ))
