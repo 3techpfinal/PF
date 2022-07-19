@@ -54,7 +54,7 @@ export default function BasicPopover({wishlist,setWishList}) {
       >
         {wishlist&&wishlist[0]? wishlist?.map(product=>(
           <>
-          <Box sx={{display:'flex',justifyContent:'space-between'}}>
+          <Box key={product._id} sx={{display:'flex',justifyContent:'space-between'}}>
             <Box sx={{width:100,marginX:1}}>
               <CardMedia
                 component="img"

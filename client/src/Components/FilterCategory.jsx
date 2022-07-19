@@ -45,14 +45,18 @@ export default function FilterByCategory({title}) {
             name='category'
             sx={{ height:24,bgcolor:color.color3,fontSize:{xs:11} }}
           >
-              <MenuItem key='select' value='Todos' onClick={()=>{
-                dispatch(GETPRODUCTS()) 
-                if(location!=='/')navigate('/')
+              <MenuItem key='select' value='Todos' 
+                onClick={()=>{
+                  dispatch(GETPRODUCTS()) 
+                  if(location!=='/')navigate('/')
                 }}>
                   {title}
               </MenuItem>
                   {categories.map((category) => (
-                    <MenuItem key={category._id} name={category.name} value={category._id}>
+                    <MenuItem 
+                      key={category._id} 
+                      name={category.name} 
+                      value={category._id}>
                       {category.name}
                     </MenuItem>
                   ))}

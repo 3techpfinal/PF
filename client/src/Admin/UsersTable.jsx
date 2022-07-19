@@ -31,12 +31,12 @@ const UsersPage = () => {
 
 //////////////////////////////////////// MODIFICAR EL ESTADO DEL USUARIO INICIO //////////////////////////////////////
 
+const userStatemap=usuarios.map(user=>( //cargar el  estado con datos de la BDD
+    {id:user._id,
+    cuentaSuspendida:user.suspendedAccount}
+))
     const [userState,setUserState]=useState([]) //estado de usuarios para mostrar
     
-    const userStatemap=usuarios.map(user=>( //cargar el  estado con datos de la BDD
-        {id:user._id,
-        cuentaSuspendida:user.suspendedAccount}
-    ))
 
     useEffect(()=>{
         setUserState(()=>userStatemap)
@@ -51,7 +51,7 @@ const UsersPage = () => {
             }
             else return e
         }))
-        dispatch(MODIFYUSER({_id:row.id,suspendedAccount: e.target.value==='online'?true:false}))
+        dispatch(MODIFYUSER({_id:row.id,suspendedAccount: e.target.value==='online'?false:true}))
  }
 //|||||______________________________  MODIFICAR EL ESTADO DEL USUARIO  FIN ____________________////
 
@@ -64,7 +64,7 @@ const userRolStatemap=usuarios.map(user=>( // cargar estado userRolStatemap con 
     rolUser:user.role}
 ))
 
-// console.log("roleUser",userRolStatemap) 
+// console.log("userRolStatemap",userRolStatemap) 
 //                  ejemplo:
 // 0: {id: '6294228a1ceba51474078b13', rolUser: 'admin'}
 // 1: {id: '629521f73a2bff0012f073fb', rolUser: 'user'}
@@ -85,6 +85,7 @@ const handleChangeRol=(e,row)=>{ //e es el nuevo valor
         }
         else return e
     }))
+
     dispatch(MODIFYUSER({_id:row.id, role:e.target.value}))
 }
 

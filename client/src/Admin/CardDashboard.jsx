@@ -9,18 +9,7 @@ import { useState, useEffect,useMemo } from "react";
 
 export default function SummaryTile ({ title, subTitle, icon,link})  {
 
-
     const [isHovered, setIsHovered] = useState (false);
-/*
-    const productImage = useMemo(()=>{
-        return title?isHovered?
-          `${product.imageProduct[1]}`
-        : `${product.imageProduct[0]}`
-        : `${product.imageProduct[0]}`
-         
-    },[isHovered,product.imageProduct])
-
-*/
 
   return (
     
@@ -35,6 +24,7 @@ export default function SummaryTile ({ title, subTitle, icon,link})  {
                         <Typography variant='h3'>{ title }</Typography>
                         <Typography variant='caption'>{ subTitle }</Typography>
                     </CardContent> 
+                    
                 </Card>
             </Link>   
               

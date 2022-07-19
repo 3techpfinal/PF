@@ -135,6 +135,7 @@ export const SEARCHBYNAMEUSERS=createAsyncThunk('SEARCHBYNAMEUSERS',async (name)
 //Edita el usuario
 export const MODIFYUSER=createAsyncThunk('MODIFYUSER',async (input)=>{
     const token=Cookie.get('token')
+    console.log("input",input)
     const user=await axios.put(`${api}/users/${input._id}`,input,{headers:{
       'x-access-token':`${token}`
     }})
