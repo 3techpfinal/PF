@@ -27,7 +27,7 @@ const UsersPage = () => {
     const orders=useSelector((State) => State.rootReducer.orders);
 
 
-
+console.log("usuarios")
 
 //////////////////////////////////////// MODIFICAR EL ESTADO DEL USUARIO INICIO //////////////////////////////////////
 
@@ -64,7 +64,7 @@ const userRolStatemap=usuarios.map(user=>( // cargar estado userRolStatemap con 
     rolUser:user.role}
 ))
 
-// console.log("userRolStatemap",userRolStatemap) 
+ console.log("userRolStatemap",userRolStatemap) 
 //                  ejemplo:
 // 0: {id: '6294228a1ceba51474078b13', rolUser: 'admin'}
 // 1: {id: '629521f73a2bff0012f073fb', rolUser: 'user'}
@@ -141,6 +141,7 @@ const handleChangeRol=(e,row)=>{ //e es el nuevo valor
                             <Typography color="error" value='superadmin'> superadmin </Typography> 
                             :
                             <Select
+                                //ESTE FILTER DE UN IGUAL , DEVUELVE UN ARRAY DE UN ELEMENTO, PORQUE SOLO 1 ES IGUAL
                                 value={ userState.filter(e=> e.id===row.id)[0]?.cuentaSuspendida?'bloqueado':'online' }
                                 label="state"
                                 onChange={(e)=>handleChangeState(e,row) }

@@ -176,10 +176,7 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
       
     </Menu>
   );
-
-  const mobileMenuId = 'primary-search-account-menu-mobile';
   
-
   return (
   <>
         
@@ -222,15 +219,8 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
               
                 <Box sx={{display:'flex',alignItems:'center', justifyContent:'flex-end'}}>
 
-
-                    {/* <IconButton style={{color: 'white'}}>
-                      <FavoriteIcon>
-                        
-                      </FavoriteIcon>
-                    </IconButton> */}
                     {isAuthenticated&&<WishList wishlist={wishlist} setWishList={setWishList}/>}
                     
-
                     <NavLink to='/cart' style={isActive => ({color: isActive ? "white" : "white"})}>
                         <IconButton size="large" aria-label="show 4 new mails" color="inherit">
                             <Badge badgeContent={numberOfItems} color="error">
@@ -308,12 +298,12 @@ export default function PrimarySearchAppBar({wishlist,setWishList}) {
                   <FilterCategory title={'Todos'}/>
                 <Divider orientation="vertical" flexItem sx={{display:{xs:'none',md:'flex'},bgcolor:'white',marginX:1}}/>
                     <Box sx={{display:{xs:'none',md:'flex'},flexDirection:'row'}}>
-                      {categories.slice(0,4).map((e)=>(
+                      {categories.slice(0,4).map((category)=>(
                       <>
-                          <Button onClick={()=>{dispatch(SEARCHBYCATEGORY(e._id)); navigate('/') }}>
-                            <Typography variant='body2' sx={{color:'white',fontWeight:20}}>{e.name}</Typography>
+                          <Button key={category._id} onClick={()=>{dispatch(SEARCHBYCATEGORY(category._id)); navigate('/') }}>
+                            <Typography key={category._id+1} variant='body2' sx={{color:'white',fontWeight:20}}>{category.name}</Typography>
                           </Button>
-                        <Divider orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
+                        <Divider key={category._id+2} orientation="vertical" variant='middle'flexItem sx={{bgcolor:'white',marginX:1}}/>
                       </>               
                     ))}
                     </Box>

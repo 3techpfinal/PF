@@ -55,8 +55,9 @@ export default function BasicPopover({wishlist,setWishList}) {
         {wishlist&&wishlist[0]? wishlist?.map(product=>(
           <>
           <Box key={product._id} sx={{display:'flex',justifyContent:'space-between'}}>
-            <Box sx={{width:100,marginX:1}}>
+            <Box key={product._id+1} sx={{width:100,marginX:1}}>
               <CardMedia
+                key={product._id+2}
                 component="img"
                 height="100"
                 width='100'
@@ -66,16 +67,16 @@ export default function BasicPopover({wishlist,setWishList}) {
                 onClick={()=>{navigate(`/product/${product._id}`)}}
               />
             </Box>
-            <Box sx={{display:'flex',flexDirection:'column',alignItems:'flex-start',width:'100%',mt:2}} onClick={()=>{navigate(`/product/${product._id}`)}}>
+            <Box key={product._id+3} sx={{display:'flex',flexDirection:'column',alignItems:'flex-start',width:'100%',mt:2}} onClick={()=>{navigate(`/product/${product._id}`)}}>
               <Typography sx={{fontSize:10,maxHeight:50}}>{product.name.slice(0,40)}</Typography>
               <Typography sx={{fontSize:10,maxHeight:50}}>${product.price}</Typography>
             </Box>
 
-            <IconButton onClick={()=>deleteElement(product._id)}style={{color: 'red',borderRadius:0}}>
+            <IconButton key={product._id+4} onClick={()=>deleteElement(product._id)}style={{color: 'red',borderRadius:0}}>
               <FavoriteIcon />
             </IconButton>
           </Box>
-          <Divider/>
+          <Divider key={product._id+6}/>
           </>
         )):<Box>
           <Typography sx={{m:2,fontWeight:20}}>No tienes productos en favoritos</Typography>

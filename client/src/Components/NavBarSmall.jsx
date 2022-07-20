@@ -46,7 +46,7 @@ const StyledToolbar = styled(Toolbar)(({ theme }) => ({
 }));
 
 
-export default function PrimarySearchAppBar({wishlist,setWishList}) {
+export default function PrimarySearchAppBarSmall({wishlist,setWishList}) {
 
   const [isHovered, setIsHovered] = React.useState (false);
 
